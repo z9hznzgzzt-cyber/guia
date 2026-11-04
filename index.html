@@ -92,6 +92,9 @@ button:focus-visible{outline:3px solid var(--gm); outline-offset:2px}
 .seg button{text-align:center; padding:10px; border-radius:10px; font-weight:600; min-height:44px}
 .seg button.on.gm{background:var(--gm); color:var(--surface)}
 .seg button.on.cm{background:var(--cm); color:var(--surface)}
+.seg.n3{grid-template-columns:1fr 1fr 1fr}
+.chip.go{background:var(--gm-bg); color:var(--gm-ink); border-color:transparent}
+.chip.mx,.chip.he{background:var(--cm-bg); color:var(--cm-ink); border-color:transparent}
 .group{margin-top:18px}
 .group h3{margin-bottom:8px}
 .item{padding:12px 14px; background:var(--surface); border:1px solid var(--line); border-top:0}
@@ -141,7 +144,7 @@ nav button.on{color:var(--fg); background:var(--bg)}
 
 <div class="wrap">
   <h1>Guia Implantodontia</h1>
-  <p class="sub">Moldagem de transferência e catálogo de componentes</p>
+  <p class="sub">Guia clínico e catálogo de componentes</p>
   <div id="app"></div>
 </div>
 <nav aria-label="Seções">
@@ -151,8 +154,9 @@ nav button.on{color:var(--fg); background:var(--bg)}
 </nav>
 
 <script>
-var L = {uni:'Unitário', prot:'Protocolo', gm:'Implante GM', cm:'Implante CM', pilar:'Pilar', mini:'Mini pilar', fechada:'Moldeira fechada', aberta:'Moldeira aberta'};
-var BRANDS = {neodent:'Neodent'};
+var L = {uni:'Unitário', prot:'Protocolo', gm:'Implante GM', cm:'Implante CM', go:'Grand Oss', mx:'Max CM', he:'Titaoss HE', pilar:'Pilar', mini:'Mini pilar', fechada:'Moldeira fechada', aberta:'Moldeira aberta'};
+var BRANDS = {neodent:'Neodent', intraoss:'Intraoss'};
+var LINES = {neodent:[['gm','GM'],['cm','CM']], intraoss:[['go','Grand Oss'],['mx','Max CM'],['he','HE']]};
 var VIEWS = ['guia','catalogo','compras'];
 
 function fichaUni(linha, pilar, pilarInfo, moldagem){
@@ -356,6 +360,69 @@ D['cir|prot|cm'] = {theme:'cm', title:'Protocolo com implantes CM (arcada comple
  ficha:CIR_CHECK([['Carga imediata','Defina antes da cirurgia se haverá carga imediata e o critério de torque. Confirme na bula.']]),
  notes:['O catálogo EMEA descreve a técnica de protocolo com Helix GM (NeoArch). Para CM, este roteiro é genérico: confirme a sequência e o torque na bula de cada modelo.','Torques e sequências: bula e protocolo do kit.']};
 
+
+/* ===== Guia cirúrgico Intraoss ===== */
+(function(){
+var LN = {
+ go:{theme:'gm', nome:'Grand Oss (GO, cone Morse 16°)', modelos:'Advanced, Cônico, Extract e Cortical',
+   chaves:'CCGMC (catraca curta), CCGML (catraca longa) ou CCAGML (contra-ângulo longa)', tapa:'tapa implante 704.177', rosca:'rosca interna Ø 1,6 mm',
+   seq:['Advanced e Cônico Ø 3,5: lança 703.167, helicoidal 2,0 703.142, cônica 3,5 703.019 e piloto 2/3 703.194 (opcional).',
+        'Advanced e Cônico Ø 4,3: as mesmas, mais cônica 4,3 703.020; piloto 3,3/4,0 703.188 é opcional.',
+        'Extract Ø 3,5: lança, helicoidal 2,0 e, se precisar, helicoidal 2,8 703.143.',
+        'Extract Ø 3,75: lança, helicoidal 2,0 e piloto 2/3. Opcionais: helicoidais 2,8, 3,0 (703.144) e 3,25 (703.146), helicoidais longas 2,0 (703.128) e 3,0 (703.130) e piloto 3,0/3,75 (703.190).',
+        'Extract Ø 4,0: lança, helicoidal 2,0, piloto 2/3 e helicoidal 2,8. Opcionais: 3,0, 3,25, longas e pilotos 3,0/3,75 e 3,3/4,0.',
+        'Cortical Ø 3,5: lança, helicoidal 2,0, helicoidal 2,8 e piloto 2,8/3,5 (703.187). Ø 3,75: lança, 2,0, piloto 2/3, helicoidais 3,0 e 3,25 (piloto 3,0/3,75 opcional). Ø 4,0: lança, 2,0, piloto 2/3, helicoidais 3,0 e 3,25 e piloto 3,3/4,0 (helicoidal 2,8 opcional).']},
+ mx:{theme:'cm', nome:'Max CM (cone Morse 11,5°)', modelos:'Advanced, Cônico, Extract e Cortical',
+   chaves:'700.030 (catraca curta), 700.032 (catraca longa) ou 700.035 (contra-ângulo)', tapa:'tapa implante 704.145', rosca:'rosca interna Ø 1,8 mm',
+   seq:['Advanced e Cônico Ø 3,5: lança 703.167, helicoidal 2,0 703.142, cônica 3,5 703.019 e piloto 2/3 703.194 (opcional).',
+        'Advanced e Cônico Ø 4,3: as mesmas, mais cônica 4,3 703.020; piloto 3,3/4,0 703.188 é opcional.',
+        'Extract Ø 3,5: lança, helicoidal 2,0 e, se precisar, helicoidal 2,8 703.143.',
+        'Extract Ø 3,75: lança, helicoidal 2,0 e piloto 2/3. Opcionais: helicoidais 2,8, 3,0 e 3,25, longas e piloto 3,0/3,75.',
+        'Extract Ø 4,0: lança, helicoidal 2,0, piloto 2/3 e helicoidal 2,8. Opcionais: 3,0, 3,25, longas e pilotos 3,0/3,75 e 3,3/4,0.',
+        'Cortical Ø 3,5: lança, helicoidal 2,0, helicoidal 2,8 e piloto 2,8/3,5. Ø 3,75: lança, 2,0, piloto 2/3, helicoidais 3,0 e 3,25. Ø 4,0: lança, 2,0, piloto 2/3, helicoidais 3,0 e 3,25 e piloto 3,3/4,0.']},
+ he:{theme:'cm', nome:'Titaoss HE (hexágono externo)', modelos:'Advanced, Cônico, Extract, Cortical e Slim',
+   chaves:'CTC (catraca curta), CTL (catraca longa) ou CAL (contra-ângulo). Plataforma Ø 3,4 usa montador 716.047 (curto) ou 716.048 (longo)', tapa:'tapa implante 704.073 (Ø 4,1) ou 704.057 (Ø 3,4)', rosca:'parafuso de retenção de 2,0 mm',
+   seq:['Advanced e Cônico Ø 3,5: lança 703.167, helicoidal 2,0 703.142, cônica 3,5 703.019 e piloto 2/3 (opcional).',
+        'Advanced e Cônico Ø 4,3: as mesmas, mais cônica 4,3 703.020.',
+        'Extract Ø 3,75: lança, helicoidal 2,0 e piloto 2/3. Opcionais: helicoidais 2,8 e 3,0 e countersink 4,1 (703.063). Ø 4,0: lança, 2,0, piloto 2/3 e helicoidal 2,8; opcionais 3,0, 3,25 e countersink.',
+        'Cortical Ø 3,75: lança, helicoidal 2,0, piloto 2/3, helicoidal 3,0 e countersink 4,1; helicoidais 2,8 e 3,25 são opcionais.',
+        'Slim: o catálogo lista lança, helicoidal 2,0, piloto 2/3, helicoidal 2,8 e countersink 4,1. Confira na tabela do catálogo o que é opcional.']}
+};
+var MODO = ' Rotação ideal de trabalho (citada no catálogo, na seção de cirurgia guiada): 800 a 1200 rpm em osso I e II e 500 a 800 rpm em osso III e IV. Irrigação abundante com soro gelado e movimentos curtos de entrada e saída.';
+function chk(l){ return CIR_CHECK([['Chaves do implante', LN[l].chaves + '.']]); }
+function build(l, tipo){
+  var c = LN[l], uni = tipo === 'uni';
+  var steps = uni ? [
+   ['Planejar o caso','Linha ' + c.nome + ', modelos ' + c.modelos + '. Cortical é para osso I e II; Advanced e Cônico para osso III, IV e exodontia; Extract é cilíndrico com ápice cônico e dupla rosca. Ø 3,5 não é indicado para molares.'],
+   ['Preparar o campo','Anestesia, assepsia e campo. Estojo cirúrgico (710.001) conferido, implante com embalagem íntegra. O implante não acompanha parafuso de cobertura: separe o ' + c.tapa + ' ou um cicatrizador.'],
+   ['Acesso','Incisão e retalho, ou punch quando a técnica sem retalho for indicada.'],
+   ['Marcar o sítio','Broca lança Ø 2,0 (703.167) rompe a cortical. Irrigação abundante.' + MODO],
+   ['Fresar em sequência','Siga a sequência do modelo e do diâmetro (nota abaixo). As brocas têm marcas de profundidade gravadas. Use o extensor de brocas (700.111) se faltar espaço.'],
+   ['Conferir o preparo','Sonda de profundidade (716.043) e indicador de direção (716.041 curto, 716.042 longo) para checar profundidade e paralelismo.'],
+   ['Captar o implante','Chave: ' + c.chaves + '. Antes de aplicar torque, confirme o encaixe correto da chave no implante.'],
+   ['Instalar o implante','Torque máximo indicado: 55 N.cm. As marcações esféricas no corpo da chave indicam a face do indexador; as três marcas indicam 1, 2 e 3 mm infraósseo. Anote o torque final.'],
+   ['Fechar o caso','Parafuso de cobertura (' + c.tapa + ') ou cicatrizador, e sutura sem tensão.'],
+   ['Controle e orientação','Radiografia periapical, orientação ao paciente e aguardar a osseointegração conforme seu protocolo.']
+  ] : [
+   ['Planejar a arcada','Tomografia, relação intermaxilar, posição e número de implantes. O catálogo indica os Extract longos para a técnica All-On-Four' + (l === 'go' ? ' (Ø 3,75 e 4,0, de 20, 22 e 25 mm)' : l === 'mx' ? ' (Ø 3,75, de 17 e 18 mm)' : '') + '.' + (l === 'he' ? ' Para HE, o catálogo não cita essa indicação: confirme o modelo.' : '')],
+   ['Decidir a técnica','Convencional ou guiada. O sistema Intraguide (estojo 710.007) atende os modelos Advanced, Cônico, Cortical e Extract de Grand Oss e Max CM; as brocas guiadas são mais longas e não podem ser usadas sem o guia.'],
+   ['Preparar o campo','Anestesia, assepsia, estojo cirúrgico (710.001) e implantes conferidos. Reserve ' + c.tapa + ' ou cicatrizadores.'],
+   ['Regularizar a crista','Alveoloplastia com retalho, criando plataforma óssea e espaço protético. Respeite estruturas anatômicas.'],
+   ['Marcar os sítios','Broca lança Ø 2,0 (703.167), com o guia cirúrgico quando houver.' + MODO],
+   ['Fresar em sequência','Sequência do modelo e do diâmetro (nota abaixo). Para implantes longos use as helicoidais longas 2,0 (703.128) e 3,0 (703.130). Confira o paralelismo com os indicadores de direção.'],
+   ['Instalar os implantes','Chave: ' + c.chaves + '. Torque máximo 55 N.cm, marcas de 1, 2 e 3 mm infraósseo. Anote o torque de cada implante.'],
+   ['Mini Abutments','Instale os Mini Abutments retos ou angulados (17° e 30°) conforme o paralelismo. Veja o Catálogo, em Protético, os torques e alturas.'],
+   ['Moldagem ou escaneamento','Transferente de Mini Abutment (TMA 4800 aberta, TMF 4800 fechada) ou scan body (TSBMN). Registro de mordida com DVO e fotos.'],
+   ['Provisório e controle','Cilindros do Mini Abutment (708.016, 702.292), prótese provisória conforme seu protocolo, radiografia final e orientação.']
+  ];
+  var notes = ['Sequência de brocas por modelo, segundo a tabela do catálogo (círculo é uso, asterisco é uso opcional): ' + c.seq.join(' ')];
+  notes.push('Torque máximo de instalação do implante: 55 N.cm. Critérios de carga imediata não constam no catálogo: use a bula e o seu protocolo.');
+  notes.push('O catálogo é de 2025 na capa, com direitos de 2026. Confirme códigos com o representante antes de pedir.');
+  return {theme:c.theme, title:(uni ? 'Cirurgia unitária' : 'Protocolo (arcada completa)') + ' com ' + c.nome, comps:['Implante ' + c.nome.split(' (')[0], 'Broca lança Ø 2,0 (703.167)', 'Brocas helicoidais, pilotos e cônicas', 'Chaves de instalação', 'Torquímetro cirúrgico (700.001)', 'Tapa implante ou cicatrizador'], steps:steps, ficha:chk(l), notes:notes};
+}
+['go','mx','he'].forEach(function(l){ ['uni','prot'].forEach(function(t){ D['in|cir|' + t + '|' + l] = build(l, t); }); });
+})();
+
 var CATS = [['pilares','Pilares'],['mini','Mini pilares'],['transfer','Transfer'],['analogo','Análogo'],['implantes','Implantes'],['cicatrizadores','Cicatrizadores e tampas'],['parafusos','Parafusos'],['cilindros','Cilindros de proteção'],['kits','Kits cirúrgicos'],['brocas','Brocas e stops'],['drivers','Drivers de implante'],['scanbodies','Transfers de escaneamento'],['copings','Cilindros protéticos'],['instrumental','Instrumental']];
 
 var ITEMS = [
@@ -536,17 +603,199 @@ var ITEMS = [
  ['cm-imp-titamax-375','implantes','cm','Titamax CM Cortical Ø 3,75 mm','Flexibilidade de instalação coronoapical. || NeoPoros: 13 mm 109.610 || Lista parcial da eShop; podem existir outros tamanhos','NeoPoros 109.610',1],
  ['cm-imp-titamax-40','implantes','cm','Titamax CM Cortical Ø 4,0 mm','Flexibilidade de instalação coronoapical. || NeoPoros: 7 mm 109.630 · 8 mm 109.631 · 9 mm 109.632 · 11 mm 109.633 · 15 mm 109.634 · 17 mm 109.635 || Lista parcial da eShop; podem existir outros tamanhos','NeoPoros 109.630 a 109.635',1],
  ['cm-imp-titamax-50','implantes','cm','Titamax CM Cortical Ø 5,0 mm','Flexibilidade de instalação coronoapical. || NeoPoros: 7 mm 109.642 · 8 mm 109.643 · 9 mm 109.644 · 11 mm 109.645 · 13 mm 109.646 || Lista parcial da eShop; podem existir outros tamanhos','NeoPoros 109.642 a 109.646',1]
-].map(function(r){ return {id:r[0], cat:r[1], line:r[2], name:r[3], desc:r[4], code:r[5], ok:r[6]}; });
+,
+ ["in-imp-go-adv-35", "implantes", "go", "Grand Oss Advanced Ø 3,5 mm", "Cônico compactante, alta estabilidade primária. Ossos III e IV e exodontia. Plataforma switching. Torque máximo 55 N.cm. Não acompanha parafuso de cobertura || Ø 3,5 não é indicado para molares || 8 mm 717.291 · 10 mm 717.292 · 11,5 mm 717.293 · 13 mm 717.294 · 16 mm 717.296", "717.291 a 717.296", 1, "intraoss"],
+ ["in-imp-go-adv-43", "implantes", "go", "Grand Oss Advanced Ø 4,3 mm", "Cônico compactante, alta estabilidade primária. Ossos III e IV e exodontia. Plataforma switching. Torque máximo 55 N.cm. Não acompanha parafuso de cobertura || 8 mm 717.306 · 10 mm 717.307 · 11,5 mm 717.308 · 13 mm 717.309 · 16 mm 717.311", "717.306 a 717.311", 1, "intraoss"],
+ ["in-imp-go-côn-35", "implantes", "go", "Grand Oss Cônico Ø 3,5 mm", "Corpo cônico, alto poder de compactação. Ossos III e IV e pós-exodontia. Plataforma switching. Torque máximo 55 N.cm. Não acompanha parafuso de cobertura || Ø 3,5 não é indicado para molares e caninos || 8 mm 717.263 · 10 mm 717.264 · 11,5 mm 717.265 · 13 mm 717.266", "717.263 a 717.266", 1, "intraoss"],
+ ["in-imp-go-côn-43", "implantes", "go", "Grand Oss Cônico Ø 4,3 mm", "Corpo cônico, alto poder de compactação. Ossos III e IV e pós-exodontia. Plataforma switching. Torque máximo 55 N.cm. Não acompanha parafuso de cobertura || 8 mm 717.277 · 10 mm 717.278 · 11,5 mm 717.279 · 13 mm 717.280", "717.277 a 717.280", 1, "intraoss"],
+ ["in-imp-go-ext-35", "implantes", "go", "Grand Oss Extract Ø 3,5 mm", "Cilíndrico com ápice cônico, dupla rosca (inserção mais rápida). Plataforma switching. Torque máximo 55 N.cm. Não acompanha parafuso de cobertura || 9 mm 717.214 · 11 mm 717.216 · 13 mm 717.217", "717.214 a 717.217", 1, "intraoss"],
+ ["in-imp-go-ext-375", "implantes", "go", "Grand Oss Extract Ø 3,75 mm", "Cilíndrico com ápice cônico, dupla rosca (inserção mais rápida). Plataforma switching. Torque máximo 55 N.cm. Não acompanha parafuso de cobertura || 20, 22 e 25 mm são indicados para a técnica All-On-Four || 9 mm 717.231 · 11 mm 717.233 · 13 mm 717.234 · 15 mm 717.235 · 20 mm 717.240 · 22 mm 717.242 · 25 mm 717.245", "717.231 a 717.245", 1, "intraoss"],
+ ["in-imp-go-ext-40", "implantes", "go", "Grand Oss Extract Ø 4,0 mm", "Cilíndrico com ápice cônico, dupla rosca (inserção mais rápida). Plataforma switching. Torque máximo 55 N.cm. Não acompanha parafuso de cobertura || 20, 22 e 25 mm são indicados para a técnica All-On-Four || 9 mm 717.248 · 11 mm 717.250 · 13 mm 717.251 · 20 mm 717.257 · 22 mm 717.259 · 25 mm 717.262", "717.248 a 717.262", 1, "intraoss"],
+ ["in-imp-go-cor-35", "implantes", "go", "Grand Oss Cortical Ø 3,5 mm", "Cilíndrico, dupla rosca, alto poder de corte. Ossos I e II. Plataforma switching. Torque máximo 55 N.cm. Não acompanha parafuso de cobertura || Ø 3,5 não é indicado para molares || 7 mm 717.161 · 8 mm 717.162 · 9 mm 717.163 · 11 mm 717.165", "717.161 a 717.165", 1, "intraoss"],
+ ["in-imp-go-cor-375", "implantes", "go", "Grand Oss Cortical Ø 3,75 mm", "Cilíndrico, dupla rosca, alto poder de corte. Ossos I e II. Plataforma switching. Torque máximo 55 N.cm. Não acompanha parafuso de cobertura || 7 mm 717.178 · 9 mm 717.180 · 11 mm 717.182 · 13 mm 717.183", "717.178 a 717.183", 1, "intraoss"],
+ ["in-imp-go-cor-40", "implantes", "go", "Grand Oss Cortical Ø 4,0 mm", "Cilíndrico, dupla rosca, alto poder de corte. Ossos I e II. Plataforma switching. Torque máximo 55 N.cm. Não acompanha parafuso de cobertura || 7 mm 717.195", "717.195", 1, "intraoss"],
+ ["in-imp-mx-adv-35", "implantes", "mx", "Max CM Advanced Ø 3,5 mm", "Cônico compactante, alta estabilidade primária. Ossos III e IV e exodontia. Plataforma switching. Torque máximo 55 N.cm. Não acompanha parafuso de cobertura || Ø 3,5 não é indicado para molares || 8 mm 701.037 · 10 mm 701.038 · 11,5 mm 701.039 · 13 mm 701.040 · 16 mm 701.041", "701.037 a 701.041", 1, "intraoss"],
+ ["in-imp-mx-adv-43", "implantes", "mx", "Max CM Advanced Ø 4,3 mm", "Cônico compactante, alta estabilidade primária. Ossos III e IV e exodontia. Plataforma switching. Torque máximo 55 N.cm. Não acompanha parafuso de cobertura || 8 mm 701.042 · 10 mm 701.043 · 11,5 mm 701.044 · 13 mm 701.045 · 16 mm 701.046", "701.042 a 701.046", 1, "intraoss"],
+ ["in-imp-mx-côn-35", "implantes", "mx", "Max CM Cônico Ø 3,5 mm", "Corpo cônico, alto poder de compactação. Ossos III e IV e pós-exodontia. Plataforma switching. Torque máximo 55 N.cm. Não acompanha parafuso de cobertura || Ø 3,5 não é indicado para molares || 8 mm 701.073 · 10 mm 701.075 · 11,5 mm 701.076 · 13 mm 701.077", "701.073 a 701.077", 1, "intraoss"],
+ ["in-imp-mx-côn-43", "implantes", "mx", "Max CM Cônico Ø 4,3 mm", "Corpo cônico, alto poder de compactação. Ossos III e IV e pós-exodontia. Plataforma switching. Torque máximo 55 N.cm. Não acompanha parafuso de cobertura || 8 mm 701.082 · 10 mm 701.084 · 11,5 mm 701.085 · 13 mm 701.086", "701.082 a 701.086", 1, "intraoss"],
+ ["in-imp-mx-ext-35", "implantes", "mx", "Max CM Extract Ø 3,5 mm", "Cilíndrico com ápice cônico, dupla rosca. Todos os tipos de osso e pós-exodontia. Plataforma switching. Torque máximo 55 N.cm. Não acompanha parafuso de cobertura || Ø 3,5 não é indicado para molares e caninos || 9 mm 701.052 · 11 mm 701.054 · 13 mm 701.055", "701.052 a 701.055", 1, "intraoss"],
+ ["in-imp-mx-ext-375", "implantes", "mx", "Max CM Extract Ø 3,75 mm", "Cilíndrico com ápice cônico, dupla rosca. Todos os tipos de osso e pós-exodontia. Plataforma switching. Torque máximo 55 N.cm. Não acompanha parafuso de cobertura || 17 e 18 mm são indicados para a técnica All-On-Four || 9 mm 701.059 · 11 mm 701.061 · 13 mm 701.062 · 15 mm 701.063 · 17 mm 701.064 · 18 mm 701.065", "701.059 a 701.065", 1, "intraoss"],
+ ["in-imp-mx-ext-40", "implantes", "mx", "Max CM Extract Ø 4,0 mm", "Cilíndrico com ápice cônico, dupla rosca. Todos os tipos de osso e pós-exodontia. Plataforma switching. Torque máximo 55 N.cm. Não acompanha parafuso de cobertura || 9 mm 701.066 · 11 mm 701.068 · 13 mm 701.069", "701.066 a 701.069", 1, "intraoss"],
+ ["in-imp-mx-cor-35", "implantes", "mx", "Max CM Cortical Ø 3,5 mm", "Cilíndrico, dupla rosca, alto poder de corte. Ossos I e II. Plataforma switching. Torque máximo 55 N.cm. Não acompanha parafuso de cobertura || Ø 3,5 não é indicado para molares e caninos || 7 mm 701.001 · 8 mm 701.002 · 9 mm 701.003 · 11 mm 701.005 · 13 mm 701.006", "701.001 a 701.006", 1, "intraoss"],
+ ["in-imp-mx-cor-375", "implantes", "mx", "Max CM Cortical Ø 3,75 mm", "Cilíndrico, dupla rosca, alto poder de corte. Ossos I e II. Plataforma switching. Torque máximo 55 N.cm. Não acompanha parafuso de cobertura || 7 mm 701.010 · 9 mm 701.012 · 11 mm 701.014 · 13 mm 701.015", "701.010 a 701.015", 1, "intraoss"],
+ ["in-imp-mx-cor-40", "implantes", "mx", "Max CM Cortical Ø 4,0 mm", "Cilíndrico, dupla rosca, alto poder de corte. Ossos I e II. Plataforma switching. Torque máximo 55 N.cm. Não acompanha parafuso de cobertura || 7 mm 701.019", "701.019", 1, "intraoss"],
+ ["in-imp-he-adv-35", "implantes", "he", "Titaoss HE Advanced Ø 3,5 mm", "Corpo cônico. Plataforma Ø 4,1 com torque interno hexagonal. Carga imediata ou tardia, unitário ou múltiplo. Torque máximo 55 N.cm. Não acompanha parafuso de cobertura. Ossos III e IV e pós-exodontia || Ø 3,5 não é indicado para molares e caninos || 10 mm ITRSA 4110 · 11,5 mm ITRSA 4111 · 13 mm ITRSA 4113", "ITRSA 4110 a ITRSA 4113", 1, "intraoss"],
+ ["in-imp-he-adv-43", "implantes", "he", "Titaoss HE Advanced Ø 4,3 mm", "Corpo cônico. Plataforma Ø 4,1 com torque interno hexagonal. Carga imediata ou tardia, unitário ou múltiplo. Torque máximo 55 N.cm. Não acompanha parafuso de cobertura. Ossos III e IV e pós-exodontia || 8 mm ITRSA 4308 · 10 mm ITRSA 4310 · 11,5 mm ITRSA 4311 · 13 mm ITRSA 4313", "ITRSA 4308 a ITRSA 4313", 1, "intraoss"],
+ ["in-imp-he-côn-35", "implantes", "he", "Titaoss HE Cônico Ø 3,5 mm", "Corpo cônico. Plataforma Ø 4,1 com torque interno hexagonal. Carga imediata ou tardia, unitário ou múltiplo. Torque máximo 55 N.cm. Não acompanha parafuso de cobertura. Alto poder de compactação. Ossos III e IV e pós-exodontia || Ø 3,5 não é indicado para molares e caninos || 8 mm ITRSC 4108 · 10 mm ITRSC 4110 · 11,5 mm ITRSC 4111 · 13 mm ITRSC 4113", "ITRSC 4108 a ITRSC 4113", 1, "intraoss"],
+ ["in-imp-he-côn-43", "implantes", "he", "Titaoss HE Cônico Ø 4,3 mm", "Corpo cônico. Plataforma Ø 4,1 com torque interno hexagonal. Carga imediata ou tardia, unitário ou múltiplo. Torque máximo 55 N.cm. Não acompanha parafuso de cobertura. Alto poder de compactação. Ossos III e IV e pós-exodontia || 10 mm ITRSC 4310 · 11,5 mm ITRSC 4311 · 13 mm ITRSC 4313", "ITRSC 4310 a ITRSC 4313", 1, "intraoss"],
+ ["in-imp-he-ext-375", "implantes", "he", "Titaoss HE Extract Ø 3,75 mm", "Cilíndrico com ápice cônico, dupla rosca. Todos os tipos de osso e pós-exodontia. Plataforma 4,1. Torque máximo 55 N.cm. Não acompanha parafuso de cobertura || O código de 10 mm parece inconsistente no catálogo, confirme || 9 mm ITRNC 309 · 10 mm ITRNE 315 · 11 mm ITRNC 311 · 13 mm ITRNC 313 · 15 mm ITRNC 315", "ITRNC 309 a ITRNC 315", 0, "intraoss"],
+ ["in-imp-he-ext-40", "implantes", "he", "Titaoss HE Extract Ø 4,0 mm", "Cilíndrico com ápice cônico, dupla rosca. Todos os tipos de osso e pós-exodontia. Plataforma 4,1. Torque máximo 55 N.cm. Não acompanha parafuso de cobertura || O código de 10 mm parece inconsistente no catálogo, confirme || 9 mm ITRNC 409 · 10 mm ITRNA 4313 · 11 mm ITRNC 411 · 13 mm ITRNC 413 · 15 mm ITRNC 415", "ITRNC 409 a ITRNC 415", 0, "intraoss"],
+ ["in-imp-he-cor-375", "implantes", "he", "Titaoss HE Cortical Ø 3,75 mm", "Cilíndrico, ultra-rosqueante, hexágono externo. Plataforma 4,1, torque interno hexagonal. Ossos I e II. Torque máximo 55 N.cm. Não acompanha parafuso de cobertura || O código de 10 mm parece inconsistente no catálogo, confirme || 9 mm ITRNM 309 · 10 mm ITRNE 309 · 11 mm ITRNM 311 · 13 mm ITRNM 313", "ITRNM 309 a ITRNM 313", 0, "intraoss"],
+ ["in-imp-he-slim-34", "implantes", "he", "Titaoss HE Slim, plataforma Ø 3,4 mm (corpo Ø 3,25)", "Cilíndrico. Plataforma 3,4 usa montador (não acompanha), sem torque interno. Ossos I a IV e pós-exodontia. Torque máximo 55 N.cm. Não acompanha montador nem parafuso de cobertura || 9 mm ITRS 3285 · 10 mm ITRS 3210 · 11 mm ITRS 3211 · 13 mm ITRS 3213", "ITRS 3285 a ITRS 3213", 1, "intraoss"],
+ ["in-imp-he-slim-41", "implantes", "he", "Titaoss HE Slim, plataforma Ø 4,1 mm (corpo Ø 3,25)", "Cilíndrico. Plataforma 4,1 com torque interno hexagonal. Ossos I a IV e pós-exodontia. Torque máximo 55 N.cm. Não acompanha parafuso de cobertura || 9 mm ITRS 4185 · 10 mm ITRS 4110 · 11 mm ITRS 4111 · 13 mm ITRS 4113", "ITRS 4185 a ITRS 4113", 1, "intraoss"],
+ ["in-kit-cir", "kits", "all", "Estojo cirúrgico", "Estojo para esterilização. O código refere-se só ao estojo, sem a composição sugerida. Brocas e chaves são vendidas separadas", "710.001", 1, "intraoss"],
+ ["in-kit-guiado", "kits", "all", "Estojo cirúrgico para cirurgia guiada (Intraguide)", "Estojo para esterilização, cirurgia guiada CM. O código refere-se só ao estojo. Composição sugerida: torquímetro, conexões, brocas guiadas, sonda guiada, pinos e fixadores de guia, redutores de broca", "710.007", 1, "intraoss"],
+ ["in-br-lanca", "brocas", "all", "Broca lança Ø 2,0", "Aço inoxidável com revestimento DLC || Rompe a cortical. Uso em HE, CM e Grand Oss conforme a sequência do implante", "703.167", 1, "intraoss"],
+ ["in-br-h20", "brocas", "all", "Broca helicoidal Ø 2,0", "Aço inoxidável com revestimento DLC. Uso em HE, CM e Grand Oss conforme a sequência do implante", "703.142", 1, "intraoss"],
+ ["in-br-h20l", "brocas", "all", "Broca helicoidal longa Ø 2,0", "Aço inoxidável com revestimento DLC || Para implantes longos. Uso em HE, CM e Grand Oss conforme a sequência do implante", "703.128", 1, "intraoss"],
+ ["in-br-h28", "brocas", "all", "Broca helicoidal Ø 2,8", "Aço inoxidável com revestimento DLC. Uso em HE, CM e Grand Oss conforme a sequência do implante", "703.143", 1, "intraoss"],
+ ["in-br-h30", "brocas", "all", "Broca helicoidal Ø 3,0", "Aço inoxidável com revestimento DLC. Uso em HE, CM e Grand Oss conforme a sequência do implante", "703.144", 1, "intraoss"],
+ ["in-br-h30l", "brocas", "all", "Broca helicoidal longa Ø 3,0", "Aço inoxidável com revestimento DLC || Para implantes longos. Uso em HE, CM e Grand Oss conforme a sequência do implante", "703.130", 1, "intraoss"],
+ ["in-br-h325", "brocas", "all", "Broca helicoidal Ø 3,25", "Aço inoxidável com revestimento DLC. Uso em HE, CM e Grand Oss conforme a sequência do implante", "703.146", 1, "intraoss"],
+ ["in-br-p23", "brocas", "all", "Broca piloto 2/3", "Aço inoxidável com revestimento DLC. Uso em HE, CM e Grand Oss conforme a sequência do implante", "703.194", 1, "intraoss"],
+ ["in-br-p2835", "brocas", "all", "Broca piloto 2,8/3,5", "Aço inoxidável com revestimento DLC. Uso em HE, CM e Grand Oss conforme a sequência do implante", "703.187", 1, "intraoss"],
+ ["in-br-p3075", "brocas", "all", "Broca piloto CM/GO 3,0/3,75", "Aço inoxidável com revestimento DLC. Uso em HE, CM e Grand Oss conforme a sequência do implante", "703.190", 1, "intraoss"],
+ ["in-br-p3340", "brocas", "all", "Broca piloto CM/GO 3,3/4,0", "Aço inoxidável com revestimento DLC. Uso em HE, CM e Grand Oss conforme a sequência do implante", "703.188", 1, "intraoss"],
+ ["in-br-c35", "brocas", "all", "Broca cônica Ø 3,5", "Aço inoxidável com revestimento DLC || Implantes Advanced e Cônico Ø 3,5. Uso em HE, CM e Grand Oss conforme a sequência do implante", "703.019", 1, "intraoss"],
+ ["in-br-c43", "brocas", "all", "Broca cônica Ø 4,3", "Aço inoxidável com revestimento DLC || Implantes Advanced e Cônico Ø 4,3. Uso em HE, CM e Grand Oss conforme a sequência do implante", "703.020", 1, "intraoss"],
+ ["in-br-cs41", "brocas", "all", "Broca countersink Ø 4,1", "Aço inoxidável com revestimento DLC || Para implantes HE, plataforma 4,1. Uso em HE, CM e Grand Oss conforme a sequência do implante", "703.063", 1, "intraoss"],
+ ["in-br-g-h13", "brocas", "all", "Broca helicoidal Ø 1,3 (guiada)", "Sistema Intraguide. Mais longa que a convencional, não use sem o guia cirúrgico. Curta serve de 7 a 10 mm de implante, longa de 7 a 15 mm. Rotação ideal: 800 a 1200 rpm em osso I e II, 500 a 800 rpm em osso III e IV", "703.110", 1, "intraoss"],
+ ["in-br-g-ini", "brocas", "all", "Broca inicial Ø 2,0 (guiada)", "Sistema Intraguide. Mais longa que a convencional, não use sem o guia cirúrgico. Curta serve de 7 a 10 mm de implante, longa de 7 a 15 mm. Rotação ideal: 800 a 1200 rpm em osso I e II, 500 a 800 rpm em osso III e IV", "703.164", 1, "intraoss"],
+ ["in-br-g-h20c", "brocas", "all", "Broca helicoidal curta Ø 2,0 (guiada)", "Sistema Intraguide. Mais longa que a convencional, não use sem o guia cirúrgico. Curta serve de 7 a 10 mm de implante, longa de 7 a 15 mm. Rotação ideal: 800 a 1200 rpm em osso I e II, 500 a 800 rpm em osso III e IV", "703.117", 1, "intraoss"],
+ ["in-br-g-h20l", "brocas", "all", "Broca helicoidal longa Ø 2,0 (guiada)", "Sistema Intraguide. Mais longa que a convencional, não use sem o guia cirúrgico. Curta serve de 7 a 10 mm de implante, longa de 7 a 15 mm. Rotação ideal: 800 a 1200 rpm em osso I e II, 500 a 800 rpm em osso III e IV", "703.136", 1, "intraoss"],
+ ["in-br-g-h28c", "brocas", "all", "Broca helicoidal curta Ø 2,8 (guiada)", "Sistema Intraguide. Mais longa que a convencional, não use sem o guia cirúrgico. Curta serve de 7 a 10 mm de implante, longa de 7 a 15 mm. Rotação ideal: 800 a 1200 rpm em osso I e II, 500 a 800 rpm em osso III e IV", "703.129", 1, "intraoss"],
+ ["in-br-g-h28l", "brocas", "all", "Broca helicoidal longa Ø 2,8 (guiada)", "Sistema Intraguide. Mais longa que a convencional, não use sem o guia cirúrgico. Curta serve de 7 a 10 mm de implante, longa de 7 a 15 mm. Rotação ideal: 800 a 1200 rpm em osso I e II, 500 a 800 rpm em osso III e IV", "703.118", 1, "intraoss"],
+ ["in-br-g-p35", "brocas", "all", "Broca piloto para implante 3,5 (guiada)", "Sistema Intraguide. Mais longa que a convencional, não use sem o guia cirúrgico. Curta serve de 7 a 10 mm de implante, longa de 7 a 15 mm. Rotação ideal: 800 a 1200 rpm em osso I e II, 500 a 800 rpm em osso III e IV", "703.173", 1, "intraoss"],
+ ["in-br-g-p43", "brocas", "all", "Broca piloto para implante 4,3 (guiada)", "Sistema Intraguide. Mais longa que a convencional, não use sem o guia cirúrgico. Curta serve de 7 a 10 mm de implante, longa de 7 a 15 mm. Rotação ideal: 800 a 1200 rpm em osso I e II, 500 a 800 rpm em osso III e IV", "703.175", 1, "intraoss"],
+ ["in-br-g-c35c", "brocas", "all", "Broca cônica curta para implante 3,5 (guiada)", "Sistema Intraguide. Mais longa que a convencional, não use sem o guia cirúrgico. Curta serve de 7 a 10 mm de implante, longa de 7 a 15 mm. Rotação ideal: 800 a 1200 rpm em osso I e II, 500 a 800 rpm em osso III e IV", "703.013", 1, "intraoss"],
+ ["in-br-g-c43c", "brocas", "all", "Broca cônica curta para implante 4,3 (guiada)", "Sistema Intraguide. Mais longa que a convencional, não use sem o guia cirúrgico. Curta serve de 7 a 10 mm de implante, longa de 7 a 15 mm. Rotação ideal: 800 a 1200 rpm em osso I e II, 500 a 800 rpm em osso III e IV", "703.014", 1, "intraoss"],
+ ["in-br-g-c35l", "brocas", "all", "Broca cônica longa para implante 3,5 (guiada)", "Sistema Intraguide. Mais longa que a convencional, não use sem o guia cirúrgico. Curta serve de 7 a 10 mm de implante, longa de 7 a 15 mm. Rotação ideal: 800 a 1200 rpm em osso I e II, 500 a 800 rpm em osso III e IV", "703.016", 1, "intraoss"],
+ ["in-br-g-c43l", "brocas", "all", "Broca cônica longa para implante 4,3 (guiada)", "Sistema Intraguide. Mais longa que a convencional, não use sem o guia cirúrgico. Curta serve de 7 a 10 mm de implante, longa de 7 a 15 mm. Rotação ideal: 800 a 1200 rpm em osso I e II, 500 a 800 rpm em osso III e IV", "703.017", 1, "intraoss"],
+ ["in-br-g-m35", "brocas", "all", "Extrator de mucosa 3,5 (guiada)", "Sistema Intraguide. Mais longa que a convencional, não use sem o guia cirúrgico. Curta serve de 7 a 10 mm de implante, longa de 7 a 15 mm. Rotação ideal: 800 a 1200 rpm em osso I e II, 500 a 800 rpm em osso III e IV", "703.224", 1, "intraoss"],
+ ["in-br-g-m43", "brocas", "all", "Extrator de mucosa 4,3 (guiada)", "Sistema Intraguide. Mais longa que a convencional, não use sem o guia cirúrgico. Curta serve de 7 a 10 mm de implante, longa de 7 a 15 mm. Rotação ideal: 800 a 1200 rpm em osso I e II, 500 a 800 rpm em osso III e IV", "703.226", 1, "intraoss"],
+ ["in-dr-go", "drivers", "go", "Chaves de instalação Grand Oss", "Marcas esféricas indicam a face do indexador. Três marcas indicam profundidade de 1, 2 e 3 mm infraósseo. Captura por o'ring de silicone. Rosca interna Ø 1,6 mm. Torque máximo 55 N.cm || Catraca curta CCGMC · Catraca longa CCGML · Contra-ângulo longa CCAGML", "CCGMC, CCGML, CCAGML", 1, "intraoss"],
+ ["in-dr-mx", "drivers", "mx", "Chaves de instalação Max CM", "Mesmas marcas de profundidade e captura por o'ring. Rosca interna Ø 1,8 mm. Torque máximo 55 N.cm || Catraca curta 700.030 · Catraca longa 700.032 · Contra-ângulo 700.035", "700.030, 700.032, 700.035", 1, "intraoss"],
+ ["in-dr-he", "drivers", "he", "Chaves de instalação HE", "Captura pela conicidade da chave, torque fora do hexágono externo. Parafuso de retenção de 2,0 mm. Torque máximo 55 N.cm || Catraca curta CTC · Catraca longa CTL · Contra-ângulo CAL", "CTC, CTL, CAL", 1, "intraoss"],
+ ["in-dr-mont", "drivers", "he", "Montador HE Slim, plataforma Ø 3,4", "Necessário para instalar a plataforma 3,4. Curto 716.047, longo 716.048", "716.047, 716.048", 1, "intraoss"],
+ ["in-dr-guiado", "drivers", "all", "Conexões de contra-ângulo para cirurgia guiada", "Trabalham sobre as anilhas. Curta CM/GO 3,5 (700.165), longa CM/GO 3,5 (700.167), curta CM/GO 4,3 (700.168), longa CM/GO 4,3 (700.170). Adaptador de catraca 700.181 permite usar no torquímetro", "700.165, 700.167, 700.168, 700.170", 1, "intraoss"],
+ ["in-dr-adapt", "drivers", "all", "Adaptador de catraca para chave de contra-ângulo", "Permite usar a chave de contra-ângulo no torquímetro cirúrgico", "700.181", 1, "intraoss"],
+ ["in-ins-torq", "instrumental", "all", "Torquímetro cirúrgico", "Escala 30, 45, 60 e 80 N.cm. Aço inoxidável", "700.001", 1, "intraoss"],
+ ["in-ins-prof", "instrumental", "all", "Sonda de profundidade", "Aço inoxidável", "716.043", 1, "intraoss"],
+ ["in-ins-dir", "instrumental", "all", "Indicadores de direção", "Curto 716.041, longo 716.042", "716.041, 716.042", 1, "intraoss"],
+ ["in-ins-dig09", "instrumental", "all", "Chave digital curta 0,9", "Chave hexagonal 0,9 mm", "700.089", 1, "intraoss"],
+ ["in-ins-dig12", "instrumental", "all", "Chave digital curta 1,2", "Chave hexagonal 1,2 mm", "700.092", 1, "intraoss"],
+ ["in-ins-ext", "instrumental", "all", "Extensor de broca", "Aço inoxidável", "700.111", 1, "intraoss"],
+ ["in-ins-g-sonda", "instrumental", "all", "Sonda de profundidade guiada", "Cirurgia guiada. Titânio", "716.044", 1, "intraoss"],
+ ["in-ins-g-pino", "instrumental", "all", "Pino de fixação da guia", "Cirurgia guiada. Titânio, parte ativa 20 mm e Ø 1,3 mm", "716.053", 1, "intraoss"],
+ ["in-ins-g-fix", "instrumental", "all", "Fixadores de guia", "CM Ø 3,5 (716.055), CM Ø 4,3 (716.058), GO Ø 3,5 (716.054), GO Ø 4,3 (716.059). Titânio", "716.054, 716.055, 716.058, 716.059", 1, "intraoss"],
+ ["in-ins-g-an13", "instrumental", "all", "Anilha para pino de fixação da guia", "Anilha de titânio Ø 1,3 mm. Não reutilizar", "716.067", 1, "intraoss"],
+ ["in-ins-g-an35", "instrumental", "all", "Anilha para implante 3,5", "Anilha de titânio, cor magenta. Use só anilhas Intraoss e não as reutilize", "716.080", 1, "intraoss"],
+ ["in-ins-g-an43", "instrumental", "all", "Anilha para implante 4,3", "Anilha de titânio, cor azul. Use só anilhas Intraoss e não as reutilize", "716.092", 1, "intraoss"],
+ ["in-ins-g-red35", "instrumental", "all", "Redutor duplo de broca para implante 3,5", "Guias de Ø 2,0 e 2,9 mm, magenta", "716.060", 1, "intraoss"],
+ ["in-ins-g-red43", "instrumental", "all", "Redutor duplo de broca para implante 4,3", "Guias de Ø 2,0 e 2,9 mm, azul", "716.064", 1, "intraoss"],
+ ["in-ins-g-red43s", "instrumental", "all", "Redutor simples de broca para implante 4,3", "Guia de Ø 3,6 mm, azul", "716.066", 1, "intraoss"],
+ ["in-ins-g-haste", "instrumental", "all", "Haste para montar anilhas", "Aço inoxidável", "700.180", 1, "intraoss"],
+ ["in-ins-p-adapt", "instrumental", "all", "Adaptador digital para chaves de catraca", "Para torque manual", "700.087", 1, "intraoss"],
+ ["in-ins-p-h09", "instrumental", "all", "Conexão catraca hexagonal 0,9 curta", "Chave protética", "700.042", 1, "intraoss"],
+ ["in-ins-p-h12c", "instrumental", "all", "Conexão catraca hexagonal 1,2 curta", "Chave protética. Parafusos 1,2 mm", "700.048", 1, "intraoss"],
+ ["in-ins-p-h12m", "instrumental", "all", "Conexão catraca hexagonal 1,2 média", "Chave protética", "700.049", 1, "intraoss"],
+ ["in-ins-p-h16", "instrumental", "all", "Conexão catraca hexagonal 1,6 média", "Para o Abutment CMN", "700.061", 1, "intraoss"],
+ ["in-ins-p-q13c", "instrumental", "all", "Conexão catraca quadrada 1,3 curta", "Para componentes HE", "700.054", 1, "intraoss"],
+ ["in-ins-p-q13m", "instrumental", "all", "Conexão catraca quadrada 1,3 média", "Para componentes HE", "700.055", 1, "intraoss"],
+ ["in-ins-p-ang", "instrumental", "all", "Conexão catraca para Abutment angulado 1,2 média", "Para pilares angulados", "700.067", 1, "intraoss"],
+ ["in-ins-p-mini", "instrumental", "all", "Conexão catraca para Mini Abutment curta", "Para Mini Abutment reto", "700.060", 1, "intraoss"],
+ ["in-ins-p-cm33", "instrumental", "all", "Conexão catraca curta Max CM 3,3", "Para cimentado/parafusado Ø 3,3", "700.159", 1, "intraoss"],
+ ["in-ins-p-cm45", "instrumental", "all", "Conexão catraca curta Max CM 4,5", "Para cimentado/parafusado Ø 4,5", "700.162", 1, "intraoss"],
+ ["in-ins-p-torq", "instrumental", "all", "Torquímetro protético", "De estalo, escala 10, 15, 20, 25, 30, 35, 40 N.cm", "700.002", 1, "intraoss"],
+ ["in-ins-p-estojo", "instrumental", "all", "Estojo protético", "O código refere-se só ao estojo, sem a composição sugerida", "710.012", 1, "intraoss"],
+ ["in-cic-go-tapa", "cicatrizadores", "go", "Tapa implante Grand Oss", "Titânio", "704.177", 1, "intraoss"],
+ ["in-cic-go-33", "cicatrizadores", "go", "Cicatrizador Grand Oss perfil Ø 3,3 mm", "Titânio. Altura transmucosa || 1,5 mm 704.146 · 2,5 mm 704.147 · 3,5 mm 704.148 · 4,5 mm 704.149 · 5,5 mm 704.150", "704.146 a 704.150", 1, "intraoss"],
+ ["in-cic-go-45", "cicatrizadores", "go", "Cicatrizador Grand Oss perfil Ø 4,5 mm", "Titânio. Altura transmucosa || 1,5 mm 704.162 · 2,5 mm 704.163 · 3,5 mm 704.164 · 4,5 mm 704.165 · 5,5 mm 704.166", "704.162 a 704.166", 1, "intraoss"],
+ ["in-cic-mx-tapa", "cicatrizadores", "mx", "Tapa implante Max CM", "Titânio", "704.145", 1, "intraoss"],
+ ["in-cic-mx-33", "cicatrizadores", "mx", "Cicatrizador Max CM perfil Ø 3,3 mm", "Titânio. Altura transmucosa || 1,5 mm 704.178 · 2,5 mm 704.179 · 3,5 mm 704.180 · 4,5 mm 704.181", "704.178 a 704.181", 1, "intraoss"],
+ ["in-cic-mx-45", "cicatrizadores", "mx", "Cicatrizador Max CM perfil Ø 4,5 mm", "Titânio. Altura transmucosa || 1,5 mm 704.184 · 2,5 mm 704.185 · 3,5 mm 704.186 · 4,5 mm 704.187", "704.184 a 704.187", 1, "intraoss"],
+ ["in-cic-he-tapa34", "cicatrizadores", "he", "Tapa implante HE plataforma Ø 3,4", "Titânio", "704.057", 1, "intraoss"],
+ ["in-cic-he-tapa41", "cicatrizadores", "he", "Tapa implante HE plataforma Ø 4,1", "Titânio", "704.073", 1, "intraoss"],
+ ["in-cic-he-34", "cicatrizadores", "he", "Cicatrizador HE perfil Ø 3,4 mm", "Titânio. Altura transmucosa || 4 mm 704.060 · 6 mm 704.062", "704.060, 704.062", 1, "intraoss"],
+ ["in-cic-he-41", "cicatrizadores", "he", "Cicatrizador HE perfil Ø 4,1 mm", "Titânio. Altura transmucosa || 2 mm 704.074 · 3 mm 704.075 · 4 mm 704.076 · 6 mm 704.078", "704.074 a 704.078", 1, "intraoss"],
+ ["in-cic-go-cmn", "cicatrizadores", "go", "Cicatrizador CMN (para Abutment CMN)", "Titânio", "704.192", 1, "intraoss"],
+ ["in-cic-mx-cmn", "cicatrizadores", "mx", "Cicatrizador CMN (para Abutment CMN)", "Titânio", "704.192", 1, "intraoss"],
+ ["in-cic-go-mini", "cicatrizadores", "go", "Cicatrizador Mini Abutment Ø 4,8 mm", "Titânio", "704.190", 1, "intraoss"],
+ ["in-cic-mx-mini", "cicatrizadores", "mx", "Cicatrizador Mini Abutment Ø 4,8 mm", "Titânio", "704.190", 1, "intraoss"],
+ ["in-cic-he-mini", "cicatrizadores", "he", "Cicatrizador Mini Abutment Ø 4,8 mm", "Titânio", "704.190", 1, "intraoss"],
+ ["in-tr-go", "transfer", "go", "Transferente Exato Grand Oss (nível do implante)", "Titânio. Moldeira aberta TMAEGM, moldeira fechada TMFEGM", "TMAEGM, TMFEGM", 1, "intraoss"],
+ ["in-tr-mx", "transfer", "mx", "Transferente Exato Max CM (nível do implante)", "Titânio. Moldeira aberta TMAECM, moldeira fechada TMFECM", "TMAECM, TMFECM", 1, "intraoss"],
+ ["in-tr-he34", "transfer", "he", "Transferente HE plataforma Ø 3,4", "Titânio. Moldeira aberta TAS 3400, moldeira fechada TFS 3400", "TAS 3400, TFS 3400", 1, "intraoss"],
+ ["in-tr-he41", "transfer", "he", "Transferente HE plataforma Ø 4,1", "Titânio. Moldeira aberta TAS 4100, moldeira fechada TFS 4100", "TAS 4100, TFS 4100", 1, "intraoss"],
+ ["in-tr-go-cmn", "transfer", "go", "Transferente CMN (Abutment CMN)", "Titânio. Moldeira aberta TMAPCM, moldeira fechada TMFPCM", "TMAPCM, TMFPCM", 1, "intraoss"],
+ ["in-tr-mx-cmn", "transfer", "mx", "Transferente CMN (Abutment CMN)", "Titânio. Moldeira aberta TMAPCM, moldeira fechada TMFPCM", "TMAPCM, TMFPCM", 1, "intraoss"],
+ ["in-tr-go-mini", "transfer", "go", "Transferente Mini Abutment Ø 4,8 mm", "Titânio. Moldeira aberta TMA 4800, moldeira fechada TMF 4800", "TMA 4800, TMF 4800", 1, "intraoss"],
+ ["in-tr-mx-mini", "transfer", "mx", "Transferente Mini Abutment Ø 4,8 mm", "Titânio. Moldeira aberta TMA 4800, moldeira fechada TMF 4800", "TMA 4800, TMF 4800", 1, "intraoss"],
+ ["in-tr-he-mini", "transfer", "he", "Transferente Mini Abutment Ø 4,8 mm", "Titânio. Moldeira aberta TMA 4800, moldeira fechada TMF 4800", "TMA 4800, TMF 4800", 1, "intraoss"],
+ ["in-tr-go-cim", "transfer", "go", "Transferente cimentado (moldeira fechada)", "Polímero. Ø 3,3: 4 mm 705.001 · 6 mm 705.003 || Ø 4,5: 4 mm 705.002 · 6 mm 705.004", "705.001 a 705.004", 1, "intraoss"],
+ ["in-tr-mx-cim", "transfer", "mx", "Transferente cimentado (moldeira fechada)", "Polímero. Ø 3,3: 4 mm 705.001 · 6 mm 705.003 || Ø 4,5: 4 mm 705.002 · 6 mm 705.004", "705.001 a 705.004", 1, "intraoss"],
+ ["in-an-go", "analogo", "go", "Análogo Grand Oss (nível do implante)", "Titânio. Mesmo análogo para todos os diâmetros de implante GO", "AGM 4100", 1, "intraoss"],
+ ["in-an-mx", "analogo", "mx", "Análogo Max CM (nível do implante)", "Aço inoxidável", "ACM 4000", 1, "intraoss"],
+ ["in-an-he34", "analogo", "he", "Análogo HE plataforma Ø 3,4", "Aço inoxidável", "ANS 3400", 1, "intraoss"],
+ ["in-an-he41", "analogo", "he", "Análogo HE plataforma Ø 4,1", "Aço inoxidável", "ANS 4100", 1, "intraoss"],
+ ["in-an-go-cmn", "analogo", "go", "Análogo CMN (Abutment CMN)", "Aço inoxidável", "AAPCM", 1, "intraoss"],
+ ["in-an-mx-cmn", "analogo", "mx", "Análogo CMN (Abutment CMN)", "Aço inoxidável", "AAPCM", 1, "intraoss"],
+ ["in-an-go-mini", "analogo", "go", "Análogo Mini Abutment Ø 4,8 mm", "Aço inoxidável", "ANM 4800", 1, "intraoss"],
+ ["in-an-mx-mini", "analogo", "mx", "Análogo Mini Abutment Ø 4,8 mm", "Aço inoxidável", "ANM 4800", 1, "intraoss"],
+ ["in-an-he-mini", "analogo", "he", "Análogo Mini Abutment Ø 4,8 mm", "Aço inoxidável", "ANM 4800", 1, "intraoss"],
+ ["in-an-go-cim", "analogo", "go", "Análogo cimentado", "Aço inoxidável. Ø 3,3: 4 mm ACMN 3304 · 6 mm ACMN 3306 || Ø 4,5: 4 mm ACMN 4504 · 6 mm ACMN 4506", "ACMN 3304 a 4506", 1, "intraoss"],
+ ["in-an-go-cimp", "analogo", "go", "Análogo cimentado/parafusado", "Aço inoxidável. Ø 3,3: 4 mm ACMNP 3304 · 6 mm ACMNP 3306 || Ø 4,5: 4 mm ACMNP 4504 · 6 mm ACMNP 4506", "ACMNP 3304 a 4506", 1, "intraoss"],
+ ["in-an-mx-cim", "analogo", "mx", "Análogo cimentado", "Aço inoxidável. Ø 3,3: 4 mm ACMN 3304 · 6 mm ACMN 3306 || Ø 4,5: 4 mm ACMN 4504 · 6 mm ACMN 4506", "ACMN 3304 a 4506", 1, "intraoss"],
+ ["in-an-mx-cimp", "analogo", "mx", "Análogo cimentado/parafusado", "Aço inoxidável. Ø 3,3: 4 mm ACMNP 3304 · 6 mm ACMNP 3306 || Ø 4,5: 4 mm ACMNP 4504 · 6 mm ACMNP 4506", "ACMNP 3304 a 4506", 1, "intraoss"],
+ ["in-an-dig", "analogo", "all", "Análogos digitais (modelo impresso)", "Duas peças, com porca de retenção. CM ADCM 3500 · Grand Oss ADGM 3500 · Abutment CMN ADAPCM · Mini Abutment ADMN 4800", "ADCM 3500, ADGM 3500, ADAPCM, ADMN 4800", 1, "intraoss"],
+ ["in-pil-go-cmn", "pilares", "go", "Abutment CMN Grand Oss Ø 4,8 mm", "Parafusado unitário. Torque 20 N.cm, chave hexagonal 1,6 || 0,8 mm 702.617 · 1,5 mm 702.618 · 2,5 mm 702.619 · 3,5 mm 702.620 · 4,5 mm 702.621", "702.617 a 702.621", 1, "intraoss"],
+ ["in-pil-mx-cmn", "pilares", "mx", "Abutment CMN Max CM Ø 4,8 mm", "Parafusado unitário. Torque 32 N.cm, chave hexagonal 1,6 || 0,8 mm 702.097 · 1,5 mm 702.098 · 2,5 mm 702.099 · 3,5 mm 702.100 · 4,5 mm 702.101", "702.097 a 702.101", 1, "intraoss"],
+ ["in-pil-go-cim-33", "pilares", "go", "Abutment cimentado reto GO Ø 3,3 mm", "Torque 20 N.cm || Cimentável 4 mm: 1,5 mm 702.552 · 2,5 mm 702.553 · 3,5 mm 702.554 || Cimentável 6 mm: 1,5 mm 702.564 · 2,5 mm 702.565 · 3,5 mm 702.566", "702.552 a 702.566", 1, "intraoss"],
+ ["in-pil-go-cim-45", "pilares", "go", "Abutment cimentado reto GO Ø 4,5 mm", "Torque 20 N.cm || Cimentável 4 mm: 1,5 mm 702.558 · 2,5 mm 702.559 · 3,5 mm 702.560 || Cimentável 6 mm: 1,5 mm 702.570 · 2,5 mm 702.571 · 3,5 mm 702.572", "702.558 a 702.572", 1, "intraoss"],
+ ["in-pil-mx-cim-33", "pilares", "mx", "Abutment cimentado reto Max CM Ø 3,3 mm", "Torque 32 N.cm || Cimentável 4 mm: 1,5 mm 702.002 · 2,5 mm 702.003 · 3,5 mm 702.004 || Cimentável 6 mm: 1,5 mm 702.014 · 2,5 mm 702.015 · 3,5 mm 702.016", "702.002 a 702.016", 1, "intraoss"],
+ ["in-pil-mx-cim-45", "pilares", "mx", "Abutment cimentado reto Max CM Ø 4,5 mm", "Torque 32 N.cm || Cimentável 4 mm: 1,5 mm 702.008 · 2,5 mm 702.009 · 3,5 mm 702.010 || Cimentável 6 mm: 1,5 mm 702.020 · 2,5 mm 702.021 · 3,5 mm 702.022", "702.008 a 702.022", 1, "intraoss"],
+ ["in-pil-go-cima", "pilares", "go", "Abutment cimentado angulado GO", "Torque 20 N.cm. Alturas 1,5 / 2,5 / 3,5 mm || 17° Ø 3,3: 4 mm 702.575 a 702.577 · 6 mm 702.581 a 702.583 || 30° Ø 3,3: 4 mm 702.587 a 702.589 || 30° Ø 4,5: 4 mm 702.590 a 702.592", "702.575 a 702.592", 1, "intraoss"],
+ ["in-pil-mx-cima", "pilares", "mx", "Abutment cimentado angulado Max CM", "Torque 20 N.cm. Alturas 1,5 / 2,5 / 3,5 mm || 17° Ø 3,3: 4 mm 702.073 a 702.075 · 6 mm 702.079 a 702.081 || 30° Ø 3,3: 4 mm 702.085 a 702.087 · 6 mm 702.091 a 702.093 || 30° Ø 4,5: 4 mm 702.088 a 702.090", "702.073 a 702.093", 0, "intraoss"],
+ ["in-pil-go-cp-33", "pilares", "go", "Abutment cimentado/parafusado reto GO Ø 3,3 mm", "Torque 20 N.cm, chave Max CM 3,3 (700.159) || Cimentável 4 mm: 1,5 mm 702.050 · 2,5 mm 702.051 · 3,5 mm 702.052 || 6 mm: 1,5 mm 702.062 · 2,5 mm 702.063 · 3,5 mm 702.064", "702.050 a 702.064", 1, "intraoss"],
+ ["in-pil-go-cp-45", "pilares", "go", "Abutment cimentado/parafusado reto GO Ø 4,5 mm", "Torque 20 N.cm, chave Max CM 4,5 (700.162) || Cimentável 4 mm: 1,5 mm 702.056 · 2,5 mm 702.057 · 3,5 mm 702.058 || 6 mm: 1,5 mm 702.068 · 2,5 mm 702.069 · 3,5 mm 702.070", "702.056 a 702.070", 1, "intraoss"],
+ ["in-pil-mx-cp-33", "pilares", "mx", "Abutment cimentado/parafusado reto Max CM Ø 3,3 mm", "Torque 32 N.cm, chave Max CM 3,3 (700.159) || Cimentável 4 mm: 1,5 mm 702.382 · 2,5 mm 702.383 · 3,5 mm 702.384 || 6 mm: 1,5 mm 702.394 · 2,5 mm 702.395 · 3,5 mm 702.396", "702.382 a 702.396", 1, "intraoss"],
+ ["in-pil-mx-cp-45", "pilares", "mx", "Abutment cimentado/parafusado reto Max CM Ø 4,5 mm", "Torque 32 N.cm, chave Max CM 4,5 (700.162) || Cimentável 4 mm: 1,5 mm 702.388 · 2,5 mm 702.389 · 3,5 mm 702.390 || 6 mm: 1,5 mm 702.400 · 2,5 mm 702.401 · 3,5 mm 702.402", "702.388 a 702.402", 1, "intraoss"],
+ ["in-pil-mx-cpa", "pilares", "mx", "Abutment cimentado/parafusado angulado Max CM", "Torque 20 N.cm. Alturas 1,5 / 2,5 / 3,5 mm || 17° Ø 3,3: 4 mm 702.405 a 702.407 · 6 mm 702.411 a 702.413 || 30° Ø 3,3: 4 mm 702.417 a 702.419 · 6 mm 702.423 a 702.425 || 30° Ø 4,5: 4 mm 702.420 a 702.422", "702.405 a 702.425", 0, "intraoss"],
+ ["in-pil-he-cim", "pilares", "he", "Abutment cimentado reto HE Ø 4,1 mm", "Torque 32 N.cm. Acompanha parafuso de retenção || 1 mm 702.207 · 2 mm 702.208 · 3 mm 702.209 · 4 mm 702.210", "702.207 a 702.210", 1, "intraoss"],
+ ["in-pil-he-cima", "pilares", "he", "Abutment cimentado angulado 17° HE Ø 4,1 mm", "Torque 32 N.cm. Acompanha parafuso de retenção || 1 mm 702.239 · 2 mm 702.240 · 3 mm 702.241 · 4 mm 702.242", "702.239 a 702.242", 1, "intraoss"],
+ ["in-pil-cad-mx", "pilares", "mx", "Abutment CAD CM Ø 3,5 mm", "Direto sobre o implante, torque 20 N.cm. Cimentável 4 mm. Acompanha parafuso || 0,5 mm 702.436 · 1 mm 702.437 · 1,5 mm 702.438 · 2 mm 702.439 · 2,5 mm 702.440 · 3,5 mm 702.441 · 4,5 mm 702.442", "702.436 a 702.442", 1, "intraoss"],
+ ["in-pil-cad-go", "pilares", "go", "Abutment CAD Grand Oss Ø 3,5 mm", "Direto sobre o implante, torque 20 N.cm. Cimentável 4 mm. Acompanha parafuso || 0,5 mm 702.450 · 1 mm 702.451 · 1,5 mm 702.452 · 2 mm 702.453 · 2,5 mm 702.454 · 3,5 mm 702.455 · 4,5 mm 702.456", "702.450 a 702.456", 1, "intraoss"],
+ ["in-pil-cad-cmn", "pilares", "all", "Abutment CAD CMN (unitária)", "Sobre o Abutment CMN, torque 10 N.cm. Cimentável 3 mm (702.489) ou 4 mm (702.490). Acompanha parafuso", "702.489, 702.490", 1, "intraoss"],
+ ["in-pil-cad-cmnr", "pilares", "all", "Abutment CAD CMNR (múltipla, rotacional)", "Sobre Abutment, torque 10 N.cm. Cimentável 4 mm, com espaço interoclusal suficiente. Acompanha parafuso", "702.500", 1, "intraoss"],
+ ["in-pil-cad-mini", "pilares", "all", "Mini Abutment CAD (múltipla, rotacional)", "Sobre o Mini Abutment, torque 10 N.cm. Cimentável 3 mm (702.485) ou 4 mm (702.486). Acompanha parafuso", "702.485, 702.486", 1, "intraoss"],
+ ["in-mini-go-r", "mini", "go", "Mini Abutment reto Grand Oss Ø 4,8 mm", "Parafusado múltiplo. Torque 20 N.cm || 0,8 mm 702.605 · 1,5 mm 702.606 · 2,5 mm 702.607 · 3,5 mm 702.608 · 4,5 mm 702.609", "702.605 a 702.609", 1, "intraoss"],
+ ["in-mini-go-a", "mini", "go", "Mini Abutment angulado Grand Oss", "Torque 20 N.cm. Alturas 1,5 / 2,5 / 3,5 mm || 17°: 702.611 · 702.612 · 702.613 || 30°: 702.614 · 702.615 · 702.616", "702.611 a 702.616", 1, "intraoss"],
+ ["in-mini-mx-r", "mini", "mx", "Mini Abutment reto Max CM Ø 4,8 mm", "Parafusado múltiplo. Torque 32 N.cm || 0,8 mm 702.103 · 1,5 mm 702.104 · 2,5 mm 702.105 · 3,5 mm 702.106 · 4,5 mm 702.107", "702.103 a 702.107", 1, "intraoss"],
+ ["in-mini-mx-a", "mini", "mx", "Mini Abutment angulado Max CM", "Alturas 1,5 / 2,5 / 3,5 mm. O catálogo cita torque de 20 N.cm numa página e 15 N.cm em outra, confirme || 17°: 702.109 · 702.110 · 702.111 || 30°: 702.112 · 702.113 · 702.114", "702.109 a 702.114", 1, "intraoss"],
+ ["in-mini-he-r34", "mini", "he", "Mini Abutment reto HE, plataforma Ø 3,4 mm", "Torque 32 N.cm || 1 mm 702.298 · 2 mm 702.299 · 3 mm 702.300", "702.298 a 702.300", 1, "intraoss"],
+ ["in-mini-he-r41", "mini", "he", "Mini Abutment reto HE, plataforma Ø 4,1 mm", "Torque 32 N.cm || 1 mm 702.302 · 2 mm 702.303 · 3 mm 702.304 · 4 mm 702.305", "702.302 a 702.305", 1, "intraoss"],
+ ["in-mini-he-a", "mini", "he", "Mini Abutment angulado HE, plataforma Ø 4,1 mm", "Torque 20 N.cm. Alturas 2 / 3 / 4 mm || 17°: 702.140 · 702.141 · 702.142 || 30°: 2 mm 702.146 · 3 mm 702.147", "702.140 a 702.147", 1, "intraoss"],
+ ["in-cil-go-prov", "copings", "go", "Cilindro provisório Grand Oss Ø 3,3 mm", "Titânio, torque 20 N.cm || 0,8 mm 702.333 · 1,5 mm 702.334 · 2,5 mm 702.335 · 3,5 mm 702.336", "702.333 a 702.336", 1, "intraoss"],
+ ["in-cil-go-ucla", "copings", "go", "Ucla Grand Oss (base CoCr)", "Calcinável com base em cobalto-cromo, torque 20 N.cm. Parafuso vendido à parte (709.013) || Ø 3,3: 0,8 mm 713.013 · 1,5 mm 713.014 · 2,5 mm 713.015 · 3,5 mm 713.016 || Ø 4,5: 0,8 mm 713.017 · 1,5 mm 713.018 · 2,5 mm 713.019 · 3,5 mm 713.020", "713.013 a 713.020", 0, "intraoss"],
+ ["in-cil-mx-prov", "copings", "mx", "Cilindro provisório / Ucla Max CM", "Torque 20 N.cm. Parafuso à parte (709.012) || Titânio: 0,8 mm 702.115 · 1,5 mm 702.116 · 2,5 mm 702.117 || Cobalto-cromo: 1,5 mm 713.002 · 2,5 mm 713.003 · 3,5 mm 713.004", "702.115 a 713.004", 0, "intraoss"],
+ ["in-cil-go-cmn", "copings", "go", "Cilindros CMN (Abutment CMN)", "Parafuso vendido à parte (709.010), torque 20 N.cm || Titânio 702.291 · Calcinável antirrotacional 708.009 · Calcinável rotacional 708.017 · Cobalto-cromo CROMO 1.2.4860", "702.291, 708.009, 708.017", 1, "intraoss"],
+ ["in-cil-mx-cmn", "copings", "mx", "Cilindros CMN (Abutment CMN)", "Parafuso vendido à parte (709.010), torque 20 N.cm || Titânio 702.291 · Calcinável antirrotacional 708.009 · Calcinável rotacional 708.017 · Cobalto-cromo CROMO 1.2.4860", "702.291, 708.009, 708.017", 1, "intraoss"],
+ ["in-cil-mini", "copings", "all", "Cilindros Mini Abutment", "Parafuso vendido à parte (709.011), torque 10 N.cm. Titânio pode ir em estrutura soldada a laser || Calcinável 708.016 · Titânio 702.292 · Cobalto-cromo CROMO 1.3.4800", "708.016, 702.292", 1, "intraoss"],
+ ["in-cil-he-prov", "copings", "he", "Cilindro provisório HE", "Titânio. Antirrotacional / rotacional || Ø 3,4: 702.277 / 702.278 || Ø 4,1: 702.279 / 702.280", "702.277 a 702.280", 1, "intraoss"],
+ ["in-cil-he-cil", "copings", "he", "Cilindros HE", "Parafuso vendido à parte (709.002), torque 32 N.cm || Ø 3,4: calcinável rotacional 708.001 · antirrotacional 708.002 · CoCr CROMO 3.1.3460 || Ø 4,1: calcinável rotacional 708.005 · antirrotacional 708.006 · CoCr CROMO 3.1.4160 e 3.1.4100", "708.001 a 708.006", 0, "intraoss"],
+ ["in-cil-cim-ucla", "copings", "all", "Ucla calcinável para abutment cimentado", "Polímero. Ø 3,3: 4 mm 706.001 · 6 mm 706.003 || Ø 4,5: 4 mm 706.002 · 6 mm 706.004", "706.001 a 706.004", 1, "intraoss"],
+ ["in-cil-cp-ucla", "copings", "all", "Ucla calcinável cimentado/parafusado", "Polímero calcinável. Vale nos pilares CM (11,5°) e GO (16°). Parafuso à parte (709.011, 10 N.cm) || Ø 3,3: 4 mm 708.030 · 6 mm 708.031 || Ø 4,5: 4 mm 708.032 · 6 mm 708.033", "708.030 a 708.033", 1, "intraoss"],
+ ["in-cil-cp-prov", "copings", "all", "Cilindro provisório cimentado/parafusado", "Titânio, acompanha parafuso, torque 10 N.cm || Ø 3,3: 4 mm 702.357 · 6 mm 702.369 || Ø 4,5: 4 mm 702.363 · 6 mm 702.375", "702.357 a 702.375", 0, "intraoss"],
+ ["in-par-010", "parafusos", "all", "Parafuso do Abutment CMN e cilindros CMN", "Vendido à parte. Torque 20 N.cm", "709.010", 1, "intraoss"],
+ ["in-par-011", "parafusos", "all", "Parafuso do Mini Abutment e Ucla cimentado/parafusado", "Vendido à parte. Torque 10 N.cm", "709.011", 1, "intraoss"],
+ ["in-par-012", "parafusos", "all", "Parafuso do cilindro/Ucla Max CM", "Vendido à parte", "709.012", 1, "intraoss"],
+ ["in-par-013", "parafusos", "all", "Parafuso da Ucla Grand Oss", "Vendido à parte", "709.013", 1, "intraoss"],
+ ["in-par-002", "parafusos", "all", "Parafuso dos cilindros HE", "Vendido à parte, torque 32 N.cm. Parafuso de retenção de 2,0 mm", "709.002", 1, "intraoss"],
+ ["in-sb-cm", "scanbodies", "mx", "Scan body Max CM", "Titânio, corpo único, direto sobre o implante. Acompanha parafuso", "TSBCM", 1, "intraoss"],
+ ["in-sb-go", "scanbodies", "go", "Scan body Grand Oss", "Titânio, corpo único, direto sobre o implante. Acompanha parafuso", "TSBGM", 1, "intraoss"],
+ ["in-sb-mini", "scanbodies", "all", "Scan body para Mini Abutment", "Titânio. Acompanha parafuso", "TSBMN", 1, "intraoss"],
+ ["in-sb-cmn", "scanbodies", "all", "Scan body para Abutment CMN", "Titânio. Acompanha parafuso", "TSBCMN", 1, "intraoss"]
+].map(function(r){ return {id:r[0], cat:r[1], line:r[2], name:r[3], desc:r[4], code:r[5], ok:r[6], brand:r[7] || 'neodent'}; });
 
 function itemById(id){ for (var i = 0; i < ITEMS.length; i++) if (ITEMS[i].id === id) return ITEMS[i]; return null; }
 function catLabel(id){ for (var i = 0; i < CATS.length; i++) if (CATS[i][0] === id) return CATS[i][1]; return id; }
 var AREAS = [['pro','Protético','Pilares, moldagem, parafusos e laboratório'],['cir','Cirúrgico','Implantes, kits, brocas, drivers e instrumental']];
 var CIR_CATS = ['implantes','kits','brocas','drivers'];
-var CIR_INS = ['gm-ins-perfil','cm-ins-perfil','gm-ins-medang','cm-ins-medang','gm-ins-ind','gm-ins-prof','gm-ins-pinca','cm-ins-para','cm-ins-macho','cm-ins-remov','cm-ins-posic','cm-ins-sonda','cm-ins-pinca'];
+var CIR_INS = ['gm-ins-perfil','cm-ins-perfil','gm-ins-medang','cm-ins-medang','gm-ins-ind','gm-ins-prof','gm-ins-pinca','cm-ins-para','cm-ins-macho','cm-ins-remov','cm-ins-posic','cm-ins-sonda','cm-ins-pinca'].concat(["in-ins-torq", "in-ins-prof", "in-ins-dir", "in-ins-dig09", "in-ins-dig12", "in-ins-ext", "in-ins-g-sonda", "in-ins-g-pino", "in-ins-g-fix", "in-ins-g-an13", "in-ins-g-an35", "in-ins-g-an43", "in-ins-g-red35", "in-ins-g-red43", "in-ins-g-red43s", "in-ins-g-haste"]);
 function areaOf(x){ return has(CIR_CATS, x.cat) || has(CIR_INS, x.id) ? 'cir' : 'pro'; }
 function areaLabel(id){ for (var i = 0; i < AREAS.length; i++) if (AREAS[i][0] === id) return AREAS[i][1]; return id; }
 function catsOf(area){ return CATS.filter(function(c){ return area === 'cir' ? (has(CIR_CATS, c[0]) || c[0] === 'instrumental') : !has(CIR_CATS, c[0]); }); }
-function countIn(id, area){ return ITEMS.filter(function(x){ return x.cat === id && (!area || areaOf(x) === area); }).length; }
+function countIn(id, area, br){ return ITEMS.filter(function(x){ return x.cat === id && x.brand === br && (!area || areaOf(x) === area); }).length; }
 
 var fase = null, view = 'guia', brand = null, path = [], cat = [], pLine = 'gm';
 var store = {};
@@ -582,8 +831,11 @@ function cartDone(id){
 function brandCards(act){
   return '<div class="choices">'
     + '<button class="choice" data-act="' + act + '" data-v="neodent"><b>Neodent</b><span>Linhas GM e CM</span></button>'
+    + '<button class="choice" data-act="' + act + '" data-v="intraoss"><b>Intraoss</b><span>Linhas Grand Oss, Max CM e Titaoss HE</span></button>'
     + '<div class="choice soon"><b>Outras marcas</b><span>Em breve</span></div></div>';
 }
+
+function keyNow(){ return (brand === 'intraoss' ? 'in|' : '') + (fase === 'cir' ? 'cir|' : '') + path.join('|'); }
 
 function guia(){
   var h = '<div class="trail"><button class="chip' + (!brand ? ' on' : '') + '" data-act="reset">Início</button>';
@@ -598,7 +850,7 @@ function guia(){
   } else if (!fase){
     h += '<p class="q">2. Qual a fase do tratamento?</p><div class="choices">'
       + '<button class="choice" data-act="fase" data-v="cir"><b>Cirúrgico</b><span>Implante unitário ou protocolo, passo a passo da cirurgia.</span></button>'
-      + '<button class="choice" data-act="fase" data-v="pro"><b>Protético</b><span>Moldagem, pilares e envio ao laboratório.</span></button></div>'
+      + (brand === 'intraoss' ? '<div class="choice soon"><b>Protético</b><span>Em breve. Os componentes protéticos já estão no Catálogo.</span></div>' : '<button class="choice" data-act="fase" data-v="pro"><b>Protético</b><span>Moldagem, pilares e envio ao laboratório.</span></button>') + '</div>'
       + '<div class="row"><button class="btn" data-act="back">Voltar</button></div>';
   } else if (fase === 'cir' && path.length === 0){
     h += '<p class="q">3. Qual o tipo de caso?</p><div class="choices">'
@@ -606,10 +858,16 @@ function guia(){
       + '<button class="choice" data-act="pick" data-v="prot"><b>Protocolo</b><span>Arcada completa com implantes esplintados.</span></button></div>'
       + '<div class="row"><button class="btn" data-act="back">Voltar</button></div>';
   } else if (fase === 'cir' && path.length === 1){
-    h += '<p class="q">4. Qual a linha do implante?</p><div class="choices">'
-      + '<button class="choice gm" data-act="pick" data-v="gm"><b>Implante GM</b><span>Grand Morse, Helix GM e Drive GM.</span></button>'
-      + '<button class="choice cm" data-act="pick" data-v="cm"><b>Implante CM</b><span>Cone Morse: Titamax, Alvim e Drive CM.</span></button></div>'
-      + '<div class="row"><button class="btn" data-act="back">Voltar</button></div>';
+    h += '<p class="q">4. Qual a linha do implante?</p><div class="choices">';
+    if (brand === 'intraoss'){
+      h += '<button class="choice gm" data-act="pick" data-v="go"><b>Grand Oss (GO)</b><span>Cone Morse 16°, conexão única. Advanced, Cônico, Extract e Cortical.</span></button>'
+        + '<button class="choice cm" data-act="pick" data-v="mx"><b>Max CM</b><span>Cone Morse 11,5°. Advanced, Cônico, Extract e Cortical.</span></button>'
+        + '<button class="choice cm" data-act="pick" data-v="he"><b>Titaoss HE</b><span>Hexágono externo, plataforma Ø 4,1 ou 3,4.</span></button>';
+    } else {
+      h += '<button class="choice gm" data-act="pick" data-v="gm"><b>Implante GM</b><span>Grand Morse, Helix GM e Drive GM.</span></button>'
+        + '<button class="choice cm" data-act="pick" data-v="cm"><b>Implante CM</b><span>Cone Morse: Titamax, Alvim e Drive CM.</span></button>';
+    }
+    h += '</div><div class="row"><button class="btn" data-act="back">Voltar</button></div>';
   } else if (path.length === 0){
     h += '<p class="q">3. Qual a linha do implante?</p><div class="choices">'
       + '<button class="choice gm" data-act="pick" data-v="gm"><b>Implante GM</b><span>Grand Morse, cone Morse 16°, conexão única. Transfer do implante é universal; o análogo do implante tem 3 grupos de diâmetro.</span></button>'
@@ -626,7 +884,7 @@ function guia(){
       + '<button class="choice cm" data-act="pick" data-v="aberta"><b>Moldeira aberta</b><span>Os transfers saem presos no molde. Permite esplintar, mais precisa em vários implantes.</span></button></div>'
       + '<div class="row"><button class="btn" data-act="back">Voltar</button></div>';
   } else {
-    var key = (fase === 'cir' ? 'cir|' : '') + path.join('|'), d = D[key], done = load('done:' + key), n = d.steps.length;
+    var key = keyNow(), d = D[key], done = load('done:' + key), n = d.steps.length;
     h += '<div class="' + d.theme + '-theme"><div class="banner ' + d.theme + '"><h2>' + d.title + '</h2></div>';
     h += '<div class="label">Componentes</div><div class="comps">';
     d.comps.forEach(function(c){ h += '<span>' + c + '</span>'; });
@@ -664,18 +922,22 @@ function catalogo(){
   } else if (cat.length === 2){
     h += '<p class="q">' + areaLabel(cat[1]) + ' ' + BRANDS[cat[0]] + '</p><div class="cats">';
     catsOf(cat[1]).forEach(function(c){
-      var n = countIn(c[0], cat[1]);
+      var n = countIn(c[0], cat[1], cat[0]);
       h += '<button class="catbtn' + (n ? '' : ' empty') + '" data-act="cpick" data-v="' + c[0] + '"><b>' + c[1] + '</b><span>' + (n ? n + (n === 1 ? ' item' : ' itens') : 'Em breve') + '</span></button>';
     });
     h += '</div><div class="row"><button class="btn" data-act="cback">Voltar</button></div>';
   } else {
-    var id = cat[2], all = ITEMS.filter(function(x){ return x.cat === id && areaOf(x) === cat[1]; }), cart = load('cart');
+    var id = cat[2], all = ITEMS.filter(function(x){ return x.cat === id && x.brand === cat[0] && areaOf(x) === cat[1]; }), cart = load('cart');
     h += '<p class="q">' + catLabel(id) + '</p>';
     if (all.length === 0){
       h += '<div class="note">Ainda sem itens. Esta categoria será preenchida depois.</div>';
     } else {
-      h += '<div class="seg" role="group" aria-label="Linha"><button class="gm' + (pLine === 'gm' ? ' on' : '') + '" data-act="line" data-v="gm">GM</button><button class="cm' + (pLine === 'cm' ? ' on' : '') + '" data-act="line" data-v="cm">CM</button></div>';
-      var shown = all.filter(function(x){ return x.line === pLine; });
+      var LS = LINES[cat[0]];
+      if (!has(LS.map(function(l){ return l[0]; }), pLine)) pLine = LS[0][0];
+      h += '<div class="seg n' + LS.length + '" role="group" aria-label="Linha">';
+      LS.forEach(function(l, i){ h += '<button class="' + (cat[0] === 'neodent' ? l[0] : (i === 0 ? 'gm' : 'cm')) + (pLine === l[0] ? ' on' : '') + '" data-act="line" data-v="' + l[0] + '">' + l[1] + '</button>'; });
+      h += '</div>';
+      var shown = all.filter(function(x){ return x.line === pLine || x.line === 'all'; });
       if (shown.length === 0){
         h += '<div class="note">Nenhum item desta linha ainda.</div>';
       } else {
@@ -692,6 +954,8 @@ function catalogo(){
   return h;
 }
 
+function lineName(x){ var L2 = LINES[x.brand] || []; for (var i = 0; i < L2.length; i++) if (L2[i][0] === x.line) return L2[i][1]; return x.line.toUpperCase(); }
+
 function compras(){
   var cart = load('cart'), h = '<div class="banner gm" style="margin-top:16px"><h2>Lista de compras</h2><p class="sub" style="color:inherit">Os componentes que você tocar no Catálogo aparecem aqui</p></div>';
   if (cart.length === 0){
@@ -704,7 +968,7 @@ function compras(){
     if (!x) return;
     h += '<div class="crow' + (c.done ? ' done' : '') + '">'
       + '<button class="cbox" data-act="cdone" data-id="' + c.id + '" aria-label="Marcar como comprado" aria-pressed="' + !!c.done + '">✓</button>'
-      + '<span class="tx"><b>' + x.name + '</b><span class="d">Neodent · ' + areaLabel(areaOf(x)) + ' · ' + catLabel(x.cat) + ' · ' + x.line.toUpperCase() + (x.code ? ' · ' + x.code : '') + '</span></span>'
+      + '<span class="tx"><b>' + x.name + '</b><span class="d">' + BRANDS[x.brand] + ' · ' + areaLabel(areaOf(x)) + ' · ' + catLabel(x.cat) + (x.line === 'all' ? '' : ' · ' + lineName(x)) + (x.code ? ' · ' + x.code : '') + '</span></span>'
       + '<span class="qty"><button class="qb" data-act="qminus" data-id="' + c.id + '" aria-label="' + (c.q === 1 ? 'Remover da lista' : 'Diminuir') + '">' + (c.q === 1 ? '×' : '−') + '</button><span class="qn">' + c.q + '</span><button class="qb" data-act="qplus" data-id="' + c.id + '" aria-label="Aumentar">+</button></span></div>';
   });
   h += '</div><div class="row"><button class="btn" data-act="clearcart">Limpar lista</button></div>';
@@ -743,8 +1007,8 @@ document.addEventListener('click', function(e){
   else if (a === 'back'){ if (path.length) path.pop(); else if (fase) fase = null; else brand = null; }
   else if (a === 'reset'){ brand = null; fase = null; path = []; }
   else if (a === 'goto') path = path.slice(0, n);
-  else if (a === 'step') toggle('done:' + (fase === 'cir' ? 'cir|' : '') + path.join('|'), i);
-  else if (a === 'clear') save('done:' + (fase === 'cir' ? 'cir|' : '') + path.join('|'), []);
+  else if (a === 'step') toggle('done:' + keyNow(), i);
+  else if (a === 'clear') save('done:' + keyNow(), []);
   else if (a === 'line') pLine = v;
   else if (a === 'cpick') cat.push(v);
   else if (a === 'cback') cat.pop();
