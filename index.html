@@ -154,7 +154,7 @@ nav button.on{color:var(--fg); background:var(--bg)}
 </nav>
 
 <script>
-var L = {uni:'Unitário', prot:'Protocolo', gm:'Implante GM', cm:'Implante CM', go:'Grand Oss', mx:'Max CM', he:'Titaoss HE', pilar:'Pilar', mini:'Mini pilar', fechada:'Moldeira fechada', aberta:'Moldeira aberta'};
+var L = {uni:'Unitário', prot:'Protocolo', impl:'Sobre implante', cmn:'Abutment CMN', cim:'Abutment cimentado', gm:'Implante GM', cm:'Implante CM', go:'Grand Oss', mx:'Max CM', he:'Titaoss HE', pilar:'Pilar', mini:'Mini pilar', fechada:'Moldeira fechada', aberta:'Moldeira aberta'};
 var BRANDS = {neodent:'Neodent', intraoss:'Intraoss'};
 var LINES = {neodent:[['gm','GM'],['cm','CM']], intraoss:[['go','Grand Oss'],['mx','Max CM'],['he','HE']]};
 var VIEWS = ['guia','catalogo','compras'];
@@ -421,6 +421,108 @@ function build(l, tipo){
   return {theme:c.theme, title:(uni ? 'Cirurgia unitária' : 'Protocolo (arcada completa)') + ' com ' + c.nome, comps:['Implante ' + c.nome.split(' (')[0], 'Broca lança Ø 2,0 (703.167)', 'Brocas helicoidais, pilotos e cônicas', 'Chaves de instalação', 'Torquímetro cirúrgico (700.001)', 'Tapa implante ou cicatrizador'], steps:steps, ficha:chk(l), notes:notes};
 }
 ['go','mx','he'].forEach(function(l){ ['uni','prot'].forEach(function(t){ D['in|cir|' + t + '|' + l] = build(l, t); }); });
+})();
+
+/* ===== Guia protético Intraoss ===== */
+(function(){
+var PL = {
+ go:{theme:'gm', nome:'Grand Oss (GO)', hex:'chave hexagonal 1,2 mm (700.048 curta, 700.049 média)',
+   impl:{tr:'Transferente Exato GO: TMAEGM (aberta) ou TMFEGM (fechada)', an:'Análogo GO (AGM 4100)', cic:'cicatrizador GO, perfil Ø 3,3 ou 4,5 (704.146 a 704.166)', t:'20 N.cm', sb:'TSBGM', parte:'Cilindro provisório GO Ø 3,3 (702.333 a 702.336) ou Ucla GO (713.013 a 713.020, parafuso 709.013)'},
+   cmn:{t:'20 N.cm', alt:'0,8 / 1,5 / 2,5 / 3,5 / 4,5 mm (702.617 a 702.621)'},
+   mini:{t:'20 N.cm', alt:'reto 0,8 a 4,5 mm (702.605 a 702.609); angulado 17° e 30° em 1,5 / 2,5 / 3,5 mm (702.611 a 702.616)', ang:'20 N.cm'},
+   cim:{t:'20 N.cm', alt:'reto Ø 3,3 e 4,5, alturas 1,5 / 2,5 / 3,5 mm, cimentável 4 ou 6 mm (702.552 a 702.572); angulado 17° e 30° (702.575 a 702.592)', ang:'20 N.cm'}},
+ mx:{theme:'cm', nome:'Max CM', hex:'chave hexagonal 1,2 mm (700.048 curta, 700.049 média)',
+   impl:{tr:'Transferente Exato Max CM: TMAECM (aberta) ou TMFECM (fechada)', an:'Análogo Max CM (ACM 4000)', cic:'cicatrizador Max CM, perfil Ø 3,3 ou 4,5 (704.178 a 704.187)', t:'20 N.cm', sb:'TSBCM', parte:'Cilindro/Ucla Max CM (702.115 a 702.117 em titânio; 713.002 a 713.004 em CoCr, parafuso 709.012)'},
+   cmn:{t:'32 N.cm', alt:'0,8 / 1,5 / 2,5 / 3,5 / 4,5 mm (702.097 a 702.101)'},
+   mini:{t:'32 N.cm', alt:'reto 0,8 a 4,5 mm (702.103 a 702.107); angulado 17° e 30° em 1,5 / 2,5 / 3,5 mm (702.109 a 702.114)', ang:'20 N.cm (o catálogo cita 15 N.cm em outra página, confirme)'},
+   cim:{t:'32 N.cm', alt:'reto Ø 3,3 e 4,5, alturas 1,5 / 2,5 / 3,5 mm, cimentável 4 ou 6 mm (702.002 a 702.022); angulado 17° e 30° (702.073 a 702.093)', ang:'20 N.cm'}},
+ he:{theme:'cm', nome:'Titaoss HE', hex:'conexão catraca quadrada 1,3 mm (700.054 curta, 700.055 média) nos parafusos HE; hexagonal 1,2 mm nos Mini Abutments',
+   impl:{tr:'Transferente HE: TAS 3400 / TAS 4100 (aberta) ou TFS 3400 / TFS 4100 (fechada)', an:'Análogo HE (ANS 3400 ou ANS 4100)', cic:'cicatrizador HE, Ø 3,4 ou 4,1 (704.057 a 704.078)', t:'32 N.cm', sb:'', parte:'Cilindro provisório HE (702.277 a 702.280) ou cilindros HE (708.001 a 708.006, parafuso 709.002)'},
+   mini:{t:'32 N.cm', alt:'reto 1 a 4 mm, plataforma Ø 3,4 ou 4,1 (702.298 a 702.305); angulado 17° e 30° em 2 / 3 / 4 mm (702.140 a 702.147)', ang:'20 N.cm'},
+   cim:{t:'32 N.cm', alt:'reto Ø 4,1, 1 a 4 mm (702.207 a 702.210); angulado 17° (702.239 a 702.242)', ang:''}}
+};
+var TIPO = {
+ impl:{nome:'sobre implante, coroa unitária parafusada'},
+ cmn:{nome:'Abutment CMN, coroa unitária parafusada'},
+ mini:{nome:'Mini Abutment, prótese múltipla parafusada'},
+ cim:{nome:'abutment cimentado, coroa unitária cimentada'}
+};
+function pbuild(l, t){
+  var c = PL[l], info = c[t], tp = TIPO[t], multi = t === 'mini', nome = c.nome;
+  var comps, steps, moldagem, notes = [], pilarTxt;
+  if (t === 'impl'){
+    comps = ['Cicatrizador', 'Transferente do implante', 'Análogo do implante', 'Cilindro provisório ou Ucla', 'Parafuso de retenção'];
+    moldagem = 'Nível do implante, moldeira aberta ou fechada, com transferente do implante.';
+    pilarTxt = 'Sem intermediário: cilindro provisório ou Ucla direto sobre o implante.';
+    steps = [
+     ['Remover o cicatrizador','Chave hexagonal, anti-horário. Irrigue e seque. Trabalhe rápido, a mucosa colapsa.'],
+     ['Conferir o perfil de emergência','Compare o perfil do cicatrizador usado (' + c.impl.cic + ') com o que a prótese vai pedir.'],
+     ['Instalar o transferente','' + c.impl.tr + '. Aperto manual, sem tocar nos dentes vizinhos. Radiografia periapical para confirmar o assentamento.'],
+     ['Moldar','Moldeira aberta: transferente sai preso no molde. Moldeira fechada: fica na boca e volta ao molde. Silicone leve ao redor e denso na moldeira.'],
+     ['Conferir o molde','Sem bolhas ou rasgos na região do transferente. Se houver defeito, repita.'],
+     ['Montar o análogo','' + c.impl.an + '. Parafuse ao transferente e reposicione no molde até o encaixe.'],
+     ['Proteger o implante','Recoloque o cicatrizador ou um provisório.'],
+     ['Registros','Alginato do antagonista, silicone de mordida, cor com escala.'],
+     ['Escolher o componente protético','' + c.impl.parte + '.'],
+     ['Enviar ao laboratório','Molde, antagonista, registro de mordida e a ficha preenchida. O guia da ficha está logo abaixo.']];
+    notes.push('Torque do parafuso do componente sobre implante: ' + c.impl.t + '. Confirme na bula.');
+    if (c.impl.sb) notes.push('Fluxo digital: scan body ' + c.impl.sb + ' direto sobre o implante, no lugar do transferente.');
+  } else if (t === 'cmn'){
+    comps = ['Abutment CMN', 'Cicatrizador CMN (704.192)', 'Transferente CMN: TMAPCM (aberta) ou TMFPCM (fechada)', 'Análogo CMN (AAPCM)', 'Cilindros CMN: titânio 702.291, calcinável 708.009 ou 708.017, CoCr'];
+    moldagem = 'Nível do abutment, com transferente CMN, aberta (TMAPCM) ou fechada (TMFPCM).';
+    pilarTxt = 'Abutment CMN, altura transmucosa e diâmetro de cada um.';
+    steps = [
+     ['Remover o cicatrizador','Chave hexagonal, anti-horário. Irrigue e seque.'],
+     ['Medir a mucosa','Sonda milimetrada da plataforma à margem gengival. Alturas do Abutment CMN: ' + info.alt + '.'],
+     ['Instalar o Abutment CMN','Conexão catraca hexagonal 1,6 mm (700.061). Torque ' + info.t + '. Radiografia periapical para confirmar o assentamento.'],
+     ['Instalar o transferente CMN','TMAPCM (moldeira aberta) ou TMFPCM (fechada). Aperto manual.'],
+     ['Moldar','Silicone leve ao redor e denso na moldeira. Moldeira fechada: o transferente volta ao molde. Aberta: sai preso.'],
+     ['Conferir o molde','Sem bolhas ou rasgos na região do transferente e do sulco.'],
+     ['Montar o análogo','Análogo CMN (AAPCM) parafusado ao transferente e reposicionado no molde.'],
+     ['Proteger o abutment','Cicatrizador CMN (704.192) ou provisório.'],
+     ['Registros','Alginato do antagonista, silicone de mordida, cor com escala.'],
+     ['Enviar ao laboratório','Molde, antagonista, registro de mordida e a ficha preenchida. O guia da ficha está logo abaixo.']];
+    notes.push('Parafuso do cilindro CMN (709.010, vendido à parte): torque 20 N.cm. Diga na ficha se o cilindro vai com você ou com o laboratório.');
+    notes.push('Fluxo digital: scan body TSBCMN sobre o Abutment CMN, e Abutment CAD CMN (702.489, 702.490).');
+  } else if (t === 'mini'){
+    comps = ['Mini Abutment reto ou angulado', 'Cicatrizador Mini Abutment (704.190)', 'Transferente Mini Abutment: TMA 4800 (aberta) ou TMF 4800 (fechada)', 'Análogo Mini Abutment (ANM 4800)', 'Cilindros: calcinável 708.016, titânio 702.292 ou CoCr', 'Resina para esplintar'];
+    moldagem = 'Nível do Mini Abutment, moldeira aberta (TMA 4800) com transferentes esplintados, ou fechada (TMF 4800).';
+    pilarTxt = 'Mini Abutment, posição, altura e angulação de cada um.';
+    steps = [
+     ['Remover os cicatrizadores','Chave hexagonal, irrigação e secagem. Observe a saúde da mucosa.'],
+     ['Escolher altura e angulação','' + info.alt + '. Use angulado quando os implantes não estão paralelos.'],
+     ['Instalar os Mini Abutments','Conexão catraca para Mini Abutment (700.060, reto) ou para angulado (700.067). Torque: reto ' + info.t + (info.ang ? ', angulado ' + info.ang : '') + '.'],
+     ['Radiografia e paralelismo','Confirme o assentamento e o paralelismo. Se divergirem demais, troque por angulado.'],
+     ['Instalar os transferentes','TMA 4800 para moldeira aberta ou TMF 4800 para fechada. Esplinte com resina quando for aberta.'],
+     ['Moldar','Moldeira aberta: afrouxe os parafusos antes de remover, e o molde sai com os transferentes. Fechada: os transferentes ficam na boca e voltam ao molde.'],
+     ['Conferir o molde','Sem bolhas ou rasgos. Confirme se todos os transferentes vieram no molde.'],
+     ['Montar os análogos','Análogo Mini Abutment (ANM 4800) parafusado em cada transferente.'],
+     ['Proteger e registrar','Cicatrizador Mini Abutment (704.190) ou provisório. Registro de mordida com DVO, linha do sorriso, antagonista e fotos.'],
+     ['Enviar ao laboratório','Molde com transferentes e análogos, antagonista, registro e ficha. O guia da ficha está logo abaixo.']];
+    notes.push('Parafuso do cilindro do Mini Abutment (709.011, vendido à parte): torque 10 N.cm. O cilindro de titânio pode ir em estrutura soldada a laser.');
+    notes.push('Fluxo digital: scan body TSBMN, e Mini Abutment CAD (702.485, 702.486).');
+  } else {
+    comps = ['Abutment cimentado reto ou angulado', 'Cicatrizador', 'Transferente cimentado (705.001 a 705.004), moldeira fechada', 'Análogo cimentado (ACMN)', 'Ucla calcinável cimentada (706.001 a 706.004)'];
+    moldagem = 'Nível do abutment, moldeira fechada, com transferente cimentado de polímero.';
+    pilarTxt = 'Abutment cimentado: reto ou angulado, diâmetro, altura transmucosa e altura cimentável (4 ou 6 mm).';
+    steps = [
+     ['Remover o cicatrizador','Chave hexagonal, anti-horário. Irrigue e seque.'],
+     ['Escolher o abutment','' + info.alt + '. Meça a mucosa para definir a altura transmucosa e escolha o perfil conforme o dente.'],
+     ['Instalar o abutment','Chave do componente (' + c.hex + '). Torque: reto ' + info.t + (info.ang ? ', angulado ' + info.ang : '') + '. Radiografia periapical para confirmar o assentamento.'],
+     ['Instalar o transferente','Transferente cimentado (705.001 a 705.004, de acordo com diâmetro e altura cimentável). É só moldeira fechada.'],
+     ['Moldar','Silicone leve ao redor e denso na moldeira. O transferente volta ao molde depois.'],
+     ['Conferir o molde','Sem bolhas ou rasgos na região do transferente e da margem.'],
+     ['Montar o análogo','Análogo cimentado (ACMN, mesmo diâmetro e altura), reposicionado no molde.'],
+     ['Proteger o abutment','Provisório ou cicatrizador.'],
+     ['Registros','Alginato do antagonista, silicone de mordida, cor com escala.'],
+     ['Enviar ao laboratório','Molde, antagonista, registro de mordida e a ficha preenchida. O guia da ficha está logo abaixo.']];
+    notes.push('Existe também o abutment cimentado/parafusado, com Ucla calcinável (708.030 a 708.033) e cilindro provisório. Veja no Catálogo.');
+  }
+  notes.push('Torques da bula e do catálogo: confirme sempre antes de aplicar. O catálogo traz "Catálogo de Produtos 2025" na capa.');
+  return {theme:c.theme, title:nome + ': ' + tp.nome, comps:comps, steps:steps,
+    ficha: multi ? fichaMulti(nome, 'Mini Abutment', moldagem) : fichaUni(nome, 'o componente escolhido', pilarTxt, moldagem), notes:notes};
+}
+['go','mx','he'].forEach(function(l){ ['impl','cmn','mini','cim'].forEach(function(t){ if (PL[l][t] || t === 'impl') D['in|' + l + '|' + t] = pbuild(l, t); }); });
 })();
 
 var CATS = [['pilares','Pilares'],['mini','Mini pilares'],['transfer','Transfer'],['analogo','Análogo'],['implantes','Implantes'],['cicatrizadores','Cicatrizadores e tampas'],['parafusos','Parafusos'],['cilindros','Cilindros de proteção'],['kits','Kits cirúrgicos'],['brocas','Brocas e stops'],['drivers','Drivers de implante'],['scanbodies','Transfers de escaneamento'],['copings','Cilindros protéticos'],['instrumental','Instrumental']];
@@ -850,7 +952,7 @@ function guia(){
   } else if (!fase){
     h += '<p class="q">2. Qual a fase do tratamento?</p><div class="choices">'
       + '<button class="choice" data-act="fase" data-v="cir"><b>Cirúrgico</b><span>Implante unitário ou protocolo, passo a passo da cirurgia.</span></button>'
-      + (brand === 'intraoss' ? '<div class="choice soon"><b>Protético</b><span>Em breve. Os componentes protéticos já estão no Catálogo.</span></div>' : '<button class="choice" data-act="fase" data-v="pro"><b>Protético</b><span>Moldagem, pilares e envio ao laboratório.</span></button>') + '</div>'
+      + '<button class="choice" data-act="fase" data-v="pro"><b>Protético</b><span>Moldagem, pilares e envio ao laboratório.</span></button>' + '</div>'
       + '<div class="row"><button class="btn" data-act="back">Voltar</button></div>';
   } else if (fase === 'cir' && path.length === 0){
     h += '<p class="q">3. Qual o tipo de caso?</p><div class="choices">'
@@ -868,6 +970,20 @@ function guia(){
         + '<button class="choice cm" data-act="pick" data-v="cm"><b>Implante CM</b><span>Cone Morse: Titamax, Alvim e Drive CM.</span></button>';
     }
     h += '</div><div class="row"><button class="btn" data-act="back">Voltar</button></div>';
+  } else if (brand === 'intraoss' && fase === 'pro' && path.length === 0){
+    h += '<p class="q">3. Qual a linha do implante?</p><div class="choices">'
+      + '<button class="choice gm" data-act="pick" data-v="go"><b>Grand Oss (GO)</b><span>Cone Morse 16°.</span></button>'
+      + '<button class="choice cm" data-act="pick" data-v="mx"><b>Max CM</b><span>Cone Morse 11,5°.</span></button>'
+      + '<button class="choice cm" data-act="pick" data-v="he"><b>Titaoss HE</b><span>Hexágono externo, plataforma Ø 4,1 ou 3,4.</span></button></div>'
+      + '<div class="row"><button class="btn" data-act="back">Voltar</button></div>';
+  } else if (brand === 'intraoss' && fase === 'pro' && path.length === 1){
+    var hh = path[0] === 'he';
+    h += '<p class="q">4. Qual o tipo de prótese?</p><div class="choices">'
+      + '<button class="choice" data-act="pick" data-v="impl"><b>Sobre implante</b><span>Coroa unitária direto sobre o implante, sem intermediário.</span></button>'
+      + (hh ? '' : '<button class="choice" data-act="pick" data-v="cmn"><b>Abutment CMN</b><span>Coroa unitária parafusada sobre o Abutment CMN.</span></button>')
+      + '<button class="choice" data-act="pick" data-v="mini"><b>Mini Abutment</b><span>Ponte, protocolo ou implantes esplintados.</span></button>'
+      + '<button class="choice" data-act="pick" data-v="cim"><b>Abutment cimentado</b><span>Coroa unitária cimentada, reto ou angulado.</span></button></div>'
+      + '<div class="row"><button class="btn" data-act="back">Voltar</button></div>';
   } else if (path.length === 0){
     h += '<p class="q">3. Qual a linha do implante?</p><div class="choices">'
       + '<button class="choice gm" data-act="pick" data-v="gm"><b>Implante GM</b><span>Grand Morse, cone Morse 16°, conexão única. Transfer do implante é universal; o análogo do implante tem 3 grupos de diâmetro.</span></button>'
