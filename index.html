@@ -154,17 +154,18 @@ nav button.on{color:var(--fg); background:var(--bg)}
 </nav>
 
 <script>
-var L = {uni:'Unitário', prot:'Protocolo', impl:'Sobre implante', cmn:'Abutment CMN', cim:'Abutment cimentado', gm:'Implante GM', cm:'Implante CM', go:'Grand Oss', mx:'Max CM', he:'Titaoss HE', pilar:'Pilar', mini:'Mini pilar', fechada:'Moldeira fechada', aberta:'Moldeira aberta'};
+var L = {uni:'Unitário', prot:'Protocolo', impl:'No implante', implante:'No implante', cmn:'Abutment CMN', cim:'Abutment cimentado', gm:'Implante GM', cm:'Implante CM', go:'Grand Oss', mx:'Max CM', he:'Titaoss HE', pilar:'Pilar', mini:'Mini pilar', fechada:'Moldeira fechada', aberta:'Moldeira aberta'};
 var BRANDS = {neodent:'Neodent', intraoss:'Intraoss'};
 var LINES = {neodent:[['gm','GM'],['cm','CM']], intraoss:[['go','Grand Oss'],['mx','Max CM'],['he','HE']]};
 var VIEWS = ['guia','catalogo','compras'];
 
-function fichaUni(linha, pilar, pilarInfo, moldagem){
+function fichaUni(linha, pilar, pilarInfo, moldagem, marca){
+  marca = marca || 'Neodent';
   return [
     ['Paciente e datas','Nome do paciente, seu nome e CRO, data da moldagem e data desejada de entrega.'],
     ['Dentes','Número de cada dente a restaurar. Identifique no molde ou no modelo cada análogo com o número do dente.'],
     ['Tipo de trabalho','Coroa unitária parafusada sobre ' + pilar + '.'],
-    ['Implante','Neodent ' + linha + ', diâmetro e comprimento de cada implante.'],
+    ['Implante',marca + ' ' + linha + ', diâmetro e comprimento de cada implante.'],
     ['Pilar', pilarInfo],
     ['Moldagem', moldagem],
     ['Material e cor','Material da coroa, cor pela escala e foto com a escala ao lado do dente vizinho.'],
@@ -173,11 +174,12 @@ function fichaUni(linha, pilar, pilarInfo, moldagem){
     ['O que segue junto','Molde, antagonista, registro de mordida e as fotos.']
   ];
 }
-function fichaMulti(linha, mini, moldagem){
+function fichaMulti(linha, mini, moldagem, marca){
+  marca = marca || 'Neodent';
   return [
     ['Paciente e datas','Nome do paciente, seu nome e CRO, data da moldagem e data desejada de entrega.'],
     ['Tipo de trabalho','Prótese múltipla parafusada (ponte ou protocolo) sobre ' + mini + '.'],
-    ['Implantes e pilares','Neodent ' + linha + ', posição, diâmetro e comprimento de cada implante, altura e angulação de cada mini pilar.'],
+    ['Implantes e pilares',marca + ' ' + linha + ', posição, diâmetro e comprimento de cada implante, altura e angulação de cada mini pilar.'],
     ['Cilindros','Material do cilindro (titânio, calcinável ou CoCr) e quem fornece.'],
     ['Moldagem', moldagem],
     ['Estrutura e dentes','Material da estrutura, tipo de dentes e cor.'],
@@ -520,9 +522,53 @@ function pbuild(l, t){
   }
   notes.push('Torques da bula e do catálogo: confirme sempre antes de aplicar. O catálogo traz "Catálogo de Produtos 2025" na capa.');
   return {theme:c.theme, title:nome + ': ' + tp.nome, comps:comps, steps:steps,
-    ficha: multi ? fichaMulti(nome, 'Mini Abutment', moldagem) : fichaUni(nome, 'o componente escolhido', pilarTxt, moldagem), notes:notes};
+    ficha: multi ? fichaMulti(nome, 'Mini Abutment', moldagem, 'Intraoss') : fichaUni(nome, 'o componente escolhido', pilarTxt, moldagem, 'Intraoss'), notes:notes};
 }
 ['go','mx','he'].forEach(function(l){ ['impl','cmn','mini','cim'].forEach(function(t){ if (PL[l][t] || t === 'impl') D['in|' + l + '|' + t] = pbuild(l, t); }); });
+})();
+
+/* ===== Moldagem no implante (Neodent) e nível da moldagem ===== */
+(function(){
+function imp(l){
+  var gm = l === 'gm', nome = gm ? 'GM' : 'CM';
+  var cod = gm ? {f:'108.160 (regular) ou 108.161 (longo)', a:'108.162 (regular) ou 108.163 (longo)'} : {f:'108.152 (regular) ou 108.153 (longo)', a:'108.154 (regular) ou 108.155 (longo)'};
+  var an = gm ? 'Análogo do implante GM, que depende do diâmetro: 101.103 (Ø 3,5 e 3,75), 101.089 (Ø 4,0 e 4,3) ou 101.090 (Ø 5,0, 6,0 e 7,0).' : 'Análogo do implante CM, um só para todos os diâmetros (101.088).';
+  return {theme:l, title:nome + ' no nível do implante: moldagem de transferência, sem pilar pré-fabricado',
+   comps:['Cicatrizador', 'Transfer Exact para Implante ' + nome + ' (fechada e aberta, regular e longo)', 'Análogo do implante ' + nome, 'Componente do laboratório: Munhão Anatômico, Base de titânio ou Pilar personalizado'],
+   steps:[
+   ['Remover o cicatrizador','Chave hexagonal, anti-horário. Irrigue e seque. Trabalhe rápido, a mucosa colapsa.'],
+   ['Escolher moldeira fechada ou aberta','Unitário: fechada costuma bastar. Vários implantes ou esplintagem: aberta. É regra prática, não do catálogo.'],
+   ['Escolher o comprimento do transfer','O catálogo oferece regular e longo. Escolha o que fica acima da gengiva sem tocar o dente vizinho.'],
+   ['Instalar o Transfer Exact ' + nome,'Fechada: ' + cod.f + '. Aberta: ' + cod.a + '. Aperto manual, até o fim do assentamento.'],
+   ['Radiografia periapical','Confirme que o transfer assentou por completo, sem espaço entre ele e o implante.'],
+   ['Moldar','Silicone leve ao redor do transfer e denso na moldeira. Fechada: o transfer fica na boca e volta ao molde. Aberta: afrouxe o parafuso antes de remover o molde.'],
+   ['Conferir o molde','Sem bolhas ou rasgos ao redor do transfer. Se houver defeito, repita.'],
+   ['Montar o análogo', an],
+   ['Proteger e registrar','Recoloque o cicatrizador. Alginato do antagonista, silicone de mordida e cor com escala.'],
+   ['Enviar ao laboratório','Molde, antagonista, registro de mordida e a ficha. Diga qual componente vai sobre o implante. O guia da ficha está logo abaixo.']],
+   ficha:fichaUni(nome,'o componente sobre o implante','Munhão Anatômico, Base de titânio ou Pilar personalizado, definido com o laboratório. Informe diâmetro do implante e perfil de emergência desejado.','Nível do implante, Transfer Exact ' + nome + ', moldeira fechada ou aberta.'),
+   notes:[gm ? 'O transfer de implante GM é universal: o mesmo para todos os diâmetros. O que muda com o diâmetro é o análogo.' : 'O análogo de implante CM é um só. Não há divisão por diâmetro.', 'Fluxo digital: transfer para escaneamento do implante, no lugar do transfer de moldagem. Veja o Catálogo, em Transfers de escaneamento.', 'Torques e códigos: confirme na bula e no catálogo.']};
+}
+D['gm|implante'] = imp('gm');
+D['cm|implante'] = imp('cm');
+
+window.nivelOf = function(key){
+  var k = key.split('|');
+  if (k[0] === 'cir') return null;
+  if (k[0] === 'in'){
+    var t = k[2];
+    if (t === 'impl') return 'implante';
+    if (t === 'mini') return 'mini';
+    return 'pilar';
+  }
+  if (k[1] === 'implante') return 'implante';
+  return k[1] === 'mini' ? 'mini' : 'pilar';
+};
+window.NIVEL_TXT = {
+  implante:['No implante','Você molda direto na plataforma do implante. O transfer, o análogo e o código dependem da linha (e, no GM, o análogo depende do diâmetro).'],
+  pilar:['No pilar','O pilar já está instalado e você molda sobre ele. O transfer e o análogo são do pilar, não do implante.'],
+  mini:['No mini pilar','Os mini pilares estão instalados e você molda sobre eles. O transfer e o análogo são do mini pilar, não do implante.']
+};
 })();
 
 var CATS = [['pilares','Pilares'],['mini','Mini pilares'],['transfer','Transfer'],['analogo','Análogo'],['implantes','Implantes'],['cicatrizadores','Cicatrizadores e tampas'],['parafusos','Parafusos'],['cilindros','Cilindros de proteção'],['kits','Kits cirúrgicos'],['brocas','Brocas e stops'],['drivers','Drivers de implante'],['scanbodies','Transfers de escaneamento'],['copings','Cilindros protéticos'],['instrumental','Instrumental']];
@@ -564,7 +610,7 @@ var ITEMS = [
  ['gm-tr-ponte','transfer','gm','Transfer para Implante GM, moldeira aberta','Nível do implante, para Base de titânio de ponte. Regular 108.158, longo 108.159','108.158 e 108.159',1],
  ['gm-tr-pilar','transfer','gm','Transfer do Pilar GM, moldeira fechada','Ø 4,8 mm, titânio. Um só modelo para todas as alturas do pilar','108.179',1],
  ['gm-tr-mini','transfer','gm','Transfer Mini Pilar, moldeira aberta Slim','Para o Mini Pilar Cônico GM','108.176',1],
- ['gm-tr-micro-f','transfer','gm','Transfer do Micro Pilar, moldeira fechada antirrotacional','Prótese unitária','108.182',1],
+ ['gm-tr-micro-f','transfer','gm','Transfer do Micro Pilar, moldeira fechada antirrotacional','Prótese unitária. A eShop lista dois códigos para o mesmo item','108.180, 108.182',1],
  ['gm-tr-micro-a','transfer','gm','Transfer do Micro Pilar, moldeira aberta Slim','Para próteses múltiplas','108.178',1],
  ['gm-tr-univ','transfer','gm','Transfer do Munhão Universal Click','Polímero, moldeira fechada. 4 combinações: Ø 3,3 ou 4,5 × área cimentável 4 ou 6 mm','108.172 a 108.175',1],
 
@@ -847,12 +893,12 @@ var ITEMS = [
  ["in-pil-mx-cim-33", "pilares", "mx", "Abutment cimentado reto Max CM Ø 3,3 mm", "Torque 32 N.cm || Cimentável 4 mm: 1,5 mm 702.002 · 2,5 mm 702.003 · 3,5 mm 702.004 || Cimentável 6 mm: 1,5 mm 702.014 · 2,5 mm 702.015 · 3,5 mm 702.016", "702.002 a 702.016", 1, "intraoss"],
  ["in-pil-mx-cim-45", "pilares", "mx", "Abutment cimentado reto Max CM Ø 4,5 mm", "Torque 32 N.cm || Cimentável 4 mm: 1,5 mm 702.008 · 2,5 mm 702.009 · 3,5 mm 702.010 || Cimentável 6 mm: 1,5 mm 702.020 · 2,5 mm 702.021 · 3,5 mm 702.022", "702.008 a 702.022", 1, "intraoss"],
  ["in-pil-go-cima", "pilares", "go", "Abutment cimentado angulado GO", "Torque 20 N.cm. Alturas 1,5 / 2,5 / 3,5 mm || 17° Ø 3,3: 4 mm 702.575 a 702.577 · 6 mm 702.581 a 702.583 || 30° Ø 3,3: 4 mm 702.587 a 702.589 || 30° Ø 4,5: 4 mm 702.590 a 702.592", "702.575 a 702.592", 1, "intraoss"],
- ["in-pil-mx-cima", "pilares", "mx", "Abutment cimentado angulado Max CM", "Torque 20 N.cm. Alturas 1,5 / 2,5 / 3,5 mm || 17° Ø 3,3: 4 mm 702.073 a 702.075 · 6 mm 702.079 a 702.081 || 30° Ø 3,3: 4 mm 702.085 a 702.087 · 6 mm 702.091 a 702.093 || 30° Ø 4,5: 4 mm 702.088 a 702.090", "702.073 a 702.093", 0, "intraoss"],
+ ["in-pil-mx-cima", "pilares", "mx", "Abutment cimentado angulado Max CM", "Torque 20 N.cm. Alturas 1,5 / 2,5 / 3,5 mm || 17° Ø 3,3: 4 mm 702.073 a 702.075 · 6 mm 702.079 a 702.081 || 30° Ø 3,3: 4 mm 702.085 a 702.087 · 6 mm só 1,5 mm 702.091 || 30° Ø 4,5: 4 mm 702.088 a 702.090", "702.073 a 702.091", 0, "intraoss"],
  ["in-pil-go-cp-33", "pilares", "go", "Abutment cimentado/parafusado reto GO Ø 3,3 mm", "Torque 20 N.cm, chave Max CM 3,3 (700.159) || Cimentável 4 mm: 1,5 mm 702.050 · 2,5 mm 702.051 · 3,5 mm 702.052 || 6 mm: 1,5 mm 702.062 · 2,5 mm 702.063 · 3,5 mm 702.064", "702.050 a 702.064", 1, "intraoss"],
  ["in-pil-go-cp-45", "pilares", "go", "Abutment cimentado/parafusado reto GO Ø 4,5 mm", "Torque 20 N.cm, chave Max CM 4,5 (700.162) || Cimentável 4 mm: 1,5 mm 702.056 · 2,5 mm 702.057 · 3,5 mm 702.058 || 6 mm: 1,5 mm 702.068 · 2,5 mm 702.069 · 3,5 mm 702.070", "702.056 a 702.070", 1, "intraoss"],
  ["in-pil-mx-cp-33", "pilares", "mx", "Abutment cimentado/parafusado reto Max CM Ø 3,3 mm", "Torque 32 N.cm, chave Max CM 3,3 (700.159) || Cimentável 4 mm: 1,5 mm 702.382 · 2,5 mm 702.383 · 3,5 mm 702.384 || 6 mm: 1,5 mm 702.394 · 2,5 mm 702.395 · 3,5 mm 702.396", "702.382 a 702.396", 1, "intraoss"],
  ["in-pil-mx-cp-45", "pilares", "mx", "Abutment cimentado/parafusado reto Max CM Ø 4,5 mm", "Torque 32 N.cm, chave Max CM 4,5 (700.162) || Cimentável 4 mm: 1,5 mm 702.388 · 2,5 mm 702.389 · 3,5 mm 702.390 || 6 mm: 1,5 mm 702.400 · 2,5 mm 702.401 · 3,5 mm 702.402", "702.388 a 702.402", 1, "intraoss"],
- ["in-pil-mx-cpa", "pilares", "mx", "Abutment cimentado/parafusado angulado Max CM", "Torque 20 N.cm. Alturas 1,5 / 2,5 / 3,5 mm || 17° Ø 3,3: 4 mm 702.405 a 702.407 · 6 mm 702.411 a 702.413 || 30° Ø 3,3: 4 mm 702.417 a 702.419 · 6 mm 702.423 a 702.425 || 30° Ø 4,5: 4 mm 702.420 a 702.422", "702.405 a 702.425", 0, "intraoss"],
+ ["in-pil-mx-cpa", "pilares", "mx", "Abutment cimentado/parafusado angulado Max CM", "Torque 20 N.cm. Alturas 1,5 / 2,5 / 3,5 mm || 17° Ø 3,3: 4 mm 702.405 a 702.407 · 6 mm 702.411 a 702.413 || 30° Ø 3,3: 4 mm 702.417 a 702.419 · 6 mm só 1,5 mm 702.423 || 30° Ø 4,5: 4 mm 702.420 a 702.422", "702.405 a 702.423", 0, "intraoss"],
  ["in-pil-he-cim", "pilares", "he", "Abutment cimentado reto HE Ø 4,1 mm", "Torque 32 N.cm. Acompanha parafuso de retenção || 1 mm 702.207 · 2 mm 702.208 · 3 mm 702.209 · 4 mm 702.210", "702.207 a 702.210", 1, "intraoss"],
  ["in-pil-he-cima", "pilares", "he", "Abutment cimentado angulado 17° HE Ø 4,1 mm", "Torque 32 N.cm. Acompanha parafuso de retenção || 1 mm 702.239 · 2 mm 702.240 · 3 mm 702.241 · 4 mm 702.242", "702.239 a 702.242", 1, "intraoss"],
  ["in-pil-cad-mx", "pilares", "mx", "Abutment CAD CM Ø 3,5 mm", "Direto sobre o implante, torque 20 N.cm. Cimentável 4 mm. Acompanha parafuso || 0,5 mm 702.436 · 1 mm 702.437 · 1,5 mm 702.438 · 2 mm 702.439 · 2,5 mm 702.440 · 3,5 mm 702.441 · 4,5 mm 702.442", "702.436 a 702.442", 1, "intraoss"],
@@ -899,7 +945,7 @@ function areaLabel(id){ for (var i = 0; i < AREAS.length; i++) if (AREAS[i][0] =
 function catsOf(area){ return CATS.filter(function(c){ return area === 'cir' ? (has(CIR_CATS, c[0]) || c[0] === 'instrumental') : !has(CIR_CATS, c[0]); }); }
 function countIn(id, area, br){ return ITEMS.filter(function(x){ return x.cat === id && x.brand === br && (!area || areaOf(x) === area); }).length; }
 
-var fase = null, view = 'guia', brand = null, path = [], cat = [], pLine = 'gm';
+var info = false, fase = null, view = 'guia', brand = null, path = [], cat = [], pLine = 'gm';
 var store = {};
 
 function load(k){ try { var v = localStorage.getItem(k); return v ? JSON.parse(v) : (store[k] || []); } catch(e){ return store[k] || []; } }
@@ -939,7 +985,29 @@ function brandCards(act){
 
 function keyNow(){ return (brand === 'intraoss' ? 'in|' : '') + (fase === 'cir' ? 'cir|' : '') + path.join('|'); }
 
+
+function nivelPage(){
+  var h = '<div class="banner gm" style="margin-top:16px"><h2>Moldar no implante ou no pilar?</h2><p class="sub" style="color:inherit">Escolha o nível antes de pedir o transfer</p></div>';
+  h += '<div class="label">Moldagem no nível do implante</div><div class="group" style="margin-top:0">'
+    + '<div class="item"><b>O que é</b><span>O transfer vai direto na plataforma do implante. O análogo representa o implante no modelo, e o laboratório escolhe ou confecciona o componente.</span></div>'
+    + '<div class="item"><b>Indicações</b><span>Munhão Anatômico, base de titânio, pilar personalizado ou CAD. Perfil de emergência personalizado, em região estética. Coroa direto sobre o implante. Fluxo digital com scan body no implante.</span></div>'
+    + '<div class="item"><b>Cuidados</b><span>O cicatrizador sai e a plataforma fica exposta. Confirme o assentamento com radiografia. No Neodent GM, o análogo muda com o diâmetro; no Grand Oss e no CM, é um só.</span></div></div>';
+  h += '<div class="label">Moldagem no nível do pilar ou mini pilar</div><div class="group" style="margin-top:0">'
+    + '<div class="item"><b>O que é</b><span>Você instala o pilar pré-fabricado com o torque da bula e molda sobre ele. O transfer e o análogo são do pilar.</span></div>'
+    + '<div class="item"><b>Pilar (unitário)</b><span>Pilar GM, Pilar CM, Munhão Universal, Micro Pilar, Abutment CMN ou cimentado. A altura transmucosa é escolhida por você, pela mucosa. O pilar fica na boca e a plataforma do implante sai do campo.</span></div>'
+    + '<div class="item"><b>Mini pilar (múltiplo)</b><span>Ponte, protocolo ou implantes esplintados, com moldeira aberta. O mini pilar angulado corrige implantes divergentes.</span></div>'
+    + '<div class="item"><b>Cuidados</b><span>A escolha do pilar já define a prótese. Evite retirar e recolocar o pilar várias vezes. No Pilar GM, a moldagem é só com moldeira fechada.</span></div></div>';
+  h += '<div class="label">Peças por nível (códigos do catálogo)</div><div class="group" style="margin-top:0">'
+    + '<div class="item"><b>Neodent GM</b><span>Implante: Transfer Exact 108.160 a 108.163, análogo por diâmetro. Pilar GM: 108.179 (fechada), análogo 101.101. Mini pilar: 108.176 (aberta).</span></div>'
+    + '<div class="item"><b>Neodent CM</b><span>Implante: Transfer Exact 108.152 a 108.155, análogo 101.088. Pilar CM: 108.040 (fechada), 108.039 (aberta), análogo 101.096. Mini pilar: 108.068 (aberta, a confirmar).</span></div>'
+    + '<div class="item"><b>Intraoss</b><span>Implante: TMAEGM e TMFEGM (GO), TMAECM e TMFECM (Max CM), TAS e TFS (HE). Abutment CMN: TMAPCM e TMFPCM. Mini Abutment: TMA 4800 e TMF 4800. Cimentado: só fechada, 705.001 a 705.004.</span></div></div>';
+  h += '<div class="note">As indicações clínicas acima são regras práticas gerais, não vêm do catálogo. Os códigos vêm dos catálogos Neodent e Intraoss. Confirme tudo na bula e ajuste ao seu protocolo.</div>';
+  h += '<div class="row"><button class="btn" data-act="ninfo-off">Voltar</button></div>';
+  return h;
+}
+
 function guia(){
+  if (info) return nivelPage();
   var h = '<div class="trail"><button class="chip' + (!brand ? ' on' : '') + '" data-act="reset">Início</button>';
   if (brand) h += '<button class="chip' + (!fase ? ' on' : '') + '" data-act="gobrand">' + BRANDS[brand] + '</button>';
   if (fase) h += '<button class="chip' + (path.length === 0 ? ' on' : '') + '" data-act="goto" data-n="0">' + (fase === 'cir' ? 'Cirúrgico' : 'Protético') + '</button>';
@@ -979,10 +1047,11 @@ function guia(){
   } else if (brand === 'intraoss' && fase === 'pro' && path.length === 1){
     var hh = path[0] === 'he';
     h += '<p class="q">4. Qual o tipo de prótese?</p><div class="choices">'
-      + '<button class="choice" data-act="pick" data-v="impl"><b>Sobre implante</b><span>Coroa unitária direto sobre o implante, sem intermediário.</span></button>'
-      + (hh ? '' : '<button class="choice" data-act="pick" data-v="cmn"><b>Abutment CMN</b><span>Coroa unitária parafusada sobre o Abutment CMN.</span></button>')
-      + '<button class="choice" data-act="pick" data-v="mini"><b>Mini Abutment</b><span>Ponte, protocolo ou implantes esplintados.</span></button>'
-      + '<button class="choice" data-act="pick" data-v="cim"><b>Abutment cimentado</b><span>Coroa unitária cimentada, reto ou angulado.</span></button></div>'
+      + '<button class="choice" data-act="pick" data-v="impl"><b>No implante</b><span>Coroa unitária direto sobre o implante, sem intermediário.</span></button>'
+      + (hh ? '' : '<button class="choice" data-act="pick" data-v="cmn"><b>No Abutment CMN</b><span>Coroa unitária parafusada sobre o Abutment CMN.</span></button>')
+      + '<button class="choice" data-act="pick" data-v="mini"><b>No Mini Abutment</b><span>Ponte, protocolo ou implantes esplintados.</span></button>'
+      + '<button class="choice" data-act="pick" data-v="cim"><b>No Abutment cimentado</b><span>Coroa unitária cimentada, reto ou angulado.</span></button></div>'
+      + '<div class="row"><button class="btn" data-act="ninfo">Implante ou pilar?</button></div>'
       + '<div class="row"><button class="btn" data-act="back">Voltar</button></div>';
   } else if (path.length === 0){
     h += '<p class="q">3. Qual a linha do implante?</p><div class="choices">'
@@ -991,10 +1060,12 @@ function guia(){
       + '<div class="row"><button class="btn" data-act="back">Voltar</button></div>';
   } else if (path.length === 1){
     h += '<p class="q">4. Qual o tipo de prótese?</p><div class="choices">'
-      + '<button class="choice" data-act="pick" data-v="pilar"><b>Pilar</b><span>Coroa unitária, um implante por dente.</span></button>'
-      + '<button class="choice" data-act="pick" data-v="mini"><b>Mini pilar</b><span>Ponte, protocolo ou implantes esplintados.</span></button></div>'
+      + '<button class="choice" data-act="pick" data-v="implante"><b>No implante</b><span>Sem pilar pré-fabricado: munhão anatômico, base de titânio ou pilar personalizado.</span></button>'
+      + '<button class="choice" data-act="pick" data-v="pilar"><b>No pilar</b><span>Coroa unitária, um implante por dente.</span></button>'
+      + '<button class="choice" data-act="pick" data-v="mini"><b>No mini pilar</b><span>Ponte, protocolo ou implantes esplintados.</span></button></div>'
+      + '<div class="row"><button class="btn" data-act="ninfo">Implante ou pilar?</button></div>'
       + '<div class="row"><button class="btn" data-act="back">Voltar</button></div>';
-  } else if (path.length === 2 && path[0] === 'cm'){
+  } else if (path.length === 2 && path[0] === 'cm' && path[1] !== 'implante'){
     h += '<p class="q">5. Qual o tipo de moldagem?</p><div class="choices">'
       + '<button class="choice cm" data-act="pick" data-v="fechada"><b>Moldeira fechada</b><span>Os transfers ficam na boca e são reposicionados no molde. Mais simples.</span></button>'
       + '<button class="choice cm" data-act="pick" data-v="aberta"><b>Moldeira aberta</b><span>Os transfers saem presos no molde. Permite esplintar, mais precisa em vários implantes.</span></button></div>'
@@ -1002,6 +1073,8 @@ function guia(){
   } else {
     var key = keyNow(), d = D[key], done = load('done:' + key), n = d.steps.length;
     h += '<div class="' + d.theme + '-theme"><div class="banner ' + d.theme + '"><h2>' + d.title + '</h2></div>';
+    var nv = nivelOf(key);
+    if (nv) h += '<div class="note"><b>Moldagem ' + NIVEL_TXT[nv][0].toLowerCase() + '.</b> ' + NIVEL_TXT[nv][1] + '</div><div class="row" style="margin-top:8px"><button class="btn" data-act="ninfo">Implante ou pilar?</button></div>';
     h += '<div class="label">Componentes</div><div class="comps">';
     d.comps.forEach(function(c){ h += '<span>' + c + '</span>'; });
     h += '</div><div class="label">Passo a passo (toque para marcar)</div>';
@@ -1118,10 +1191,12 @@ document.addEventListener('click', function(e){
   if (a === 'opencat') return setView('catalogo');
   if (a === 'brand') brand = v;
   else if (a === 'pick') path.push(v);
+  else if (a === 'ninfo') info = true;
+  else if (a === 'ninfo-off') info = false;
   else if (a === 'fase'){ fase = v; path = []; }
   else if (a === 'gobrand'){ fase = null; path = []; }
   else if (a === 'back'){ if (path.length) path.pop(); else if (fase) fase = null; else brand = null; }
-  else if (a === 'reset'){ brand = null; fase = null; path = []; }
+  else if (a === 'reset'){ brand = null; fase = null; path = []; info = false; }
   else if (a === 'goto') path = path.slice(0, n);
   else if (a === 'step') toggle('done:' + keyNow(), i);
   else if (a === 'clear') save('done:' + keyNow(), []);
