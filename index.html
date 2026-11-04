@@ -5,15 +5,16 @@
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="Implantodontia">
-<meta name="theme-color" content="#0F5A44">
+<meta name="theme-color" content="#000000">
 <link rel="apple-touch-icon" href="icon-180.png">
 <link rel="manifest" href="manifest.json">
 <title>Guia Implantodontia</title>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700&family=Figtree:wght@400;500;600&display=swap">
 <style>
-/* Layout: uma coluna de celular, trilha de escolhas no topo, barra de abas fixa embaixo. GM em esmeralda, CM em ouro. */
+/* Layout: uma coluna de celular, barra de título no topo, barra de abas fixa embaixo. Cores por conexão: cone Morse 16° (GM, Grand Oss) em verde, cone Morse 11,5° (CM, Max CM) em dourado, hexágono externo (HE) em azul. Fundos neutros no estilo Apple. */
 :root{
-  --bg:#F3F6F4; --surface:#FFFFFF; --fg:#10201A; --muted:#58695F; --line:#D7DFDA;
+  --bg:#F2F2F7; --surface:#FFFFFF; --fg:#000000; --muted:#6C6C70; --line:#D1D1D6;
+  --he:#2F5F9E; --he-bg:#E1EBF7; --he-ink:#173A66;
   --gm:#0B6B4F; --gm-bg:#DFF0E8; --gm-ink:#07402F;
   --cm:#8A5E08; --cm-bg:#F5EBCF; --cm-ink:#5A3D04;
   --ok:#0B6B4F; --warn-bg:#FBF3DC;
@@ -22,17 +23,19 @@
 }
 @media (prefers-color-scheme: dark){
   :root:not([data-theme="light"]){
-    --bg:#0C1411; --surface:#14201B; --fg:#E7F0EA; --muted:#93A59B; --line:#263630;
+    --bg:#000000; --surface:#1C1C1E; --fg:#FFFFFF; --muted:#98989F; --line:#38383A;
+    --he:#7FB2F0; --he-bg:#16263B; --he-ink:#CFE2FA;
     --gm:#55CBA0; --gm-bg:#143629; --gm-ink:#BDEBD9;
     --cm:#E5B54F; --cm-bg:#392C10; --cm-ink:#F3DDA6;
-    --ok:#55CBA0; --warn-bg:#2B2410; color-scheme:dark;
+    --ok:#55CBA0; --warn-bg:#2C2A1E; color-scheme:dark;
   }
 }
 :root[data-theme="dark"]{
-  --bg:#0C1411; --surface:#14201B; --fg:#E7F0EA; --muted:#93A59B; --line:#263630;
+  --bg:#000000; --surface:#1C1C1E; --fg:#FFFFFF; --muted:#98989F; --line:#38383A;
+  --he:#7FB2F0; --he-bg:#16263B; --he-ink:#CFE2FA;
   --gm:#55CBA0; --gm-bg:#143629; --gm-ink:#BDEBD9;
   --cm:#E5B54F; --cm-bg:#392C10; --cm-ink:#F3DDA6;
-  --ok:#55CBA0; --warn-bg:#2B2410; color-scheme:dark;
+  --ok:#55CBA0; --warn-bg:#2C2A1E; color-scheme:dark;
 }
 *{box-sizing:border-box}
 html{-webkit-text-size-adjust:100%; background:var(--surface); min-height:100%}
@@ -51,7 +54,7 @@ body{
 .top b{font-family:var(--f-display); font-size:17px; font-weight:700; letter-spacing:-0.01em}
 /* no modo claro, o relógio do iPhone fica branco: a barra escurece só no app instalado */
 @media (display-mode: standalone) and (prefers-color-scheme: light){
-  .top{background:#10201A; color:#F3F6F4; border-bottom-color:#10201A}
+  .top{background:#1C1C1E; color:#FFFFFF; border-bottom-color:#1C1C1E}
 }
 /* preenche qualquer folga abaixo da barra de abas */
 nav::after{content:''; position:absolute; left:0; right:0; top:100%; height:200px; background:var(--surface)}
@@ -104,9 +107,15 @@ button:focus-visible{outline:3px solid var(--gm); outline-offset:2px}
 .seg button{text-align:center; padding:10px; border-radius:10px; font-weight:600; min-height:44px}
 .seg button.on.gm{background:var(--gm); color:var(--surface)}
 .seg button.on.cm{background:var(--cm); color:var(--surface)}
+.seg button.on.he{background:var(--he); color:var(--surface)}
+.chip.he{background:var(--he-bg); color:var(--he-ink); border-color:transparent}
+.choice.he{background:var(--he-bg); border-color:transparent}
+.choice.he b{color:var(--he-ink)}
+.banner.he{background:var(--he-bg); color:var(--he-ink)}
+.he-theme .bar i{background:var(--he)}
 .seg.n3{grid-template-columns:1fr 1fr 1fr}
 .chip.go{background:var(--gm-bg); color:var(--gm-ink); border-color:transparent}
-.chip.mx,.chip.he{background:var(--cm-bg); color:var(--cm-ink); border-color:transparent}
+.chip.mx{background:var(--cm-bg); color:var(--cm-ink); border-color:transparent}
 .group{margin-top:18px}
 .group h3{margin-bottom:8px}
 .item{padding:12px 14px; background:var(--surface); border:1px solid var(--line); border-top:0}
@@ -394,7 +403,7 @@ var LN = {
         'Extract Ø 3,75: lança, helicoidal 2,0 e piloto 2/3. Opcionais: helicoidais 2,8, 3,0 e 3,25, longas e piloto 3,0/3,75.',
         'Extract Ø 4,0: lança, helicoidal 2,0, piloto 2/3 e helicoidal 2,8. Opcionais: 3,0, 3,25, longas e pilotos 3,0/3,75 e 3,3/4,0.',
         'Cortical Ø 3,5: lança, helicoidal 2,0, helicoidal 2,8 e piloto 2,8/3,5. Ø 3,75: lança, 2,0, piloto 2/3, helicoidais 3,0 e 3,25. Ø 4,0: lança, 2,0, piloto 2/3, helicoidais 3,0 e 3,25 e piloto 3,3/4,0.']},
- he:{theme:'cm', nome:'Titaoss HE (hexágono externo)', modelos:'Advanced, Cônico, Extract, Cortical e Slim',
+ he:{theme:'he', nome:'Titaoss HE (hexágono externo)', modelos:'Advanced, Cônico, Extract, Cortical e Slim',
    chaves:'CTC (catraca curta), CTL (catraca longa) ou CAL (contra-ângulo). Plataforma Ø 3,4 usa montador 716.047 (curto) ou 716.048 (longo)', tapa:'tapa implante 704.073 (Ø 4,1) ou 704.057 (Ø 3,4)', rosca:'parafuso de retenção de 2,0 mm',
    seq:['Advanced e Cônico Ø 3,5: lança 703.167, helicoidal 2,0 703.142, cônica 3,5 703.019 e piloto 2/3 (opcional).',
         'Advanced e Cônico Ø 4,3: as mesmas, mais cônica 4,3 703.020.',
@@ -451,7 +460,7 @@ var PL = {
    cmn:{t:'32 N.cm', alt:'0,8 / 1,5 / 2,5 / 3,5 / 4,5 mm (702.097 a 702.101)'},
    mini:{t:'32 N.cm', alt:'reto 0,8 a 4,5 mm (702.103 a 702.107); angulado 17° e 30° em 1,5 / 2,5 / 3,5 mm (702.109 a 702.114)', ang:'20 N.cm (o catálogo cita 15 N.cm em outra página, confirme)'},
    cim:{t:'32 N.cm', alt:'reto Ø 3,3 e 4,5, alturas 1,5 / 2,5 / 3,5 mm, cimentável 4 ou 6 mm (702.002 a 702.022); angulado 17° e 30° (702.073 a 702.093)', ang:'20 N.cm'}},
- he:{theme:'cm', nome:'Titaoss HE', hex:'conexão catraca quadrada 1,3 mm (700.054 curta, 700.055 média) nos parafusos HE; hexagonal 1,2 mm nos Mini Abutments',
+ he:{theme:'he', nome:'Titaoss HE', hex:'conexão catraca quadrada 1,3 mm (700.054 curta, 700.055 média) nos parafusos HE; hexagonal 1,2 mm nos Mini Abutments',
    impl:{tr:'Transferente HE: TAS 3400 / TAS 4100 (aberta) ou TFS 3400 / TFS 4100 (fechada)', an:'Análogo HE (ANS 3400 ou ANS 4100)', cic:'cicatrizador HE, Ø 3,4 ou 4,1 (704.057 a 704.078)', t:'32 N.cm', sb:'', parte:'Cilindro provisório HE (702.277 a 702.280) ou cilindros HE (708.001 a 708.006, parafuso 709.002)'},
    mini:{t:'32 N.cm', alt:'reto 1 a 4 mm, plataforma Ø 3,4 ou 4,1 (702.298 a 702.305); angulado 17° e 30° em 2 / 3 / 4 mm (702.140 a 702.147)', ang:'20 N.cm'},
    cim:{t:'32 N.cm', alt:'reto Ø 4,1, 1 a 4 mm (702.207 a 702.210); angulado 17° (702.239 a 702.242)', ang:''}}
@@ -1078,7 +1087,7 @@ function guia(){
     if (brand === 'intraoss'){
       h += '<button class="choice gm" data-act="pick" data-v="go"><b>Grand Oss (GO)</b><span>Cone Morse 16°, conexão única. Advanced, Cônico, Extract e Cortical.</span></button>'
         + '<button class="choice cm" data-act="pick" data-v="mx"><b>Max CM</b><span>Cone Morse 11,5°. Advanced, Cônico, Extract e Cortical.</span></button>'
-        + '<button class="choice cm" data-act="pick" data-v="he"><b>Titaoss HE</b><span>Hexágono externo, plataforma Ø 4,1 ou 3,4.</span></button>';
+        + '<button class="choice he" data-act="pick" data-v="he"><b>Titaoss HE</b><span>Hexágono externo, plataforma Ø 4,1 ou 3,4.</span></button>';
     } else {
       h += '<button class="choice gm" data-act="pick" data-v="gm"><b>Implante GM</b><span>Grand Morse: Helix GM, Drive GM, Titamax GM, Helix GM Long e Zygoma GM.</span></button>'
         + '<button class="choice cm" data-act="pick" data-v="cm"><b>Implante CM</b><span>Cone Morse: Titamax, Alvim e Drive CM.</span></button>';
@@ -1088,7 +1097,7 @@ function guia(){
     h += '<p class="q">3. Qual a linha do implante?</p><div class="choices">'
       + '<button class="choice gm" data-act="pick" data-v="go"><b>Grand Oss (GO)</b><span>Cone Morse 16°.</span></button>'
       + '<button class="choice cm" data-act="pick" data-v="mx"><b>Max CM</b><span>Cone Morse 11,5°.</span></button>'
-      + '<button class="choice cm" data-act="pick" data-v="he"><b>Titaoss HE</b><span>Hexágono externo, plataforma Ø 4,1 ou 3,4.</span></button></div>'
+      + '<button class="choice he" data-act="pick" data-v="he"><b>Titaoss HE</b><span>Hexágono externo, plataforma Ø 4,1 ou 3,4.</span></button></div>'
       + '<div class="row"><button class="btn" data-act="back">Voltar</button></div>';
   } else if (brand === 'intraoss' && fase === 'pro' && path.length === 1){
     var hh = path[0] === 'he';
@@ -1171,7 +1180,7 @@ function catalogo(){
       var LS = LINES[cat[0]];
       if (!has(LS.map(function(l){ return l[0]; }), pLine)) pLine = LS[0][0];
       h += '<div class="seg n' + LS.length + '" role="group" aria-label="Linha">';
-      LS.forEach(function(l, i){ h += '<button class="' + (cat[0] === 'neodent' ? l[0] : (i === 0 ? 'gm' : 'cm')) + (pLine === l[0] ? ' on' : '') + '" data-act="line" data-v="' + l[0] + '">' + l[1] + '</button>'; });
+      LS.forEach(function(l, i){ h += '<button class="' + (cat[0] === 'neodent' ? l[0] : ({go:'gm', mx:'cm', he:'he'})[l[0]]) + (pLine === l[0] ? ' on' : '') + '" data-act="line" data-v="' + l[0] + '">' + l[1] + '</button>'; });
       h += '</div>';
       var shown = all.filter(function(x){ return x.line === pLine || x.line === 'all'; });
       if (shown.length === 0){
