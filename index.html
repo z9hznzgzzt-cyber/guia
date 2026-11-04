@@ -1,0 +1,775 @@
+<!doctype html>
+<html lang="pt-BR"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Implantodontia">
+<meta name="theme-color" content="#0F5A44">
+<link rel="apple-touch-icon" href="icon-180.png">
+<link rel="manifest" href="manifest.json">
+<title>Guia Implantodontia</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700&family=Figtree:wght@400;500;600&display=swap">
+<style>
+/* Layout: uma coluna de celular, trilha de escolhas no topo, barra de abas fixa embaixo. GM em esmeralda, CM em ouro. */
+:root{
+  --bg:#F3F6F4; --surface:#FFFFFF; --fg:#10201A; --muted:#58695F; --line:#D7DFDA;
+  --gm:#0B6B4F; --gm-bg:#DFF0E8; --gm-ink:#07402F;
+  --cm:#8A5E08; --cm-bg:#F5EBCF; --cm-ink:#5A3D04;
+  --ok:#0B6B4F; --warn-bg:#FBF3DC;
+  --f-display:"Bricolage Grotesque","Avenir Next",system-ui,sans-serif;
+  --f-body:"Figtree",system-ui,-apple-system,sans-serif;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#0C1411; --surface:#14201B; --fg:#E7F0EA; --muted:#93A59B; --line:#263630;
+    --gm:#55CBA0; --gm-bg:#143629; --gm-ink:#BDEBD9;
+    --cm:#E5B54F; --cm-bg:#392C10; --cm-ink:#F3DDA6;
+    --ok:#55CBA0; --warn-bg:#2B2410; color-scheme:dark;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#0C1411; --surface:#14201B; --fg:#E7F0EA; --muted:#93A59B; --line:#263630;
+  --gm:#55CBA0; --gm-bg:#143629; --gm-ink:#BDEBD9;
+  --cm:#E5B54F; --cm-bg:#392C10; --cm-ink:#F3DDA6;
+  --ok:#55CBA0; --warn-bg:#2B2410; color-scheme:dark;
+}
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{
+  margin:0; background:var(--bg); color:var(--fg); font:16px/1.5 var(--f-body);
+  padding-block:20px 104px;
+  padding-left:max(16px, env(safe-area-inset-left, 0px));
+  padding-right:max(16px, env(safe-area-inset-right, 0px));
+}
+.wrap{max-width:560px; margin:0 auto}
+h1,h2,h3{font-family:var(--f-display); margin:0; text-wrap:balance; letter-spacing:-0.01em}
+h1{font-size:28px; line-height:1.1; font-weight:700}
+h2{font-size:20px; line-height:1.2; font-weight:700}
+h3{font-size:16px; font-weight:700}
+.sub{color:var(--muted); font-size:14px; margin:6px 0 0}
+button{font:inherit; color:inherit; background:none; border:0; padding:0; cursor:pointer; text-align:left}
+button:focus-visible{outline:3px solid var(--gm); outline-offset:2px}
+.trail{display:flex; flex-wrap:wrap; gap:6px; margin:18px 0 16px}
+.chip{font-size:13px; font-weight:600; padding:6px 12px; border-radius:999px; border:1px solid var(--line); background:var(--surface); color:var(--muted); min-height:34px}
+.chip.on{color:var(--fg); border-color:var(--fg)}
+.chip.gm{background:var(--gm-bg); color:var(--gm-ink); border-color:transparent}
+.chip.cm{background:var(--cm-bg); color:var(--cm-ink); border-color:transparent}
+.q{font-family:var(--f-display); font-size:19px; font-weight:700; margin:0 0 12px}
+.choices{display:grid; gap:12px}
+.choice{display:block; width:100%; border-radius:16px; padding:18px; min-height:96px; border:1px solid var(--line); background:var(--surface)}
+.choice b{display:block; font-family:var(--f-display); font-size:22px; line-height:1.15}
+.choice span{display:block; margin-top:6px; font-size:14px; color:var(--muted)}
+.choice.gm{background:var(--gm-bg); border-color:transparent}
+.choice.gm b{color:var(--gm-ink)}
+.choice.cm{background:var(--cm-bg); border-color:transparent}
+.choice.cm b{color:var(--cm-ink)}
+.choice.soon{border-style:dashed; background:transparent; cursor:default}
+.choice.soon b{color:var(--muted)}
+.banner{border-radius:16px; padding:14px 16px; margin-bottom:16px}
+.banner.gm{background:var(--gm-bg); color:var(--gm-ink)}
+.banner.cm{background:var(--cm-bg); color:var(--cm-ink)}
+.banner h2{color:inherit}
+.label{font-size:12px; font-weight:600; letter-spacing:0.06em; text-transform:uppercase; color:var(--muted); margin:22px 0 8px}
+.comps{display:flex; flex-wrap:wrap; gap:8px}
+.comps span{font-size:14px; padding:6px 12px; border-radius:10px; background:var(--surface); border:1px solid var(--line)}
+.bar{height:6px; border-radius:3px; background:var(--line); overflow:hidden; margin:0 0 12px}
+.bar i{display:block; height:100%; background:var(--gm); width:0; transition:width .2s}
+.cm-theme .bar i{background:var(--cm)}
+.steps{display:grid; gap:8px; margin:0; padding:0; list-style:none}
+.step{display:flex; gap:12px; width:100%; padding:12px; border-radius:14px; background:var(--surface); border:1px solid var(--line); min-height:64px}
+.step .n{flex:0 0 28px; height:28px; border-radius:50%; background:var(--bg); border:1px solid var(--line); display:flex; align-items:center; justify-content:center; font-size:13px; font-weight:700}
+.step .t{min-width:0}
+.step .t b{display:block; font-weight:600}
+.step .t span{display:block; font-size:14px; color:var(--muted); margin-top:2px}
+.step.done{background:transparent}
+.step.done .n{background:var(--ok); border-color:var(--ok); color:var(--surface)}
+.step.done .t b{text-decoration:line-through; color:var(--muted)}
+.note{margin-top:10px; padding:12px 14px; border-radius:12px; background:var(--warn-bg); font-size:14px}
+.row{display:flex; gap:8px; flex-wrap:wrap; margin-top:18px}
+.btn{padding:10px 16px; border-radius:12px; border:1px solid var(--line); background:var(--surface); font-weight:600; font-size:14px; min-height:44px}
+.seg{display:grid; grid-template-columns:1fr 1fr; gap:4px; padding:4px; border-radius:14px; background:var(--line); margin:16px 0}
+.seg button{text-align:center; padding:10px; border-radius:10px; font-weight:600; min-height:44px}
+.seg button.on.gm{background:var(--gm); color:var(--surface)}
+.seg button.on.cm{background:var(--cm); color:var(--surface)}
+.group{margin-top:18px}
+.group h3{margin-bottom:8px}
+.item{padding:12px 14px; background:var(--surface); border:1px solid var(--line); border-top:0}
+.item:first-of-type{border-top:1px solid var(--line); border-radius:14px 14px 0 0}
+.item:last-child{border-radius:0 0 14px 14px}
+.item:only-child{border-radius:14px; border-top:1px solid var(--line)}
+.item b{display:block; font-weight:600}
+.item span{display:block; font-size:14px; color:var(--muted)}
+.cats{display:grid; grid-template-columns:repeat(auto-fit,minmax(150px,1fr)); gap:10px}
+.catbtn{display:block; padding:14px; min-height:84px; border-radius:14px; background:var(--surface); border:1px solid var(--line)}
+.catbtn b{display:block; font-family:var(--f-display); font-size:17px; line-height:1.2}
+.catbtn span{display:block; margin-top:4px; font-size:13px; color:var(--muted)}
+.catbtn.empty{background:transparent; border-style:dashed}
+.catbtn.empty b{color:var(--muted)}
+.cit{display:flex; gap:12px; width:100%; align-items:center; justify-content:space-between; padding:12px 14px; background:var(--surface); border:1px solid var(--line); border-top:0; min-height:60px}
+.cit:first-of-type{border-top:1px solid var(--line); border-radius:14px 14px 0 0}
+.cit:last-child{border-radius:0 0 14px 14px}
+.cit:only-child{border-radius:14px; border-top:1px solid var(--line)}
+.cit .tx{min-width:0}
+.cit .tx b{display:block; font-weight:600}
+.cit .d{display:block; font-size:14px; color:var(--muted)}
+.cit .add{flex:0 0 auto; font-size:13px; font-weight:600; padding:6px 12px; border-radius:999px; border:1px solid var(--line); white-space:nowrap}
+.cit.on .add{background:var(--ok); border-color:var(--ok); color:var(--surface)}
+.crow{display:flex; gap:12px; align-items:center; padding:12px 14px; background:var(--surface); border:1px solid var(--line); border-top:0}
+.crow:first-of-type{border-top:1px solid var(--line); border-radius:14px 14px 0 0}
+.crow:last-child{border-radius:0 0 14px 14px}
+.crow:only-child{border-radius:14px; border-top:1px solid var(--line)}
+.crow .tx{flex:1; min-width:0}
+.crow .tx b{display:block; font-weight:600}
+.crow .tx .d{display:block; font-size:13px; color:var(--muted)}
+.crow.done .tx b{text-decoration:line-through; color:var(--muted)}
+.cbox{flex:0 0 28px; height:28px; border-radius:8px; border:2px solid var(--muted); display:flex; align-items:center; justify-content:center; font-size:14px; font-weight:700; color:transparent}
+.crow.done .cbox{background:var(--ok); border-color:var(--ok); color:var(--surface)}
+.qty{flex:0 0 auto; display:flex; align-items:center; gap:6px}
+.qb{width:36px; height:36px; border-radius:10px; border:1px solid var(--line); background:var(--bg); display:flex; align-items:center; justify-content:center; font-weight:700; font-size:18px; line-height:1}
+.qn{min-width:20px; text-align:center; font-weight:600; font-variant-numeric:tabular-nums}
+.foot{margin-top:24px; font-size:13px; color:var(--muted)}
+nav{
+  position:fixed; left:0; right:0; bottom:0; z-index:5; background:var(--surface); border-top:1px solid var(--line);
+  display:grid; grid-template-columns:repeat(3,1fr);
+  padding:6px max(8px, env(safe-area-inset-right, 0px)) calc(6px + env(safe-area-inset-bottom, 0px)) max(8px, env(safe-area-inset-left, 0px));
+}
+nav button{text-align:center; padding:10px 4px; border-radius:12px; font-size:13px; font-weight:600; color:var(--muted); min-height:48px}
+nav button.on{color:var(--fg); background:var(--bg)}
+@media (prefers-reduced-motion: reduce){.bar i{transition:none}}
+</style>
+
+<div class="wrap">
+  <h1>Guia Implantodontia</h1>
+  <p class="sub">Moldagem de transferência e catálogo de componentes</p>
+  <div id="app"></div>
+</div>
+<nav aria-label="Seções">
+  <button id="t-guia" data-act="tab" data-v="guia">Guia</button>
+  <button id="t-catalogo" data-act="tab" data-v="catalogo">Catálogo</button>
+  <button id="t-compras" data-act="tab" data-v="compras">Compras</button>
+</nav>
+
+<script>
+var L = {uni:'Unitário', prot:'Protocolo', gm:'Implante GM', cm:'Implante CM', pilar:'Pilar', mini:'Mini pilar', fechada:'Moldeira fechada', aberta:'Moldeira aberta'};
+var BRANDS = {neodent:'Neodent'};
+var VIEWS = ['guia','catalogo','compras'];
+
+function fichaUni(linha, pilar, pilarInfo, moldagem){
+  return [
+    ['Paciente e datas','Nome do paciente, seu nome e CRO, data da moldagem e data desejada de entrega.'],
+    ['Dentes','Número de cada dente a restaurar. Identifique no molde ou no modelo cada análogo com o número do dente.'],
+    ['Tipo de trabalho','Coroa unitária parafusada sobre ' + pilar + '.'],
+    ['Implante','Neodent ' + linha + ', diâmetro e comprimento de cada implante.'],
+    ['Pilar', pilarInfo],
+    ['Moldagem', moldagem],
+    ['Material e cor','Material da coroa, cor pela escala e foto com a escala ao lado do dente vizinho.'],
+    ['Acesso do parafuso','Posição desejada do acesso e como selar (resina na face oclusal).'],
+    ['Oclusão e contatos','Contato proximal e oclusal, espaço para o antagonista e observações de mordida.'],
+    ['O que segue junto','Molde, antagonista, registro de mordida e as fotos.']
+  ];
+}
+function fichaMulti(linha, mini, moldagem){
+  return [
+    ['Paciente e datas','Nome do paciente, seu nome e CRO, data da moldagem e data desejada de entrega.'],
+    ['Tipo de trabalho','Prótese múltipla parafusada (ponte ou protocolo) sobre ' + mini + '.'],
+    ['Implantes e pilares','Neodent ' + linha + ', posição, diâmetro e comprimento de cada implante, altura e angulação de cada mini pilar.'],
+    ['Cilindros','Material do cilindro (titânio, calcinável ou CoCr) e quem fornece.'],
+    ['Moldagem', moldagem],
+    ['Estrutura e dentes','Material da estrutura, tipo de dentes e cor.'],
+    ['Registros','Mordida com DVO, linha do sorriso, antagonista e fotos.'],
+    ['Provas combinadas','Prova da estrutura, prova dos dentes e entrega.'],
+    ['O que segue junto','Molde com transfers e análogos, antagonista, registro de mordida e as fotos.']
+  ];
+}
+
+var D = {
+'gm|pilar':{theme:'gm', title:'GM com Pilar GM: coroa unitária parafusada, moldeira fechada',
+ comps:['Pilar GM (altura transmucosa)','Transfer do Pilar GM (com tampa roxa de vedação)','Análogo do Pilar GM','Cilindro de proteção','Cilindro anti-rotacional (lab): coping calcinável, CoCr ou titânio'],
+ steps:[
+ ['Remover o cicatrizador','Chave hexagonal, anti-horário. Irrigue com soro e seque. Trabalhe rápido, a mucosa colapsa.'],
+ ['Medir a mucosa','Sonda milimetrada da plataforma à margem gengival. Cinta do pilar cerca de 1 mm subgengival. Alturas do Pilar GM: 0,8 / 1,5 / 2,5 / 3,5 / 4,5 mm. Meça os dentes individualmente.'],
+ ['Instalar o Pilar GM','Assente, faça radiografia periapical para confirmar o assentamento e aplique o torque da bula (o catálogo cita 20 N.cm para o Pilar GM Exact). Espaço interoclusal mínimo de 4,9 mm a partir da mucosa.'],
+ ['Instalar o Transfer do Pilar GM','Aperto manual, sem tocar dentes vizinhos. O transfer já vem com a vedação do parafuso, uma tampa roxa. Encaixe-a para o silicone não entrar.'],
+ ['Moldar com moldeira fechada','Silicone leve ao redor dos transfers e denso na moldeira. Os transfers ficam na boca e voltam ao molde depois.'],
+ ['Conferir o molde','Sem bolhas ou rasgos na região dos transfers e do sulco. Se houver defeito, repita.'],
+ ['Montar os análogos','Remova os transfers, parafuse o Análogo do Pilar GM em cada um e reposicione no molde até o clique.'],
+ ['Proteger os pilares','Cilindros de proteção sobre os pilares, ou provisório.'],
+ ['Registros','Alginato do antagonista, silicone de mordida, cor com escala.'],
+ ['Enviar ao laboratório','Envie o molde, o antagonista, o registro de mordida e a ficha preenchida. O guia da ficha está logo abaixo.']],
+ ficha:fichaUni('GM','Pilar GM','Pilar GM, altura transmucosa e diâmetro de cada pilar. Diga se o cilindro anti-rotacional vai com você ou se o laboratório fornece.','Moldeira fechada, nível do pilar, com Transfer do Pilar GM.'),
+ notes:['Transfer (108.179) e análogo (101.101) do Pilar GM são universais. Não variam com a altura do pilar nem com o diâmetro do implante.','No Pilar GM, a moldagem é sempre com moldeira fechada.','Se em vez do Pilar GM você usar Munhão Anatômico, Base de titânio ou Pilar personalizado, a moldagem é no nível do implante: transfer 108.160 a 108.163 (universal) e análogo do implante, que depende do Ø (101.103 para 3,5/3,75; 101.089 para 4,0/4,3; 101.090 para 5,0/6,0).','Cilindro anti-rotacional: no catálogo de Portugal aparece como coping do Pilar GM (calcinável 118.298, CoCr 118.299, titânio 118.300). Torque do parafuso do coping: 10 N.cm.']},
+
+'gm|mini':{theme:'gm', title:'GM com Mini Pilar Cônico: prótese múltipla, moldeira aberta',
+ comps:['Mini Pilar Cônico GM (reto ou angulado)','Transfer de moldeira aberta slim','Análogo do mini pilar','Cilindro de proteção','Cilindros protéticos','Resina para esplintar'],
+ steps:[
+ ['Remover os cicatrizadores','Chave hexagonal, irrigação e secagem. Observe a saúde da mucosa.'],
+ ['Escolher altura e angulação','Reto, Ø 4,8 mm, em alturas de 0,8 / 1,5 / 2,5 / 3,5 / 4,5 / 5,5 mm, com mínimo de 4,5 mm de espaço interoclusal. Angulado de 17° ou 30° (alturas 1,5 / 2,5 / 3,5 mm) quando os implantes não estão paralelos. O 45° é só para Helix GM Long e Zygoma.'],
+ ['Instalar os mini pilares','Chave protética hexagonal. O protocolo da Neodent cita 32 N.cm para o reto e 20 N.cm para o angulado. Confirme na bula.'],
+ ['Radiografia e paralelismo','Confirme o assentamento e o paralelismo. Se divergirem demais, troque por angulado.'],
+ ['Instalar os transfers e esplintar','Transfer slim de moldeira aberta em cada mini pilar, ligados com resina e fio dental.'],
+ ['Moldar com moldeira aberta','Janela na moldeira, silicone denso e leve. Solte os parafusos pela janela e remova o molde com os transfers dentro.'],
+ ['Montar os análogos','Parafuse o análogo do mini pilar em cada transfer, dentro do molde.'],
+ ['Proteger os pilares','Cilindros de proteção até a prova ou entrega da prótese.'],
+ ['Registros','Antagonista, mordida (DVO se for protocolo), cor.'],
+ ['Enviar ao laboratório','Envie o molde, o antagonista, o registro de mordida e a ficha preenchida. O guia da ficha está logo abaixo.']],
+ ficha:fichaMulti('GM','Mini Pilar Cônico GM','Moldeira aberta, nível do mini pilar, transfers slim esplintados com resina.'),
+ notes:['O catálogo Neodent lista apenas transfer de moldeira aberta slim para o mini pilar cônico GM. Por isso este caminho usa moldeira aberta.','Esplintar os transfers garante a precisão em vários implantes.','Parafuso do cilindro protético: o protocolo cita 10 N.cm.','Análogo do mini pilar: 101.092. Transfer slim de moldeira aberta: 108.176. Os cilindros protéticos aparecem no catálogo de Portugal como copings (calcinável, CoCr e titânio).','Para coroa unitária parafusada, prefira Pilar GM ou Base de titânio. O mini pilar é para pontes e protocolo.']},
+
+'cm|pilar|fechada':{theme:'cm', title:'CM com Pilar CM: coroa unitária parafusada, moldeira fechada',
+ comps:['Pilar CM (Ø 4,8 mm)','Transfer GT Antirrotacional, moldeira fechada (108.040)','Análogo Reposicionável Híbrido Pilar CM/WS (101.096)','Cilindro de proteção','Cilindro GT Antirrotacional (lab): titânio, calcinável ou CoCr'],
+ steps:[
+ ['Conferir a linha dos componentes','Tudo da linha CM. Nada da linha GM encaixa. Confira no pedido se pilar e transfer são da mesma versão.'],
+ ['Remover o cicatrizador','Irrigue e seque o interior do implante.'],
+ ['Medir a mucosa','Meça os dentes individualmente e defina a altura transmucosa. O Pilar CM tem Ø 4,8 mm único; o que muda é a altura gengival (0,8 a 6,5 mm). Espaço interoclusal mínimo de 5,0 mm.'],
+ ['Instalar o Pilar CM','Assente, radiografia periapical e torque da bula CM.'],
+ ['Instalar o transfer de moldeira fechada','Aperto manual, sem tocar dentes vizinhos. Se o transfer não trouxer tampa de vedação, proteja o acesso ao parafuso com cera ou teflon.'],
+ ['Moldar com moldeira fechada','Silicone leve ao redor dos transfers e denso na moldeira. Os transfers ficam na boca e voltam ao molde depois.'],
+ ['Conferir e montar os análogos','Sem bolhas ou rasgos na região dos transfers. Remova os transfers, parafuse o Análogo do Pilar CM em cada um e reposicione no molde até o clique.'],
+ ['Proteger os pilares','Cilindros de proteção da linha CM.'],
+ ['Registros','Antagonista, mordida, cor.'],
+ ['Enviar ao laboratório','Envie o molde, o antagonista, o registro de mordida e a ficha preenchida. O guia da ficha está logo abaixo.']],
+ ficha:fichaUni('CM','Pilar CM','Pilar CM, altura gengival de cada pilar. Diga se o cilindro GT antirrotacional vai com você ou se o laboratório fornece.','Moldeira fechada, nível do pilar, com Transfer do Pilar CM.'),
+ notes:['Conferido no site e na eShop da Neodent Brasil.','No CM o análogo do implante é um só (101.088), diferente do GM. No nível do pilar, o Pilar CM usa o análogo 101.096.','Para coroa cimentada, o caminho é o Munhão Universal CM (Ø 3.3 ou 4.5).']},
+
+'cm|pilar|aberta':{theme:'cm', title:'CM com Pilar CM: coroa unitária parafusada, moldeira aberta',
+ comps:['Pilar CM (Ø 4,8 mm)','Transfer GT Antirrotacional, moldeira aberta (108.039)','Análogo Reposicionável Híbrido Pilar CM/WS (101.096)','Cilindro de proteção','Cilindro GT Antirrotacional (lab): titânio, calcinável ou CoCr','Moldeira com janela','Resina para esplintar (implantes vizinhos)'],
+ steps:[
+ ['Conferir a linha dos componentes','Tudo da linha CM. Nada da linha GM encaixa. Confira no pedido se pilar e transfer são da mesma versão.'],
+ ['Remover o cicatrizador','Irrigue e seque o interior do implante.'],
+ ['Medir a mucosa','Meça os dentes individualmente e defina a altura transmucosa. O Pilar CM tem Ø 4,8 mm único; o que muda é a altura gengival (0,8 a 6,5 mm). Espaço interoclusal mínimo de 5,0 mm.'],
+ ['Instalar o Pilar CM','Assente, radiografia periapical e torque da bula CM.'],
+ ['Instalar o transfer de moldeira aberta','Parafuso longo, aperto manual. Em implantes vizinhos, esplinte com resina e fio dental para ganhar precisão.'],
+ ['Moldar com moldeira aberta','Moldeira com janela, silicone denso e leve. Vede o parafuso com cera, solte-o pela janela depois da presa e remova o molde com os transfers dentro.'],
+ ['Conferir e montar os análogos','Sem bolhas ou rasgos na região dos transfers. Parafuse o Análogo do Pilar CM em cada transfer, dentro do molde.'],
+ ['Proteger os pilares','Cilindros de proteção da linha CM.'],
+ ['Registros','Antagonista, mordida, cor.'],
+ ['Enviar ao laboratório','Envie o molde, o antagonista, o registro de mordida e a ficha preenchida. O guia da ficha está logo abaixo.']],
+ ficha:fichaUni('CM','Pilar CM','Pilar CM, altura gengival de cada pilar. Diga se o cilindro GT antirrotacional vai com você ou se o laboratório fornece.','Moldeira aberta, nível do pilar, com Transfer do Pilar CM. Informe se os transfers foram esplintados.'),
+ notes:['Conferido no site e na eShop da Neodent Brasil.','No CM o análogo do implante é um só (101.088), diferente do GM. No nível do pilar, o Pilar CM usa o análogo 101.096.','Para coroa cimentada, o caminho é o Munhão Universal CM (Ø 3.3 ou 4.5).']},
+
+'cm|mini|fechada':{theme:'cm', title:'CM com Mini Pilar Cônico: prótese múltipla, moldeira fechada',
+ comps:['Mini Pilar Cônico CM (reto ou angulado)','Transfer de moldeira fechada do mini pilar','Análogo do mini pilar','Cilindro de proteção','Cilindros protéticos'],
+ steps:[
+ ['Remover os cicatrizadores','Irrigação e secagem.'],
+ ['Escolher altura e angulação','O catálogo CM lista mini pilares retos e angulados (17° e 30°).'],
+ ['Instalar os mini pilares','Torque da bula CM. Confirme o valor do reto e do angulado.'],
+ ['Radiografia e paralelismo','Confirme o assentamento e o alinhamento entre os pilares.'],
+ ['Instalar os transfers de moldeira fechada','Aperto manual, sem tocar os vizinhos. Proteja o acesso ao parafuso se o transfer não trouxer vedação.'],
+ ['Moldar com moldeira fechada','Silicone leve ao redor dos transfers e denso na moldeira. Os transfers ficam na boca e voltam ao molde depois.'],
+ ['Conferir e montar os análogos','Remova os transfers, parafuse o análogo do mini pilar em cada um e reposicione no molde até o clique.'],
+ ['Proteger os pilares','Cilindros de proteção do mini pilar.'],
+ ['Registros','Antagonista, mordida, cor.'],
+ ['Enviar ao laboratório','Envie o molde, o antagonista, o registro de mordida e a ficha preenchida. O guia da ficha está logo abaixo.']],
+ ficha:fichaMulti('CM','Mini Pilar Cônico CM','Moldeira fechada, nível do mini pilar, com transfers de moldeira fechada.'),
+ notes:['Conferido em parte na eShop brasileira: o Mini Pilar CM e os cilindros foram conferidos; transfer e análogo do mini pilar CM não foram confirmados.','Confirme com o representante qual transfer de moldeira fechada a linha oferece para o mini pilar CM. A plataforma do mini pilar é compartilhada entre linhas.']},
+
+'cm|mini|aberta':{theme:'cm', title:'CM com Mini Pilar Cônico: prótese múltipla, moldeira aberta',
+ comps:['Mini Pilar Cônico CM (reto ou angulado)','Transfer de moldeira aberta do mini pilar','Análogo do mini pilar','Cilindro de proteção','Cilindros protéticos','Moldeira com janela','Resina para esplintar'],
+ steps:[
+ ['Remover os cicatrizadores','Irrigação e secagem.'],
+ ['Escolher altura e angulação','O catálogo CM lista mini pilares retos e angulados (17° e 30°).'],
+ ['Instalar os mini pilares','Torque da bula CM. Confirme o valor do reto e do angulado.'],
+ ['Radiografia e paralelismo','Confirme o assentamento e o alinhamento entre os pilares.'],
+ ['Instalar os transfers e esplintar','Moldeira aberta, resina e fio dental ligando os transfers.'],
+ ['Moldar com moldeira aberta','Janela na moldeira, silicone denso e leve. Solte os parafusos pela janela e remova o molde com os transfers dentro.'],
+ ['Montar os análogos','Análogo do mini pilar em cada transfer, dentro do molde.'],
+ ['Proteger os pilares','Cilindros de proteção do mini pilar.'],
+ ['Registros','Antagonista, mordida, cor.'],
+ ['Enviar ao laboratório','Envie o molde, o antagonista, o registro de mordida e a ficha preenchida. O guia da ficha está logo abaixo.']],
+ ficha:fichaMulti('CM','Mini Pilar Cônico CM','Moldeira aberta, nível do mini pilar, transfers esplintados com resina.'),
+ notes:['Conferido em parte na eShop brasileira: o Mini Pilar CM e os cilindros foram conferidos; transfer e análogo do mini pilar CM não foram confirmados.','A plataforma do mini pilar é compartilhada entre linhas. Confirme com o representante se transfer e análogo são os mesmos do GM.']}
+};
+
+
+/* ===== Guia cirúrgico ===== */
+var CIR_CHECK = function(extra){ return [
+ ['Planejamento','CBCT ou radiografia panorâmica, tipo de osso, posição, diâmetro e comprimento de cada implante, anotados antes de abrir o kit.'],
+ ['Implantes','Separe o implante planejado e um de diâmetro vizinho de reserva, com a embalagem íntegra e a validade conferida.'],
+ ['Kit cirúrgico','Estojo esterilizado, brocas na sequência do diâmetro, stops (se Control Stop) e extensor de brocas.'],
+ ['Drivers e torque','Driver de contra-ângulo, driver para chave dinamométrica e catraca calibrada.'],
+ ['Tampas e cicatrizadores','Parafuso de fechamento (tampa) ou cicatrizador da altura e do diâmetro certos, mais um de reserva.'],
+ ['Campo e sutura','Soro, irrigação, aspiração, fio de sutura, e bisturi ou punch.']
+].concat(extra || []); };
+
+D['cir|uni|gm'] = {theme:'gm', title:'Cirurgia unitária com implante GM (Helix GM)',
+ comps:['Implante Helix GM','Broca lança Ø 2,0','Brocas cônicas Helix GM (ou Control Stop)','Brocas de contorno (osso tipo I e II)','Driver de contra-ângulo e driver dinamométrico','Cicatrizador ou parafuso de fechamento'],
+ steps:[
+ ['Planejar o caso','Avalie o volume e o tipo de osso na tomografia. Defina posição, diâmetro e comprimento do implante. Veja no Catálogo, em Cirúrgico, os diâmetros e comprimentos do Helix GM.'],
+ ['Preparar o campo','Anestesia, assepsia e campo. Separe o kit na ordem das brocas. Confira o implante e a validade da embalagem.'],
+ ['Acesso','Incisão e retalho, ou punch quando a técnica sem retalho for indicada. Exponha a crista para ver a posição do implante.'],
+ ['Marcar o sítio','Broca lança Ø 2,0 (103.170) rompe a cortical e define o ponto. Irrigação abundante em todas as brocas.'],
+ ['Fresar em sequência','Brocas cônicas Helix GM, da menor para a maior, até o diâmetro do implante. Com Control Stop, encaixe o stop da altura certa em cada broca. Conferir o paralelismo e a profundidade a cada broca.'],
+ ['Osso denso','Em osso tipo I e II, use a broca de contorno do diâmetro correspondente (3,5+ a 5,0+) antes de inserir.'],
+ ['Captar o implante','O driver de contra-ângulo (105.131) capta o implante direto da embalagem. A alternativa é o driver da chave dinamométrica, curto (105.129) ou longo (105.130).'],
+ ['Inserir o implante','Contra-ângulo com torque máximo de 35 N.cm; complete na catraca, máximo 60 N.cm. Anote o torque final. Posicione o implante 1 a 2 mm abaixo da crista óssea, usando as marcas a laser do driver como referência.'],
+ ['Fechar o caso','Cicatrizador, se a técnica for de uma etapa, ou parafuso de fechamento (tampa), aperto manual leve (cerca de 10 N.cm). Sutura sem tensão.'],
+ ['Controle e orientação','Radiografia periapical do assentamento. Oriente o paciente. Aguarde a osseointegração conforme seu protocolo antes da fase protética.']],
+ ficha:CIR_CHECK(),
+ notes:['As brocas cônicas Helix GM seguem código de cor por diâmetro. O comprimento da broca (curto 31, regular 35, longo 43 mm) é separado do comprimento do implante.','Sequência exata de brocas, velocidades e carga imediata: siga a bula e o protocolo cirúrgico do kit. O app não substitui a bula.']};
+
+D['cir|uni|cm'] = {theme:'cm', title:'Cirurgia unitária com implante CM (Titamax, Alvim ou Drive)',
+ comps:['Implante CM (Titamax CM, Alvim CM ou Drive CM)','Broca lança Ø 2,0','Brocas helicoidais ou Alvim (conforme o implante)','Brocas piloto CM','Conexões CM de contra-ângulo e catraca','Cicatrizador ou tampa'],
+ steps:[
+ ['Planejar o caso','Avalie volume e tipo de osso. Escolha o implante CM (Titamax, Alvim ou Drive), o diâmetro e o comprimento. Veja os modelos no Catálogo, em Cirúrgico.'],
+ ['Preparar o campo','Anestesia, assepsia e campo. Confira o kit cirúrgico CM e a validade do implante.'],
+ ['Acesso','Incisão e retalho, ou técnica sem retalho quando indicada.'],
+ ['Marcar o sítio','Broca lança Ø 2,0 (103.170) na cortical, com irrigação abundante.'],
+ ['Fresar em sequência','Titamax CM: brocas helicoidais Ø 2,0 / 2,8 / 3,0 / 3,3 / 3,8 / 4,3. Alvim e Drive CM: brocas Alvim Ø 2,0 / 3,5 / 4,3 / 5,0. Use o extensor de brocas se faltar espaço.'],
+ ['Osso denso e alvéolo','Brocas piloto CM para ampliar a entrada em osso denso ou alvéolo. Em Alvim em osso tipo I e II, use o macho de rosca do kit para implantes cônicos (110.277).'],
+ ['Captar e inserir','Conexão CM de contra-ângulo (105.075) até 35 N.cm. Complete com catraca curta ou longa (105.073 e 105.074), máximo 60 N.cm. Anote o torque final.'],
+ ['Profundidade','Posicione o implante 1 a 2 mm abaixo da crista óssea, conforme a bula do modelo.'],
+ ['Fechar o caso','Cicatrizador ou tampa de fechamento, aperto manual leve. Sutura sem tensão.'],
+ ['Controle e orientação','Radiografia periapical. Oriente o paciente. Aguarde a osseointegração conforme seu protocolo.']],
+ ficha:CIR_CHECK(),
+ notes:['Os códigos 105.073 a 105.075 são as conexões do implante CM; o torque máximo é 60 N.cm na catraca e 35 N.cm no contra-ângulo.','Cada modelo CM (Titamax, Alvim, Drive) tem sua sequência de brocas. Confirme na bula do implante. O app não substitui a bula.']};
+
+D['cir|prot|gm'] = {theme:'gm', title:'Protocolo com implantes GM (arcada completa, NeoArch)',
+ comps:['Helix GM, Helix GM Long ou Zygoma GM','Kit cirúrgico Helix GM','Guia multifuncional / guia cirúrgico','Mini pilares cônicos GM (retos e angulados)','Copings de moldagem esplintados','Cilindros e barra distal (provisório)'],
+ steps:[
+ ['Planejar a arcada','Tomografia, relação intermaxilar e posição dos implantes. No inferior, o padrão do catálogo usa 4 implantes. No superior atrófico, considere Helix GM Long ou Zygoma GM.'],
+ ['Decidir a técnica','Cirurgia guiada (kit de cirurgia guiada Neodent GM, com guia e acesso sem retalho) ou convencional, com guia multifuncional.'],
+ ['Regularizar a crista','Alveoloplastia com retalho, para criar plataforma óssea e espaço protético. Na mandíbula, respeite o forame mentoniano.'],
+ ['Distância do forame','Antes de fresar os distais, deixe distância segura do forame mentoniano. O catálogo cita instrumento de planejamento de espaço de 7 mm.'],
+ ['Fresar e inserir os implantes','Mesmo fluxo da unitária: broca lança, brocas cônicas até o diâmetro, broca de contorno em osso denso. Insira no contra-ângulo (máx. 35 N.cm) e finalize na catraca (máx. 60 N.cm). Anote o torque de cada implante.'],
+ ['Angulação e paralelismo','Implantes distais podem ser inclinados para ganhar comprimento. Compense com mini pilares angulados (17°, 30°; 45°, 52° e 60° para casos especiais, conforme a bula).'],
+ ['Instalar os mini pilares','Escolha a altura gengival pela espessura da mucosa. Instale com o torque da bula e confira o assentamento na radiografia.'],
+ ['Copings e esplintagem','Coloque os copings de moldagem e esplinte com resina acrílica, ou use a guia multifuncional para registrar as relações intermaxilares.'],
+ ['Moldar e registrar','Silicone macio para tecido mole, registro de mordida com DVO e linha do sorriso. Veja o guia protético de Mini Pilar GM para a moldagem.'],
+ ['Provisório e controle','Prótese provisória aparafusada (técnica híbrida de uma etapa ou barra distal, 10 N.cm no coping de barra). Radiografia final e orientação de dieta.']],
+ ficha:CIR_CHECK([['Carga imediata','Defina antes da cirurgia se haverá carga imediata e qual o critério de torque. Confirme na bula e no protocolo, o app não define esse valor.']]),
+ notes:['Pilares retos e angulados do NeoArch: 0°, 17°, 30°, 45°, 52° e 60°, com várias alturas gengivais.','A técnica híbrida de uma etapa usa copings para Mini ou Micro pilar cônico GM, cimentados à estrutura. Códigos 118.331, 118.340, 118.382.','Torques da carga imediata e sequência de brocas por tipo de osso: bula e protocolo do kit.']};
+
+D['cir|prot|cm'] = {theme:'cm', title:'Protocolo com implantes CM (arcada completa)',
+ comps:['Implantes CM (Titamax, Alvim ou Drive)','Kit cirúrgico CM','Guia cirúrgico / multifuncional','Mini pilares CM (retos e angulados)','Copings de moldagem esplintados'],
+ steps:[
+ ['Planejar a arcada','Tomografia, relação intermaxilar, posição e número de implantes. Defina o modelo CM de cada posição.'],
+ ['Preparar o campo','Anestesia, assepsia, kit cirúrgico CM (110.292) e implantes conferidos.'],
+ ['Regularizar a crista','Alveoloplastia com retalho. Respeite o forame mentoniano na mandíbula, com a distância de segurança planejada.'],
+ ['Marcar os sítios','Broca lança Ø 2,0 (103.170), com o guia cirúrgico quando houver.'],
+ ['Fresar em sequência','Por modelo: brocas helicoidais (Titamax CM) ou brocas Alvim. Confira o paralelismo entre os implantes a cada broca ou com pinos de direção.'],
+ ['Inserir os implantes','Conexão CM de contra-ângulo (105.075, máx. 35 N.cm) e catraca (105.073 e 105.074, máx. 60 N.cm). Anote o torque de cada implante.'],
+ ['Instalar os mini pilares','Altura gengival e angulação conforme o caso. Torque da bula e radiografia de assentamento.'],
+ ['Copings e esplintagem','Moldeira aberta com copings esplintados em resina. Veja o guia protético de Mini Pilar CM.'],
+ ['Registros','Registro de mordida com DVO, linha do sorriso, antagonista e fotos.'],
+ ['Provisório e controle','Prótese provisória conforme seu protocolo. Radiografia final e orientação ao paciente.']],
+ ficha:CIR_CHECK([['Carga imediata','Defina antes da cirurgia se haverá carga imediata e o critério de torque. Confirme na bula.']]),
+ notes:['O catálogo EMEA descreve a técnica de protocolo com Helix GM (NeoArch). Para CM, este roteiro é genérico: confirme a sequência e o torque na bula de cada modelo.','Torques e sequências: bula e protocolo do kit.']};
+
+var CATS = [['pilares','Pilares'],['mini','Mini pilares'],['transfer','Transfer'],['analogo','Análogo'],['implantes','Implantes'],['cicatrizadores','Cicatrizadores e tampas'],['parafusos','Parafusos'],['cilindros','Cilindros de proteção'],['kits','Kits cirúrgicos'],['brocas','Brocas e stops'],['drivers','Drivers de implante'],['scanbodies','Transfers de escaneamento'],['copings','Cilindros protéticos'],['instrumental','Instrumental']];
+
+var ITEMS = [
+ // [id, categoria, linha, nome, descrição, código(s), conferido no catálogo 2026 (1 = sim)]
+ ['gm-pilar','pilares','gm','Pilar GM','Ø 4,8 mm || Altura: 0,8 / 1,5 / 2,5 / 3,5 / 4,5 mm || Coroa unitária parafusada. Mínimo de 4,9 mm de espaço interoclusal','115.269 a 115.273',1],
+ ['gm-bti','pilares','gm','Base de titânio GM','Ø: 3,5 / 4,5 / 5,5 / 6,5 mm || Altura gengival: 0,8 / 1,5 / 2,5 / 3,5 / 4,5 mm || Área cimentável: 4 ou 6 mm || Coroa unitária CAD/CAM','135.355 a 135.398',1],
+ ['gm-bti-as','pilares','gm','Base de titânio SA GM','Ø: 4,0 / 4,5 / 5,5 mm || Altura gengival: 0,8 / 1,5 / 2,5 mm || Área cimentável: 4 ou 6 mm || Solução angulada: parafuso em canal angulado, chave própria','135.327 a 135.344',1],
+ ['gm-bti-c','pilares','gm','Base de titânio C para GM','Ø 4,65 mm || Altura gengival: 0,8 / 1,5 / 2,5 / 3,5 / 4,5 / 5,5 mm || Área cimentável: 4,7 mm || Fluxo CEREC; scanbody comprado do fabricante do scanner','135.349 a 135.354',1],
+ ['gm-bti-ponte','pilares','gm','Base de titânio GM para ponte','Ø: 3,5 / 4,5 / 5,5 mm || Altura gengival: 0,8 / 1,5 / 2,5 / 3,5 / 4,5 mm || Área cimentável: 4,0 mm (Ø 3,5) ou 4,5 mm || Prótese parafusada múltipla','135.399 a 135.413',1],
+ ['gm-bloco','pilares','gm','Pilar personalizado de titânio GM','Para fresagem. Suporte Medentika Ø 11,5 ou 15,8 mm; suporte Amann Girrbach Ø 12,0 mm. Parafuso vendido à parte','135.456, 135.457, 135.461',1],
+ ['gm-universal','pilares','gm','Munhão Universal GM','Ø: 3,3 / 4,5 mm || Área cimentável: 4 ou 6 mm || Altura reto: 0,8 / 1,5 / 2,5 / 3,5 / 4,5 / 5,5 mm || Altura 17° e 30°: 1,5 / 2,5 / 3,5 mm || Click Exact, cimentada','114.802 a 114.849',1],
+ ['gm-anatomico','pilares','gm','Munhão Anatômico GM','Altura: 1,5 / 2,5 / 3,5 mm || Reto e 17°, mais versão estreita || Click Exact, cimentada, região anterior','114.862 a 114.873',1],
+ ['gm-cocr','pilares','gm','Conjunto de pilar de CoCr GM','Pilar de CoCr, parafuso de titânio e análogo. Para sobrefundição, implante no nível ósseo','118.309 a 118.311',1],
+ ['gm-peek','pilares','gm','Pilar GM Pro PEEK','Ø: 4,5 / 6,0 mm || Altura: 0,8 / 1,5 / 2,5 / 3,5 / 4,5 / 5,5 mm || Provisório unitário, personalizável na boca','114.874 a 114.885',1],
+ ['gm-prov-ti','pilares','gm','Pilar provisório de titânio GM','Ø: 3,5 / 4,5 mm || Altura: 0,8 / 1,5 / 2,5 / 3,5 mm || Provisório de coroa ou ponte, com retenções para acrílico','118.344 a 118.359',1],
+ ['gm-novaloc','pilares','gm','Novaloc GM','Altura: 0,8 / 1,5 / 2,5 / 3,5 / 4,5 / 5,5 mm || Reto e 15° (com parafuso removível) || Sobredentadura','102.161 a 102.172',1],
+ ['gm-attach','pilares','gm','Attachment TiN GM','Altura: 0,8 / 1,5 / 2,5 / 3,5 / 4,5 / 5,5 mm || Reto e 15° || Prótese removível','102.148 a 102.159',1],
+ ['gm-equator','pilares','gm','Equator GM','Overdenture. Não consta no catálogo EMEA; conferir no catálogo do Brasil','',0],
+ ['cm-pilar','pilares','cm','Pilar CM','Ø 4,8 mm || Altura gengival: 0,8 / 1,5 / 2,5 / 3,5 / 4,5 / 5,5 / 6,5 mm || Prótese unitária parafusada, região posterior. Mínimo de 5,0 mm interoclusal','115.147, 115.148, 115.152, 115.162 a 115.165',1],
+ ['cm-bti','pilares','cm','Base de titânio CM Exact','3,5 × 4 mm || Altura gengival: 0,8 / 1,5 / 2,5 / 3,5 mm || Coroa CAD/CAM, parafusada ou cimentada','135.113 a 135.116',1],
+ ['cm-bti-cerec','pilares','cm','Base de titânio CM Exact para CEREC','Ø 4,65 mm || Altura gengival: 0,8 / 1,5 / 2,5 / 3,5 / 4,5 / 5,5 mm || Mínimo de 5,0 mm interoclusal','135.191 a 135.196',1],
+ ['cm-preface','pilares','cm','Bloco de titânio CM para CAD/CAM','Restauração parafusada ou cimentada. Consta no site brasileiro; códigos não consultados','',1],
+ ['cm-universal','pilares','cm','Munhão Universal CM','Ø: 3,3 / 4,5 mm || Área cimentável: 4 / 6 mm || Altura gengival: 1,5 / 2,5 / 3,5 mm (alguns também 4,5) || Versão comum e Exact; reto, 17° e 30° (59 variações na eShop). Cimentada, região anterior','Comum 114.077 a 114.088; Exact 114.340 em diante',1],
+ ['cm-anatomico','pilares','cm','Munhão Anatômico CM Exact (lateral)','Altura gengival: 1,5 / 2,5 / 3,5 mm || Cimentada, região anterior','114.425 a 114.427',1],
+ ['cm-coping-prov','pilares','cm','Cilindro provisório do Munhão Universal','Polímero, sobre o Munhão Universal CM. 3,3×4 (118.192), 3,3×6 (118.193), 4,5×4 (118.194), entre outros','118.192 a 118.194',1],
+ ['cm-equator','pilares','cm','Attachment Equator CM','Ø 3,3 mm || Altura gengival: 1,5 / 2,5 / 3,5 / 4,5 / 5,5 mm || Prótese removível; permite até 30° entre implantes. Captura em boca, um pilar de cada vez','102.132 a 102.136',1],
+ ['cm-castable','pilares','cm','Attachment Bola calcinável','Polímero, Ø 3,3 mm, altura gengival 0','102.141',1],
+
+ ['gm-mini-reto','mini','gm','Mini Pilar Cônico GM reto','Ø 4,8 mm || Altura: 0,8 / 1,5 / 2,5 / 3,5 / 4,5 / 5,5 mm || Prótese parafusada múltipla (pontes e protocolo). Mínimo de 4,5 mm interoclusal','115.243 a 115.248',1],
+ ['gm-mini-ang','mini','gm','Mini Pilar Cônico GM angulado','17° e 30°: altura 1,5 / 2,5 / 3,5 mm || 45° só com Helix GM Long e Zygoma; 52°, 60° e 45° Slim só com Zygoma','115.275 a 115.286, 115.300 a 115.303',1],
+ ['gm-micro','mini','gm','Micro Pilar GM','Ø 3,5 mm || Altura: 0,8 / 1,5 / 2,5 / 3,5 / 4,5 / 5,5 mm || Unitária ou múltipla parafusada em espaço reduzido (mínimo 3,5 mm)','115.255 a 115.260',1],
+ ['cm-mini','mini','cm','Mini Pilar Cônico CM','Ø 4,8 mm || Reto, altura gengival: 0,8 / 1,5 / 2,5 / 3,5 / 4,5 / 5,5 / 6,5 mm || Angulado 17° e 30°, altura gengival 1,5 / 2,5 / 3,5 mm || Versão comum e Exact. Prótese múltipla parafusada; mínimo de 4,4 mm interoclusal (reto)','Reto 115.149 a 115.161; angulado 115.166 a 115.171; angulado Exact 115.206 a 115.211',1],
+ ['cm-micro','mini','cm','Micro Pilar CM','Ø 3,5 mm || Altura gengival: 0,8 / 1,5 / 2,5 / 3,5 / 4,5 mm || Prótese múltipla parafusada, implantes próximos; mínimo de 3,5 mm interoclusal','115.200 a 115.202, 115.212, 115.213',1],
+ ['cm-hybrid','mini','cm','Cilindro GT Assentamento Passivo (One Step Hybrid CM)','Titânio 118.172, latão 118.173, calcinável 118.174','118.172 a 118.174',1],
+
+ ['gm-tr-impl','transfer','gm','Transfer Exact para Implante GM','Nível do implante, titânio. Moldeira fechada: 108.160 (regular), 108.161 (longo). Moldeira aberta: 108.162 (regular), 108.163 (longo). Serve para Munhão Anatômico, Base de titânio, Pilar personalizado e CoCr','108.160 a 108.163',1],
+ ['gm-tr-ponte','transfer','gm','Transfer para Implante GM, moldeira aberta','Nível do implante, para Base de titânio de ponte. Regular 108.158, longo 108.159','108.158 e 108.159',1],
+ ['gm-tr-pilar','transfer','gm','Transfer do Pilar GM, moldeira fechada','Ø 4,8 mm, titânio. Um só modelo para todas as alturas do pilar','108.179',1],
+ ['gm-tr-mini','transfer','gm','Transfer Mini Pilar, moldeira aberta Slim','Para o Mini Pilar Cônico GM','108.176',1],
+ ['gm-tr-micro-f','transfer','gm','Transfer do Micro Pilar, moldeira fechada antirrotacional','Prótese unitária','108.182',1],
+ ['gm-tr-micro-a','transfer','gm','Transfer do Micro Pilar, moldeira aberta Slim','Para próteses múltiplas','108.178',1],
+ ['gm-tr-univ','transfer','gm','Transfer do Munhão Universal Click','Polímero, moldeira fechada. 4 combinações: Ø 3,3 ou 4,5 × área cimentável 4 ou 6 mm','108.172 a 108.175',1],
+
+ ['gm-an-35','analogo','gm','Análogo Reposicionável Híbrido GM Ø 3,5 / 3,75','Nível do implante (convencional e digital)','101.103',1],
+ ['gm-an-40','analogo','gm','Análogo Reposicionável Híbrido GM Ø 4,0 / 4,3','Nível do implante (convencional e digital)','101.089',1],
+ ['gm-an-50','analogo','gm','Análogo Reposicionável Híbrido GM Ø 5,0 / 6,0 / 7,0','Nível do implante (convencional e digital)','101.090',1],
+ ['gm-an-pilar','analogo','gm','Análogo Reposicionável Híbrido do Pilar GM','Um só modelo para todas as alturas do pilar','101.101',1],
+ ['gm-an-mini','analogo','gm','Análogo Reposicionável Híbrido Mini Pilar','Mini Pilar Cônico GM. Existe também o análogo em titânio convencional, 101.020','101.092',1],
+ ['gm-an-micro','analogo','gm','Análogo Reposicionável Híbrido Micro Pilar','Micro Pilar GM','101.091',1],
+ ['gm-an-univ','analogo','gm','Análogo Reposicionável Híbrido Munhão Universal','4 combinações: Ø 3,3 ou 4,5 × área cimentável 4 ou 6 mm','101.097 a 101.100',1],
+
+
+ ['gm-cic','cicatrizadores','gm','Cicatrizador GM','Ø: 3,3 / 4,5 mm || Altura gengival: 0,8 / 1,5 / 2,5 / 3,5 / 4,5 / 5,5 mm || Ø 5,0 / 5,5 / 6,5 mm também existem, altura 1,5 a 4,5 mm (106.250 a 106.257)','106.207 a 106.218',1],
+ ['gm-cic-pers','cicatrizadores','gm','Cicatrizador personalizável GM','Ø 5,5 mm: altura gengival 1,5 / 2,5 / 3,5 / 4,5 / 5,5 || Ø 7,0 mm: altura gengival 2,5 / 3,5 / 4,5 / 5,5 / 6,5','106.223 a 106.232',1],
+ ['gm-cic-cocr','cicatrizadores','gm','Cicatrizador da base CoCr GM','Acompanha o conjunto de pilar de CoCr. Por diâmetro do implante: 3,5/3,75 (106.237), 4,0/4,3 (106.238), 5,0/6,0 (106.239)','106.237 a 106.239',1],
+ ['gm-tampa','cicatrizadores','gm','Tampa de fecho GM','Para cirurgia submersa, perfil 0 ou 2 mm. Torque máximo 10 N.cm','117.021 e 117.022',1],
+
+ ['gm-par-curto','parafusos','gm','Parafuso GM Neo curto','Para pilares com gengiva 0,8 mm','116.290',1],
+ ['gm-par-med','parafusos','gm','Parafuso GM Neo','Para pilares com gengiva 1,5 a 2,5 mm (o catálogo traz 0,8 a 2,5 em algumas páginas)','116.291',1],
+ ['gm-par-longo','parafusos','gm','Parafuso GM Neo longo','Para pilares com gengiva 3,5 a 5,5 mm e bases de titânio. Torque 20 N.cm','116.292',1],
+ ['gm-par-sa','parafusos','gm','Parafuso estéril para Base de titânio SA','Reposição, solução angulada','116.288',1],
+ ['gm-par-coping','parafusos','gm','Parafuso do coping do Pilar GM','Reposição, titânio (116.266) ou Neotorque (116.267). Torque 10 N.cm','116.266 e 116.267',1],
+ ['gm-par-coping-m','parafusos','gm','Parafuso do coping de Mini e Micro Pilar','Reposição, titânio ou Neotorque. Torque 10 N.cm','116.269 e 116.270',1],
+ ['gm-par-prov','parafusos','gm','Parafuso estéril do pilar provisório GM','Reposição, titânio ou Neotorque','116.285 e 116.286',1],
+
+ ['gm-cil-pilar','cilindros','gm','Cilindro de proteção do Pilar GM','Protege o pilar durante o laboratório','106.221',1],
+ ['gm-cil-mini','cilindros','gm','Cilindro de proteção do Mini Pilar GM','Protege o mini pilar durante o laboratório','106.268',1],
+ ['gm-cil-micro','cilindros','gm','Cilindro de proteção do Micro Pilar GM','Protege o micro pilar durante o laboratório','106.267',1],
+ ['gm-prot-mini','cilindros','gm','Protetor de polimento do Mini Pilar Cônico','Para polimento da prótese sobre o mini pilar','123.008',1],
+ ['gm-prot-micro','cilindros','gm','Protetor de polimento do Micro Pilar','Para polimento da prótese sobre o micro pilar','123.015',1],
+
+ ['gm-sb-impl','scanbodies','gm','Transfer para escaneamento do Implante GM (intraoral)','Titânio, Exact','108.207',1],
+ ['gm-sb-pilar','scanbodies','gm','Transfer para escaneamento do Pilar GM','Intraoral e de modelo','108.220',1],
+ ['gm-sb-mini','scanbodies','gm','Transfer para escaneamento do Mini Pilar GM','Intraoral e de modelo','108.218',1],
+ ['gm-sb-micro','scanbodies','gm','Transfer para escaneamento do Micro Pilar GM','Intraoral e de modelo','108.219',1],
+ ['gm-sb-univ','scanbodies','gm','Transfer para escaneamento intraoral do Munhão Universal','Polímero, serve para GM, CM e WS. 4 combinações: Ø 3,3 ou 4,5 × área cimentável 4 ou 6 mm','108.143 a 108.146',1],
+
+ ['gm-cop-pilar','copings','gm','Cilindro do Pilar Antirrotacional Neo (Pilar GM)','Ø 4,8 mm. Calcinável 118.298, CoCr 118.299, titânio 118.300. Fluxo digital: 118.362. Torque do parafuso 10 N.cm','118.298 a 118.300, 118.362',1],
+ ['gm-cop-mini','copings','gm','Cilindro do Mini Pilar Cônico Neo','Calcinável 118.301, titânio 118.302, CoCr 118.303. Extensão distal (titânio) 118.308','118.301 a 118.303, 118.308',1],
+ ['gm-cop-micro','copings','gm','Cilindro do Micro Pilar Neo','Ø 3,5 mm. Coroa antirrotacional: calcinável 118.315, CoCr 118.316, titânio 118.317. Ponte: 118.295, 118.296, 118.297. Fluxo digital: 118.363','118.295 a 118.297, 118.315 a 118.317, 118.363',1],
+ ['gm-cop-bti','copings','gm','Cilindro calcinável com base de titânio GM','Personalizável até 4 mm; área cimentável 4 ou 6 mm','118.322 a 118.342',1],
+
+ ['gm-ins-chave','instrumental','gm','Chave dinamométrica','Encaixe para conexões quadrangulares, desmontável','104.050',1],
+ ['gm-ins-neo','instrumental','gm','Conexão de chave de parafusos Neo, para dinamométrica','Curta 16,5 mm, média 22 mm, longa 32 mm','105.133, 105.132, 105.157',1],
+ ['gm-ins-ca','instrumental','gm','Conexão de chave de parafusos Neo, contra-ângulo','Extracurta 105.146 (indicada para transfers, tampas e cicatrizadores), curta 105.135, longa 105.160','105.146, 105.135, 105.160',1],
+ ['gm-ins-manual','instrumental','gm','Chave de parafusos manual Neo','Curta 21 mm, média 25 mm, longa 37 mm','104.058, 104.060, 104.070',1],
+ ['gm-ins-hex','instrumental','gm','Chave hexagonal para próteses','Para instalar mini pilares, pilares cônicos e micro pilares; contra-ângulo ou dinamométrica','105.138, 105.137',1],
+ ['gm-ins-sa','instrumental','gm','Chave de parafusos para Base Ti SA','Dinamométrica (105.150 a 105.152) ou contra-ângulo (105.147 a 105.149). Torque máximo 20 N.cm','105.147 a 105.152',1],
+ ['gm-ins-remov','instrumental','gm','Removedores de pilar e parafuso Neo','Para pilares com rosca interna e parafusos removíveis Neo','130.114 a 130.119',1],
+ ['gm-ins-altura','instrumental','gm','Medidor de altura GM','Seleção da altura do pilar','128.028',1],
+ ['gm-ins-angulo','instrumental','gm','Medidor de ângulo GM','17° (128.032) e 30° (128.033)','128.032 e 128.033',1],
+ ['gm-ins-perfil','instrumental','gm','Broca de perfil ósseo GM com guia','Segunda etapa cirúrgica, prepara o perfil de emergência','103.424',1],
+ ['gm-ins-kit','instrumental','gm','Kit de seleção protética GM','Pilares de prova, reto, 17°, 30° e anatômico, mais medidor de altura. Estojo pré-montado 110.305','110.295, 110.305',1],
+ ['cm-peek','pilares','cm','Munhão PEEK Pro CM','Polímero biocompatível de fácil customização. Restauração provisória. Consta no site brasileiro; códigos não consultados','',1],
+ ['cm-tr-impl','transfer','cm','Transfer Exact para Implante CM','Nível do implante, titânio. Moldeira fechada: 108.152 (regular), 108.153 (longo). Moldeira aberta: 108.154 (regular), 108.155 (longo). Versão não Exact: 108.148 a 108.151','108.152 a 108.155',1],
+ ['cm-tr-pilar','transfer','cm','Transfer GT Antirrotacional (Pilar CM)','Titânio. Moldeira fechada 108.040; moldeira aberta 108.039','108.039 e 108.040',1],
+ ['cm-tr-univ','transfer','cm','Transfer do Munhão Universal','Polímero, moldeira fechada. 4 combinações: Ø 3,3 ou 4,5 × área cimentável 4 ou 6 mm. Confirme se serve para a versão Exact','108.042 a 108.045',1],
+ ['cm-tr-mini','transfer','cm','Transfer Multifuncional do Mini Pilar, moldeira aberta','Ø 4,1 mm. A eShop não indica a linha; confirmar com o representante. O transfer de moldeira fechada do mini pilar CM não foi localizado','108.068',0],
+ ['cm-an-impl','analogo','cm','Análogo Reposicionável Híbrido CM','Nível do implante. Um só modelo, sem divisão por diâmetro do implante','101.088',1],
+ ['cm-an-pilar','analogo','cm','Análogo Reposicionável Híbrido Pilar CM/WS','Para o Pilar CM, um só modelo para todas as alturas','101.096',1],
+ ['cm-an-mini','analogo','cm','Análogo Reposicionável Híbrido Mini Pilar','Híbrido 101.092 (4,1 mm) ou 101.093 (5,0 mm); titânio convencional 101.020. A eShop não indica qual serve ao CM','101.092, 101.093, 101.020',0],
+ ['cm-cic','cicatrizadores','cm','Cicatrizador CM','Ø: 3,3 / 4,5 mm || Altura gengival: 0,8 / 1,5 / 2,5 / 3,5 / 4,5 / 5,5 / 6,5 mm','106.168 a 106.175, 106.180 a 106.185',1],
+ ['cm-sb-impl','scanbodies','cm','Transfer para escaneamento do Implante CM Exact','Polímero 108.101; titânio 108.211','108.101, 108.211',1],
+ ['cm-sb-pilar','scanbodies','cm','Transfer para escaneamento do Pilar CM, GT e WS','Polímero','108.103',1],
+ ['cm-sb-micro','scanbodies','cm','Transfer para escaneamento do Micro Pilar (CM/Facility)','Polímero 108.102; titânio 108.216','108.102, 108.216',1],
+ ['cm-sb-univ','scanbodies','cm','Transfer para escaneamento intraoral do Munhão Universal','Polímero, serve para GM, CM e WS. Ø 3,3 ou 4,5 × área cimentável 4 ou 6 mm','108.143 a 108.146',1],
+ ['cm-cop-pilar','copings','cm','Cilindro GT Antirrotacional (Pilar CM)','Titânio 118.179, calcinável 118.180, CoCr 118.242. Fluxo digital 118.364','118.179, 118.180, 118.242, 118.364',1],
+ ['cm-cil-mini','cilindros','cm','Cilindro de proteção do Mini Pilar Cônico (CM, WS, HE)','4,1 mm (106.054) ou 5,0 mm (106.055)','106.054, 106.055',1],
+ ['cm-ins-medalt','instrumental','cm','Medidor de altura CM','Titânio, marcações de 0,8 a 6,5 mm de altura gengival','128.015',1],
+ ['cm-ins-medang','instrumental','cm','Medidor de ângulo','17° (128.030) e 30° (128.031)','128.030 e 128.031',1],
+ ['cm-ins-con','drivers','cm','Conexões CM (implante)','Contra-ângulo 105.075; catraca curta e longa 105.073 e 105.074. Torque máximo 60 N.cm (catraca) e 35 N.cm (contra-ângulo)','105.073 a 105.075',1],
+ ['cm-ins-catraca','instrumental','cm','Chave catraca torquímetro','Variação menor que 5%, desmontável para limpeza','104.050',1],
+ ['cm-ins-chave','instrumental','cm','Chave digital sextavada','0,9 mm (104.041, média) e 1,2 mm (104.012, média). Para parafusos de cobertura, cicatrizadores e pilares','104.041, 104.012',1],
+ ['cm-ins-perfil','instrumental','cm','Broca perfil ósseo CM','Segunda fase cirúrgica, prepara o perfil de emergência','103.378',1],
+ ['cm-ins-kit-prot','instrumental','cm','Kit protético CM','Conexões de torque, chave transfer e medidor de altura. Estojo 110.267','110.267',1],
+ ['cm-ins-kit-sel','instrumental','cm','Kit de seleção protética CM','Munhões de prova (Universal, angulado, anatômico) para planejar a altura. Estojo 110.266','110.266',1],
+ ['cm-par-hex','parafusos','cm','Parafuso Sextavado Neotorque','Titânio. Ø 3,3 mm (116.188), Ø 4,1/4,3 mm (116.180), Ø 5,0 mm (116.189). A eShop não diz qual pilar CM usa cada um; conferir na bula','116.180, 116.188, 116.189',0],
+ ['cm-par-quad','parafusos','cm','Parafuso Quadrado em Titânio','Ø 3,3 mm (116.140), Ø 4,1/4,3 mm (116.141), Ø 5,0 mm (116.142). A eShop não diz qual pilar CM usa cada um; conferir na bula','116.140 a 116.142',0],
+ ['gm-kit-cir','kits','gm','Kit cirúrgico Helix GM','Estojo de polímero autoclavável (110.288) para Helix GM em todos os tipos de osso. Versão pré-montada completa: 110.303. Os itens são vendidos separados','110.288, 110.303',1],
+ ['gm-kit-comp','kits','gm','Kit cirúrgico compacto Helix GM','Estojo (110.297). Versão pré-montada completa: 110.302. Os itens são vendidos separados','110.297, 110.302',1],
+ ['gm-kit-cs','kits','gm','Kit cirúrgico compacto Helix GM, Control Stop','Mesmo estojo (110.297), com brocas cônicas Control Stop. Pré-montado: 110.308 (a broca cônica 7,0 não vem no pré-montado)','110.297, 110.308',1],
+ ['gm-kit-stop','kits','gm','Kit de stops para broca Control','Estojo (110.307) para esterilizar e encaixar os stops nas brocas. Pré-montado completo: 110.306','110.307, 110.306',1],
+ ['gm-br-ini','brocas','gm','Broca inicial (lança) Ø 2,0','Aço cirúrgico, Ø 2,0 mm. Rompe a cortical','103.170',1],
+ ['gm-br-con','brocas','gm','Brocas cônicas Helix GM e Drive GM','Ø 2,0 / 3,5 / 3,75 / 4,0 / 4,3 / 5,0 / 6,0, comprimentos curto 31, regular 35 e longo 43 mm. Código de cor por diâmetro','103.425, 103.561 a 103.576',1],
+ ['gm-br-cs','brocas','gm','Brocas cônicas Control Stop','Ø 2,0 / 3,5 / 3,75 / 4,0 / 4,3 / 5,0 / 6,0 / 7,0, com encaixe para os stops','103.492 a 103.499',1],
+ ['gm-br-stop','brocas','gm','Stops para broca Control','Titânio. Comprimento 8 / 10 / 11,5 / 13 mm × diâmetro D2,0 / D3,5 / D3,75-4,0 / D4,3-5,0 / D6,0-7,0 (20 modelos)','125.144 a 125.163',1],
+ ['gm-br-cont','brocas','gm','Brocas de contorno cônicas','Ø 3,5+ / 3,75+ / 4,0+ / 4,3+ / 5,0+, para osso tipo I e II com Helix GM','103.578 a 103.582',1],
+ ['gm-br-piloto','brocas','gm','Brocas piloto GM','Ø 2,0/3,0 e Ø 3,5 / 3,75 / 4,0 / 4,3 / 5,0. Alargam o rebordo do alvéolo','103.213, 103.513 a 103.517',1],
+ ['gm-br-titamax','brocas','gm','Brocas helicoidais Titamax GM','Ø 2,0 / 2,8 / 3,0 / 3,3 / 3,8 / 4,3, comprimentos 31, 35 e 43 mm','103.162 a 103.168, 103.222 a 103.231',1],
+ ['gm-br-ext','brocas','gm','Extensão de broca','Aço cirúrgico. Encaixe a broca direto na extensão','103.426',1],
+ ['gm-dr-din','drivers','gm','Driver para implantes GM, chave dinamométrica','Aço cirúrgico, curto 22 mm (105.129) e longo 30 mm (105.130). Torque máximo 60 N.cm','105.129, 105.130',1],
+ ['gm-dr-ca','drivers','gm','Driver para implantes GM, contra-ângulo','Capta o implante direto da embalagem. Torque máximo 35 N.cm','105.131',1],
+ ['gm-dr-man','drivers','gm','Chave digital para conexões de contra-ângulo','Transforma o driver de contra-ângulo em driver manual','104.028',1],
+ ['gm-ins-ind','instrumental','gm','Indicadores de direção','Titânio. 2,8/3,5, 3,0/3,75, 3,3/4,0, 3,6/4,3 e 4,3/5,0. A faixa central corresponde ao diâmetro do implante','128.019 a 128.023',1],
+ ['gm-ins-prof','instrumental','gm','Medidor de profundidade','Do kit cirúrgico GM','129.004',1],
+ ['gm-ins-pinca','instrumental','gm','Pinça de titânio','Do kit cirúrgico GM','129.001',1],
+ ['cm-kit-cir','kits','cm','Kit cirúrgico CM','Estojo de polímero autoclavável (110.292), composições para CM, Facility, WS e Ti. Os itens são vendidos separados','110.292',1],
+ ['cm-kit-comp','kits','cm','Kit cirúrgico compacto CM','Estojo (110.268). Para Titamax 3,5 e 3,75 CM, Alvim e Drive 3,5 e 4,3 CM','110.268',1],
+ ['cm-kit-con','kits','cm','Kit cirúrgico compacto para implantes cônicos','Estojo (110.277). Para Alvim e Drive CM; inclui macho de rosca para Alvim em osso tipo I e II','110.277',1],
+ ['cm-br-lanca','brocas','cm','Broca lança','Aço cirúrgico, Ø 2,0 mm. Rompe a cortical','103.170',1],
+ ['cm-br-alvim','brocas','cm','Brocas Alvim (Alvim e Drive CM)','Helicoidal Ø 2,0 (103.171), Ø 3,5 (103.172), Ø 4,3 (103.173), Ø 5,0 (103.174). Comprimentos 31, 35 e 43 mm','103.171 a 103.174',1],
+ ['cm-br-helic','brocas','cm','Brocas helicoidais (Titamax CM)','Ø 2,0 / 2,8 / 3,0 / 3,3 / 3,8 / 4,3, comprimentos 31, 35 e 43 mm','103.162 a 103.168, 103.222 a 103.231',1],
+ ['cm-br-piloto','brocas','cm','Brocas piloto CM','2,8/3,5 (103.216), 3,0/3,75 (103.217), 3,3/4,0 (103.218), 3,6/4,3 (103.219), 4,3/5,0 (103.220), 4,3/5,3 (103.215), 5,3/6,0 (103.221). Também 2/3 (103.213)','103.213, 103.215 a 103.221',1],
+ ['cm-br-ext','brocas','cm','Extensor de brocas','Aço cirúrgico','103.426',1],
+ ['cm-ins-para','instrumental','cm','Paralelizadores CM','Titânio. 2,8/3,5, 3,0/3,75, 3,3/4,0, 3,6/4,3 e 4,3/5,0. Lado menor depois da broca de 2,0; lado maior depois da última broca','128.019 a 128.023',1],
+ ['cm-ins-macho','instrumental','cm','Macho de rosca Alvim','Ø 3,5 (111.036), Ø 4,3 (111.037), Ø 5,0 (111.038). Para osso tipo I e II com Alvim','111.036 a 111.038',1],
+ ['cm-ins-remov','instrumental','cm','Removedor de implantes','Remove CM Ø 3,5 / 3,75 / 4,0 / 4,3 e 5,0','130.050',1],
+ ['cm-ins-posic','instrumental','cm','Posicionador radiográfico Alvim / Drive','Titânio. Verifica a profundidade da osteotomia sem abrir retalho. Ø 3,5 / 4,3 / 5,0','129.009, 129.013, 129.014',1],
+ ['cm-ins-sonda','instrumental','cm','Sonda milimetrada','Do kit cirúrgico CM','129.004',1],
+ ['cm-ins-pinca','instrumental','cm','Pinça de titânio','Do kit cirúrgico CM','129.001',1],
+ ['gm-imp-helix-35','implantes','gm','Helix GM Ø 3,5 mm','Cônico, todas as densidades ósseas e pós-extração. || Acqua: 8 mm 140.943 · 10 mm 140.944 · 11,5 mm 140.945 · 13 mm 140.946 · 16 mm 140.947 · 18 mm 140.988 || NeoPoros: 8 mm 109.943 · 10 mm 109.944 · 11,5 mm 109.945 · 13 mm 109.946 · 16 mm 109.947 · 18 mm 109.988','Acqua 140.943 a 140.988; NeoPoros 109.943 a 109.988',1],
+ ['gm-imp-helix-375','implantes','gm','Helix GM Ø 3,75 mm','Cônico, todas as densidades ósseas e pós-extração. || Acqua: 8 mm 140.976 · 10 mm 140.977 · 11,5 mm 140.978 · 13 mm 140.979 · 16 mm 140.980 · 18 mm 140.981 || NeoPoros: 8 mm 109.976 · 10 mm 109.977 · 11,5 mm 109.978 · 13 mm 109.979 · 16 mm 109.980 · 18 mm 109.981','Acqua 140.976 a 140.981; NeoPoros 109.976 a 109.981',1],
+ ['gm-imp-helix-40','implantes','gm','Helix GM Ø 4,0 mm','Cônico, todas as densidades ósseas e pós-extração. || Acqua: 8 mm 140.982 · 10 mm 140.983 · 11,5 mm 140.984 · 13 mm 140.985 · 16 mm 140.986 · 18 mm 140.987 || NeoPoros: 8 mm 109.982 · 10 mm 109.983 · 11,5 mm 109.984 · 13 mm 109.985 · 16 mm 109.986 · 18 mm 109.987','Acqua 140.982 a 140.987; NeoPoros 109.982 a 109.987',1],
+ ['gm-imp-helix-43','implantes','gm','Helix GM Ø 4,3 mm','Cônico, todas as densidades ósseas e pós-extração. || Acqua: 8 mm 140.948 · 10 mm 140.949 · 11,5 mm 140.950 · 13 mm 140.951 · 16 mm 140.952 · 18 mm 140.989 || NeoPoros: 8 mm 109.948 · 10 mm 109.949 · 11,5 mm 109.950 · 13 mm 109.951 · 16 mm 109.952 · 18 mm 109.989','Acqua 140.948 a 140.989; NeoPoros 109.948 a 109.989',1],
+ ['gm-imp-helix-50','implantes','gm','Helix GM Ø 5,0 mm','Cônico, todas as densidades ósseas e pós-extração. || Acqua: 8 mm 140.953 · 10 mm 140.954 · 11,5 mm 140.955 · 13 mm 140.956 · 16 mm 140.957 · 18 mm 140.990 || NeoPoros: 8 mm 109.953 · 10 mm 109.954 · 11,5 mm 109.955 · 13 mm 109.956 · 16 mm 109.957 · 18 mm 109.990','Acqua 140.953 a 140.990; NeoPoros 109.953 a 109.990',1],
+ ['gm-imp-helix-60','implantes','gm','Helix GM Ø 6,0 mm','Cônico, todas as densidades ósseas e pós-extração. || Acqua: 8 mm 140.1009 · 10 mm 140.1010 · 11,5 mm 140.1011 · 13 mm 140.1012 || NeoPoros: 8 mm 109.1009 · 10 mm 109.1010 · 11,5 mm 109.1011 · 13 mm 109.1012','Acqua 140.1009 a 140.1012; NeoPoros 109.1009 a 109.1012',1],
+ ['gm-imp-helix-70','implantes','gm','Helix GM Ø 7,0 mm','Cônico, todas as densidades ósseas e pós-extração. || Acqua: 8 mm 140.1059 · 10 mm 140.1060 · 11,5 mm 140.1061 · 13 mm 140.1062 || NeoPoros: 8 mm 109.1059 · 10 mm 109.1060 · 11,5 mm 109.1061 · 13 mm 109.1062','Acqua 140.1059 a 140.1062; NeoPoros 109.1059 a 109.1062',1],
+ ['gm-imp-drive-35','implantes','gm','Drive GM Ø 3,5 mm','Cônico, ossos tipo III e IV e pós-extração. || Acqua: 8 mm 140.958 · 10 mm 140.959 · 11,5 mm 140.960 · 13 mm 140.961 · 16 mm 140.962 · 18 mm 140.963 || NeoPoros: 8 mm 109.958 · 10 mm 109.959 · 11,5 mm 109.960 · 13 mm 109.961 · 16 mm 109.962 · 18 mm 109.963','Acqua 140.958 a 140.963; NeoPoros 109.958 a 109.963',1],
+ ['gm-imp-drive-43','implantes','gm','Drive GM Ø 4,3 mm','Cônico, ossos tipo III e IV e pós-extração. || Acqua: 8 mm 140.964 · 10 mm 140.965 · 11,5 mm 140.966 · 13 mm 140.967 · 16 mm 140.968 · 18 mm 140.969 || NeoPoros: 8 mm 109.964 · 10 mm 109.965 · 11,5 mm 109.966 · 13 mm 109.967 · 16 mm 109.968 · 18 mm 109.969','Acqua 140.964 a 140.969; NeoPoros 109.964 a 109.969',1],
+ ['gm-imp-drive-50','implantes','gm','Drive GM Ø 5,0 mm','Cônico, ossos tipo III e IV e pós-extração. || Acqua: 8 mm 140.970 · 10 mm 140.971 · 11,5 mm 140.972 · 13 mm 140.973 · 16 mm 140.974 · 18 mm 140.975 || NeoPoros: 8 mm 109.970 · 10 mm 109.971 · 11,5 mm 109.972 · 13 mm 109.973 · 16 mm 109.974 · 18 mm 109.975','Acqua 140.970 a 140.975; NeoPoros 109.970 a 109.975',1],
+ ['gm-imp-titamax-35','implantes','gm','Titamax GM Ø 3,5 mm','Cilíndrico, ossos tipo I e II ou áreas enxertadas. || Acqua: 7 mm 140.906 · 8 mm 140.907 · 9 mm 140.908 · 11 mm 140.909 · 13 mm 140.910 · 15 mm 140.911 · 17 mm 140.912 || NeoPoros: 7 mm 109.906 · 8 mm 109.907 · 9 mm 109.908 · 11 mm 109.909 · 13 mm 109.910 · 15 mm 109.911 · 17 mm 109.912','Acqua 140.906 a 140.912; NeoPoros 109.906 a 109.912',1],
+ ['gm-imp-titamax-375','implantes','gm','Titamax GM Ø 3,75 mm','Cilíndrico, ossos tipo I e II ou áreas enxertadas. || Acqua: 7 mm 140.899 · 8 mm 140.900 · 9 mm 140.901 · 11 mm 140.902 · 13 mm 140.903 · 15 mm 140.904 · 17 mm 140.905 || NeoPoros: 7 mm 109.899 · 8 mm 109.900 · 9 mm 109.901 · 11 mm 109.902 · 13 mm 109.903 · 15 mm 109.904 · 17 mm 109.905','Acqua 140.899 a 140.905; NeoPoros 109.899 a 109.905',1],
+ ['gm-imp-titamax-40','implantes','gm','Titamax GM Ø 4,0 mm','Cilíndrico, ossos tipo I e II ou áreas enxertadas. || Acqua: 7 mm 140.913 · 8 mm 140.914 · 9 mm 140.915 · 11 mm 140.916 · 13 mm 140.917 · 15 mm 140.918 · 17 mm 140.919 || NeoPoros: 7 mm 109.913 · 8 mm 109.914 · 9 mm 109.915 · 11 mm 109.916 · 13 mm 109.917 · 15 mm 109.918 · 17 mm 109.919','Acqua 140.913 a 140.919; NeoPoros 109.913 a 109.919',1],
+ ['gm-imp-titamax-50','implantes','gm','Titamax GM Ø 5,0 mm','Cilíndrico, ossos tipo I e II ou áreas enxertadas. || Acqua: 7 mm 140.920 · 8 mm 140.921 · 9 mm 140.922 · 11 mm 140.923 · 13 mm 140.924 || NeoPoros: 7 mm 109.920 · 8 mm 109.921 · 9 mm 109.922 · 11 mm 109.923 · 13 mm 109.924','Acqua 140.920 a 140.924; NeoPoros 109.920 a 109.924',1],
+ ['gm-imp-long-375','implantes','gm','Helix GM Long Ø 3,75 mm','Ossos tipo III e IV, edêntulo total ou parcial. Comprimento 20 a 25 mm. || NeoPoros: 20 mm 109.1043 · 22,5 mm 109.1044 · 25 mm 109.1045','NeoPoros 109.1043 a 109.1045',1],
+ ['gm-imp-long-40','implantes','gm','Helix GM Long Ø 4,0 mm','Ossos tipo III e IV, edêntulo total ou parcial. Comprimento 20 a 25 mm. || NeoPoros: 20 mm 109.1046 · 22,5 mm 109.1047 · 25 mm 109.1048','NeoPoros 109.1046 a 109.1048',1],
+ ['gm-imp-zyg-40','implantes','gm','Zygoma GM Ø 4,0 mm','Maxila posterior e zigoma. Comprimento 30 a 55 mm. || NeoPoros: 30 mm 109.1049 · 35 mm 109.1050 · 37,5 mm 109.1051 · 40 mm 109.1052 · 42,5 mm 109.1053 · 45 mm 109.1054 · 47,5 mm 109.1055 · 50 mm 109.1056 · 52,5 mm 109.1057 · 55 mm 109.1058','NeoPoros 109.1049 a 109.1058',1],
+ ['gm-imp-zygs','implantes','gm','Zygoma-S GM','Zigoma, inclusive abordagem extramaxilar. NeoPoros. Códigos não consultados','',1],
+ ['cm-imp-alvim-35','implantes','cm','Alvim CM Ø 3,5 mm','Cônico, ossos tipo III e IV e alvéolos pós-extração. || Acqua: 8 mm 140.657 · 10 mm 140.658 · 11,5 mm 140.659 · 13 mm 140.621 · 16 mm 140.660 || NeoPoros: 8 mm 109.657 · 10 mm 109.658 · 11,5 mm 109.659 · 13 mm 109.621 · 16 mm 109.660 || Lista parcial da eShop; podem existir outros tamanhos','Acqua 140.657 a 140.660; NeoPoros 109.657 a 109.660',1],
+ ['cm-imp-alvim-43','implantes','cm','Alvim CM Ø 4,3 mm','Cônico, ossos tipo III e IV e alvéolos pós-extração. || Acqua: 8 mm 140.647 · 10 mm 140.648 · 11,5 mm 140.649 · 13 mm 140.622 · 16 mm 140.651 || NeoPoros: 8 mm 109.647 · 10 mm 109.648 · 11,5 mm 109.649 · 13 mm 109.622 · 16 mm 109.651 || Lista parcial da eShop; podem existir outros tamanhos','Acqua 140.647 a 140.651; NeoPoros 109.647 a 109.651',1],
+ ['cm-imp-alvim-50','implantes','cm','Alvim CM Ø 5,0 mm','Cônico, ossos tipo III e IV e alvéolos pós-extração. || Acqua: 8 mm 140.652 · 10 mm 140.653 · 11,5 mm 140.654 · 13 mm 140.655 · 16 mm 140.656 || NeoPoros: 8 mm 109.652 · 10 mm 109.653 · 11,5 mm 109.654 · 13 mm 109.655 · 16 mm 109.656 || Lista parcial da eShop; podem existir outros tamanhos','Acqua 140.652 a 140.656; NeoPoros 109.652 a 109.656',1],
+ ['cm-imp-drive-35','implantes','cm','Drive CM Ø 3,5 mm','Cônico, alta estabilidade primária, carga imediata. || Acqua: 8 mm 140.692 · 10 mm 140.682 · 11,5 mm 140.693 · 13 mm 140.683 · 16 mm 140.684 || NeoPoros: 8 mm 109.692 · 10 mm 109.682 · 11,5 mm 109.693 · 13 mm 109.683 · 16 mm 109.684 || Lista parcial da eShop; podem existir outros tamanhos','Acqua 140.692 a 140.684; NeoPoros 109.692 a 109.684',1],
+ ['cm-imp-drive-43','implantes','cm','Drive CM Ø 4,3 mm','Cônico, alta estabilidade primária, carga imediata. || Acqua: 8 mm 140.689 · 10 mm 140.688 · 11,5 mm 140.627 · 13 mm 140.628 · 16 mm 140.629 || NeoPoros: 8 mm 109.689 · 10 mm 109.688 · 11,5 mm 109.627 · 13 mm 109.628 · 16 mm 109.629 || Lista parcial da eShop; podem existir outros tamanhos','Acqua 140.689 a 140.629; NeoPoros 109.689 a 109.629',1],
+ ['cm-imp-drive-50','implantes','cm','Drive CM Ø 5,0 mm','Cônico, alta estabilidade primária, carga imediata. || Acqua: 8 mm 140.690 · 10 mm 140.685 · 11,5 mm 140.691 · 13 mm 140.686 · 16 mm 140.687 || NeoPoros: 8 mm 109.690 · 10 mm 109.685 · 11,5 mm 109.691 · 13 mm 109.686 · 16 mm 109.687 || Lista parcial da eShop; podem existir outros tamanhos','Acqua 140.690 a 140.687; NeoPoros 109.690 a 109.687',1],
+ ['cm-imp-titamaxex-35','implantes','cm','Titamax EX CM Ø 3,5 mm','Flexibilidade de instalação coronoapical. || Acqua: 9 mm 140.661 · 11 mm 140.662 · 13 mm 140.663 · 15 mm 140.664 · 17 mm 140.665 || Lista parcial da eShop; podem existir outros tamanhos','Acqua 140.661 a 140.665',1],
+ ['cm-imp-titamaxex-375','implantes','cm','Titamax EX CM Ø 3,75 mm','Flexibilidade de instalação coronoapical. || Acqua: 9 mm 140.666 · 11 mm 140.667 · 13 mm 140.668 · 15 mm 140.669 · 17 mm 140.670 || Lista parcial da eShop; podem existir outros tamanhos','Acqua 140.666 a 140.670',1],
+ ['cm-imp-titamaxex-40','implantes','cm','Titamax EX CM Ø 4,0 mm','Flexibilidade de instalação coronoapical. || Acqua: 9 mm 140.636 · 11 mm 140.637 · 13 mm 140.638 · 15 mm 140.639 · 17 mm 140.640 || Lista parcial da eShop; podem existir outros tamanhos','Acqua 140.636 a 140.640',1],
+ ['cm-imp-titamax-375','implantes','cm','Titamax CM Cortical Ø 3,75 mm','Flexibilidade de instalação coronoapical. || NeoPoros: 13 mm 109.610 || Lista parcial da eShop; podem existir outros tamanhos','NeoPoros 109.610',1],
+ ['cm-imp-titamax-40','implantes','cm','Titamax CM Cortical Ø 4,0 mm','Flexibilidade de instalação coronoapical. || NeoPoros: 7 mm 109.630 · 8 mm 109.631 · 9 mm 109.632 · 11 mm 109.633 · 15 mm 109.634 · 17 mm 109.635 || Lista parcial da eShop; podem existir outros tamanhos','NeoPoros 109.630 a 109.635',1],
+ ['cm-imp-titamax-50','implantes','cm','Titamax CM Cortical Ø 5,0 mm','Flexibilidade de instalação coronoapical. || NeoPoros: 7 mm 109.642 · 8 mm 109.643 · 9 mm 109.644 · 11 mm 109.645 · 13 mm 109.646 || Lista parcial da eShop; podem existir outros tamanhos','NeoPoros 109.642 a 109.646',1]
+].map(function(r){ return {id:r[0], cat:r[1], line:r[2], name:r[3], desc:r[4], code:r[5], ok:r[6]}; });
+
+function itemById(id){ for (var i = 0; i < ITEMS.length; i++) if (ITEMS[i].id === id) return ITEMS[i]; return null; }
+function catLabel(id){ for (var i = 0; i < CATS.length; i++) if (CATS[i][0] === id) return CATS[i][1]; return id; }
+var AREAS = [['pro','Protético','Pilares, moldagem, parafusos e laboratório'],['cir','Cirúrgico','Implantes, kits, brocas, drivers e instrumental']];
+var CIR_CATS = ['implantes','kits','brocas','drivers'];
+var CIR_INS = ['gm-ins-perfil','cm-ins-perfil','gm-ins-medang','cm-ins-medang','gm-ins-ind','gm-ins-prof','gm-ins-pinca','cm-ins-para','cm-ins-macho','cm-ins-remov','cm-ins-posic','cm-ins-sonda','cm-ins-pinca'];
+function areaOf(x){ return has(CIR_CATS, x.cat) || has(CIR_INS, x.id) ? 'cir' : 'pro'; }
+function areaLabel(id){ for (var i = 0; i < AREAS.length; i++) if (AREAS[i][0] === id) return AREAS[i][1]; return id; }
+function catsOf(area){ return CATS.filter(function(c){ return area === 'cir' ? (has(CIR_CATS, c[0]) || c[0] === 'instrumental') : !has(CIR_CATS, c[0]); }); }
+function countIn(id, area){ return ITEMS.filter(function(x){ return x.cat === id && (!area || areaOf(x) === area); }).length; }
+
+var fase = null, view = 'guia', brand = null, path = [], cat = [], pLine = 'gm';
+var store = {};
+
+function load(k){ try { var v = localStorage.getItem(k); return v ? JSON.parse(v) : (store[k] || []); } catch(e){ return store[k] || []; } }
+function save(k, v){ store[k] = v; try { localStorage.setItem(k, JSON.stringify(v)); } catch(e){} }
+function has(a, x){ return a.indexOf(x) > -1; }
+function toggle(k, i){
+  var a = load(k).slice(), p = a.indexOf(i);
+  if (p > -1) a.splice(p, 1); else a.push(i);
+  save(k, a);
+}
+function cartFind(c, id){ for (var i = 0; i < c.length; i++) if (c[i].id === id) return i; return -1; }
+function cartToggle(id){
+  var c = load('cart').slice(), p = cartFind(c, id);
+  if (p > -1) c.splice(p, 1); else c.push({id:id, q:1, done:false});
+  save('cart', c);
+}
+function cartQty(id, d){
+  var c = load('cart').slice(), p = cartFind(c, id);
+  if (p < 0) return;
+  c[p] = {id:id, q:c[p].q + d, done:c[p].done};
+  if (c[p].q < 1) c.splice(p, 1);
+  save('cart', c);
+}
+function cartDone(id){
+  var c = load('cart').slice(), p = cartFind(c, id);
+  if (p < 0) return;
+  c[p] = {id:id, q:c[p].q, done:!c[p].done};
+  save('cart', c);
+}
+
+function brandCards(act){
+  return '<div class="choices">'
+    + '<button class="choice" data-act="' + act + '" data-v="neodent"><b>Neodent</b><span>Linhas GM e CM</span></button>'
+    + '<div class="choice soon"><b>Outras marcas</b><span>Em breve</span></div></div>';
+}
+
+function guia(){
+  var h = '<div class="trail"><button class="chip' + (!brand ? ' on' : '') + '" data-act="reset">Início</button>';
+  if (brand) h += '<button class="chip' + (!fase ? ' on' : '') + '" data-act="gobrand">' + BRANDS[brand] + '</button>';
+  if (fase) h += '<button class="chip' + (path.length === 0 ? ' on' : '') + '" data-act="goto" data-n="0">' + (fase === 'cir' ? 'Cirúrgico' : 'Protético') + '</button>';
+  path.forEach(function(p, i){
+    h += '<button class="chip' + (i === 0 && fase === 'pro' ? ' ' + p : '') + (i === path.length - 1 ? ' on' : '') + '" data-act="goto" data-n="' + (i + 1) + '">' + L[p] + '</button>';
+  });
+  h += '</div>';
+  if (!brand){
+    h += '<p class="q">1. Qual a marca?</p>' + brandCards('brand');
+  } else if (!fase){
+    h += '<p class="q">2. Qual a fase do tratamento?</p><div class="choices">'
+      + '<button class="choice" data-act="fase" data-v="cir"><b>Cirúrgico</b><span>Implante unitário ou protocolo, passo a passo da cirurgia.</span></button>'
+      + '<button class="choice" data-act="fase" data-v="pro"><b>Protético</b><span>Moldagem, pilares e envio ao laboratório.</span></button></div>'
+      + '<div class="row"><button class="btn" data-act="back">Voltar</button></div>';
+  } else if (fase === 'cir' && path.length === 0){
+    h += '<p class="q">3. Qual o tipo de caso?</p><div class="choices">'
+      + '<button class="choice" data-act="pick" data-v="uni"><b>Unitário</b><span>Um implante por dente, cirurgia de um sítio.</span></button>'
+      + '<button class="choice" data-act="pick" data-v="prot"><b>Protocolo</b><span>Arcada completa com implantes esplintados.</span></button></div>'
+      + '<div class="row"><button class="btn" data-act="back">Voltar</button></div>';
+  } else if (fase === 'cir' && path.length === 1){
+    h += '<p class="q">4. Qual a linha do implante?</p><div class="choices">'
+      + '<button class="choice gm" data-act="pick" data-v="gm"><b>Implante GM</b><span>Grand Morse, Helix GM e Drive GM.</span></button>'
+      + '<button class="choice cm" data-act="pick" data-v="cm"><b>Implante CM</b><span>Cone Morse: Titamax, Alvim e Drive CM.</span></button></div>'
+      + '<div class="row"><button class="btn" data-act="back">Voltar</button></div>';
+  } else if (path.length === 0){
+    h += '<p class="q">3. Qual a linha do implante?</p><div class="choices">'
+      + '<button class="choice gm" data-act="pick" data-v="gm"><b>Implante GM</b><span>Grand Morse, cone Morse 16°, conexão única. Transfer do implante é universal; o análogo do implante tem 3 grupos de diâmetro.</span></button>'
+      + '<button class="choice cm" data-act="pick" data-v="cm"><b>Implante CM</b><span>Cone Morse 11,5°. Análogo do implante é um só; no nível do pilar, componentes variam.</span></button></div>'
+      + '<div class="row"><button class="btn" data-act="back">Voltar</button></div>';
+  } else if (path.length === 1){
+    h += '<p class="q">4. Qual o tipo de prótese?</p><div class="choices">'
+      + '<button class="choice" data-act="pick" data-v="pilar"><b>Pilar</b><span>Coroa unitária, um implante por dente.</span></button>'
+      + '<button class="choice" data-act="pick" data-v="mini"><b>Mini pilar</b><span>Ponte, protocolo ou implantes esplintados.</span></button></div>'
+      + '<div class="row"><button class="btn" data-act="back">Voltar</button></div>';
+  } else if (path.length === 2 && path[0] === 'cm'){
+    h += '<p class="q">5. Qual o tipo de moldagem?</p><div class="choices">'
+      + '<button class="choice cm" data-act="pick" data-v="fechada"><b>Moldeira fechada</b><span>Os transfers ficam na boca e são reposicionados no molde. Mais simples.</span></button>'
+      + '<button class="choice cm" data-act="pick" data-v="aberta"><b>Moldeira aberta</b><span>Os transfers saem presos no molde. Permite esplintar, mais precisa em vários implantes.</span></button></div>'
+      + '<div class="row"><button class="btn" data-act="back">Voltar</button></div>';
+  } else {
+    var key = (fase === 'cir' ? 'cir|' : '') + path.join('|'), d = D[key], done = load('done:' + key), n = d.steps.length;
+    h += '<div class="' + d.theme + '-theme"><div class="banner ' + d.theme + '"><h2>' + d.title + '</h2></div>';
+    h += '<div class="label">Componentes</div><div class="comps">';
+    d.comps.forEach(function(c){ h += '<span>' + c + '</span>'; });
+    h += '</div><div class="label">Passo a passo (toque para marcar)</div>';
+    h += '<div class="bar" role="progressbar" aria-valuemin="0" aria-valuemax="' + n + '" aria-valuenow="' + done.length + '"><i style="width:' + Math.round(done.length / n * 100) + '%"></i></div>';
+    h += '<p class="sub" style="margin:0 0 10px">' + done.length + ' de ' + n + ' feitos</p><ol class="steps">';
+    d.steps.forEach(function(s, i){
+      h += '<li><button class="step' + (has(done, i) ? ' done' : '') + '" data-act="step" data-i="' + i + '" aria-pressed="' + has(done, i) + '"><span class="n">' + (has(done, i) ? '✓' : (i + 1)) + '</span><span class="t"><b>' + s[0] + '</b><span>' + s[1] + '</span></span></button></li>';
+    });
+    h += '</ol>';
+    h += '<div class="label">' + (fase === 'cir' ? 'Checklist antes da cirurgia' : 'O que colocar na ficha do laboratório') + '</div><div class="group" style="margin-top:0">';
+    d.ficha.forEach(function(f){ h += '<div class="item"><b>' + f[0] + '</b><span>' + f[1] + '</span></div>'; });
+    h += '</div>';
+    d.notes.forEach(function(t){ h += '<div class="note">' + t + '</div>'; });
+    h += '<div class="note">Torques e alturas: confirme sempre na bula do componente.</div>';
+    h += '<div class="row"><button class="btn" data-act="back">Voltar</button><button class="btn" data-act="clear">Limpar marcações</button><button class="btn" data-act="reset">Recomeçar</button></div></div>';
+  }
+  return h;
+}
+
+function catalogo(){
+  var h = '<div class="trail"><button class="chip' + (cat.length === 0 ? ' on' : '') + '" data-act="creset">Catálogo</button>';
+  if (cat.length > 0) h += '<button class="chip' + (cat.length === 1 ? ' on' : '') + '" data-act="cgoto" data-n="1">' + BRANDS[cat[0]] + '</button>';
+  if (cat.length > 1) h += '<button class="chip' + (cat.length === 2 ? ' on' : '') + '" data-act="cgoto" data-n="2">' + areaLabel(cat[1]) + '</button>';
+  if (cat.length > 2) h += '<button class="chip on" data-act="cgoto" data-n="3">' + catLabel(cat[2]) + '</button>';
+  h += '</div>';
+  if (cat.length === 0){
+    h += '<p class="q">Qual a marca?</p>' + brandCards('cpick');
+  } else if (cat.length === 1){
+    h += '<p class="q">Qual área?</p><div class="cats">';
+    AREAS.forEach(function(a){
+      h += '<button class="catbtn" data-act="cpick" data-v="' + a[0] + '"><b>' + a[1] + '</b><span>' + a[2] + '</span></button>';
+    });
+    h += '</div><div class="row"><button class="btn" data-act="cback">Voltar</button></div>';
+  } else if (cat.length === 2){
+    h += '<p class="q">' + areaLabel(cat[1]) + ' ' + BRANDS[cat[0]] + '</p><div class="cats">';
+    catsOf(cat[1]).forEach(function(c){
+      var n = countIn(c[0], cat[1]);
+      h += '<button class="catbtn' + (n ? '' : ' empty') + '" data-act="cpick" data-v="' + c[0] + '"><b>' + c[1] + '</b><span>' + (n ? n + (n === 1 ? ' item' : ' itens') : 'Em breve') + '</span></button>';
+    });
+    h += '</div><div class="row"><button class="btn" data-act="cback">Voltar</button></div>';
+  } else {
+    var id = cat[2], all = ITEMS.filter(function(x){ return x.cat === id && areaOf(x) === cat[1]; }), cart = load('cart');
+    h += '<p class="q">' + catLabel(id) + '</p>';
+    if (all.length === 0){
+      h += '<div class="note">Ainda sem itens. Esta categoria será preenchida depois.</div>';
+    } else {
+      h += '<div class="seg" role="group" aria-label="Linha"><button class="gm' + (pLine === 'gm' ? ' on' : '') + '" data-act="line" data-v="gm">GM</button><button class="cm' + (pLine === 'cm' ? ' on' : '') + '" data-act="line" data-v="cm">CM</button></div>';
+      var shown = all.filter(function(x){ return x.line === pLine; });
+      if (shown.length === 0){
+        h += '<div class="note">Nenhum item desta linha ainda.</div>';
+      } else {
+        h += '<div class="group" style="margin-top:0">';
+        shown.forEach(function(x){
+          var on = cartFind(cart, x.id) > -1;
+          h += '<button class="cit' + (on ? ' on' : '') + '" data-act="cart" data-id="' + x.id + '" aria-pressed="' + on + '"><span class="tx"><b>' + x.name + '</b><span class="d">' + x.desc.split(' || ').join('<br>') + '</span>' + (x.code ? '<span class="d">Cód. ' + x.code + '</span>' : '') + (x.ok ? '' : '<span class="d">Não conferido no catálogo 2026</span>') + '</span><span class="add">' + (on ? '✓ Na lista' : '+ Adicionar') + '</span></button>';
+        });
+        h += '</div><p class="foot">Toque em um componente para adicionar à lista de compras. Toque de novo para tirar.</p>';
+      }
+    }
+    h += '<div class="row"><button class="btn" data-act="cback">Voltar</button></div>';
+  }
+  return h;
+}
+
+function compras(){
+  var cart = load('cart'), h = '<div class="banner gm" style="margin-top:16px"><h2>Lista de compras</h2><p class="sub" style="color:inherit">Os componentes que você tocar no Catálogo aparecem aqui</p></div>';
+  if (cart.length === 0){
+    h += '<div class="note">Sua lista está vazia. Abra o Catálogo e toque em um componente para adicionar.</div><div class="row"><button class="btn" data-act="opencat">Abrir catálogo</button></div>';
+    return h;
+  }
+  h += '<div class="group" style="margin-top:0">';
+  cart.forEach(function(c){
+    var x = itemById(c.id);
+    if (!x) return;
+    h += '<div class="crow' + (c.done ? ' done' : '') + '">'
+      + '<button class="cbox" data-act="cdone" data-id="' + c.id + '" aria-label="Marcar como comprado" aria-pressed="' + !!c.done + '">✓</button>'
+      + '<span class="tx"><b>' + x.name + '</b><span class="d">Neodent · ' + areaLabel(areaOf(x)) + ' · ' + catLabel(x.cat) + ' · ' + x.line.toUpperCase() + (x.code ? ' · ' + x.code : '') + '</span></span>'
+      + '<span class="qty"><button class="qb" data-act="qminus" data-id="' + c.id + '" aria-label="' + (c.q === 1 ? 'Remover da lista' : 'Diminuir') + '">' + (c.q === 1 ? '×' : '−') + '</button><span class="qn">' + c.q + '</span><button class="qb" data-act="qplus" data-id="' + c.id + '" aria-label="Aumentar">+</button></span></div>';
+  });
+  h += '</div><div class="row"><button class="btn" data-act="clearcart">Limpar lista</button></div>';
+  h += '<p class="foot">Códigos do catálogo mudam. Confirme com o representante antes de fechar o pedido.</p>';
+  return h;
+}
+
+function render(){
+  var app = document.getElementById('app');
+  app.innerHTML = view === 'guia' ? guia() : view === 'catalogo' ? catalogo() : compras();
+  VIEWS.forEach(function(v){
+    document.getElementById('t-' + v).className = v === view ? 'on' : '';
+  });
+  var n = load('cart').length;
+  document.getElementById('t-compras').textContent = n ? 'Compras · ' + n : 'Compras';
+}
+
+function setView(v){
+  view = v;
+  if (location.hash !== '#' + v) { try { history.replaceState(null, '', '#' + v); } catch(e){} }
+  render();
+  window.scrollTo(0, 0);
+}
+
+document.addEventListener('click', function(e){
+  var el = e.target.closest('[data-act]');
+  if (!el) return;
+  var a = el.getAttribute('data-act'), v = el.getAttribute('data-v'), id = el.getAttribute('data-id');
+  var i = parseInt(el.getAttribute('data-i'), 10), n = parseInt(el.getAttribute('data-n'), 10);
+  if (a === 'tab') return setView(v);
+  if (a === 'opencat') return setView('catalogo');
+  if (a === 'brand') brand = v;
+  else if (a === 'pick') path.push(v);
+  else if (a === 'fase'){ fase = v; path = []; }
+  else if (a === 'gobrand'){ fase = null; path = []; }
+  else if (a === 'back'){ if (path.length) path.pop(); else if (fase) fase = null; else brand = null; }
+  else if (a === 'reset'){ brand = null; fase = null; path = []; }
+  else if (a === 'goto') path = path.slice(0, n);
+  else if (a === 'step') toggle('done:' + (fase === 'cir' ? 'cir|' : '') + path.join('|'), i);
+  else if (a === 'clear') save('done:' + (fase === 'cir' ? 'cir|' : '') + path.join('|'), []);
+  else if (a === 'line') pLine = v;
+  else if (a === 'cpick') cat.push(v);
+  else if (a === 'cback') cat.pop();
+  else if (a === 'creset') cat = [];
+  else if (a === 'cgoto') cat = cat.slice(0, n);
+  else if (a === 'cart') cartToggle(id);
+  else if (a === 'cdone') cartDone(id);
+  else if (a === 'qplus') cartQty(id, 1);
+  else if (a === 'qminus') cartQty(id, -1);
+  else if (a === 'clearcart') save('cart', []);
+  var y = window.scrollY;
+  render();
+  var keep = a === 'step' || a === 'line' || a === 'cart' || a === 'cdone' || a === 'qplus' || a === 'qminus';
+  if (keep) window.scrollTo(0, y); else window.scrollTo(0, 0);
+});
+
+window.addEventListener('hashchange', function(){
+  var h = location.hash.slice(1);
+  if (has(VIEWS, h)){ view = h; render(); }
+});
+(function(){
+  var h = location.hash.slice(1);
+  if (has(VIEWS, h)) view = h;
+  render();
+})();
+</script>
+
+</body></html>
