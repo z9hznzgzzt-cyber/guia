@@ -294,12 +294,13 @@ var D = {
 
 
 /* ===== Guia cirúrgico ===== */
+var ETAPAS = 'Uma ou duas etapas: a de uma etapa serve quando há boa estabilidade primária e mucosa adequada. A de duas etapas é preferida com estabilidade primária baixa, enxerto ou regeneração óssea no mesmo ato, mucosa fina ou risco de carga sobre o implante (por exemplo, prótese removível apoiada na região). Carga imediata é uma terceira situação: provisório instalado já na cirurgia, com critério de torque da bula. São regras clínicas gerais, não vêm do catálogo.';
 var CIR_CHECK = function(extra){ return [
  ['Planejamento','CBCT ou radiografia panorâmica, tipo de osso, posição, diâmetro e comprimento de cada implante, anotados antes de abrir o kit.'],
  ['Implantes','Separe o implante planejado e um de diâmetro vizinho de reserva, com a embalagem íntegra e a validade conferida.'],
  ['Kit cirúrgico','Estojo esterilizado, brocas na sequência do diâmetro, stops (se Control Stop) e extensor de brocas.'],
  ['Drivers e torque','Driver de contra-ângulo, driver para chave dinamométrica e catraca calibrada.'],
- ['Tampas e cicatrizadores','Parafuso de fechamento (tampa) ou cicatrizador da altura e do diâmetro certos, mais um de reserva.'],
+ ['Tampas e cicatrizadores','Tampa (parafuso de cobertura) para duas etapas, ou cicatrizador da altura e do diâmetro certos para uma etapa, mais um de reserva.'],
  ['Campo e sutura','Soro, irrigação, aspiração, fio de sutura, e bisturi ou punch.']
 ].concat(extra || []); };
 
@@ -314,10 +315,10 @@ D['cir|uni|gm'] = {theme:'gm', title:'Cirurgia unitária com implante GM (Helix 
  ['Osso denso e entrada do alvéolo','Brocas piloto GM alargam a entrada. Brocas de contorno cônicas (3,5+ a 5,0+) são para osso tipo I e II com Helix GM. Para Drive GM e Titamax GM, siga a bula.'],
  ['Captar o implante','O driver de contra-ângulo (105.131) capta o implante direto da embalagem. A alternativa é o driver da chave dinamométrica, curto (105.129) ou longo (105.130).'],
  ['Inserir o implante','Contra-ângulo com torque máximo de 35 N.cm; complete na catraca, máximo 60 N.cm. Anote o torque final. Posicione o implante 1 a 2 mm abaixo da crista óssea, usando as marcas a laser do driver como referência.'],
- ['Fechar o caso','Cicatrizador, se a técnica for de uma etapa, ou parafuso de fechamento (tampa), aperto manual leve (cerca de 10 N.cm). Sutura sem tensão.'],
+ ['Uma ou duas etapas','Uma etapa (não submersa): instale o cicatrizador já na cirurgia e suture ao redor dele, sem reabertura. Duas etapas (submersa): instale o parafuso de cobertura (tampa), feche o retalho sobre o implante e faça a reabertura após a osseointegração, para trocar a tampa pelo cicatrizador. Aperto manual leve (cerca de 10 N.cm). Sutura sem tensão.'],
  ['Controle e orientação','Radiografia periapical do assentamento. Oriente o paciente. Aguarde a osseointegração conforme seu protocolo antes da fase protética.']],
  ficha:CIR_CHECK(),
- notes:['Todos os implantes GM têm a mesma conexão protética (cone Morse 16°), então a parte protética não muda com o modelo. O que muda na cirurgia é a broca e o tipo de osso indicado.','As brocas cônicas Helix GM e Drive GM seguem código de cor por diâmetro. O comprimento da broca (curto 31, regular 35, longo 43 mm) é separado do comprimento do implante.','Sequência exata de brocas por modelo, velocidades e carga imediata: siga a bula e o protocolo cirúrgico do kit. O app não substitui a bula.']};
+ notes:['Todos os implantes GM têm a mesma conexão protética (cone Morse 16°), então a parte protética não muda com o modelo. O que muda na cirurgia é a broca e o tipo de osso indicado.','As brocas cônicas Helix GM e Drive GM seguem código de cor por diâmetro. O comprimento da broca (curto 31, regular 35, longo 43 mm) é separado do comprimento do implante.','Sequência exata de brocas por modelo, velocidades e carga imediata: siga a bula e o protocolo cirúrgico do kit. O app não substitui a bula.', ETAPAS]};
 
 D['cir|uni|cm'] = {theme:'cm', title:'Cirurgia unitária com implante CM (Titamax, Alvim ou Drive)',
  comps:['Implante CM (Titamax CM, Alvim CM ou Drive CM)','Broca lança Ø 2,0','Brocas helicoidais ou Alvim (conforme o implante)','Brocas piloto CM','Conexões CM de contra-ângulo e catraca','Cicatrizador ou tampa'],
@@ -330,10 +331,10 @@ D['cir|uni|cm'] = {theme:'cm', title:'Cirurgia unitária com implante CM (Titama
  ['Osso denso e alvéolo','Brocas piloto CM para ampliar a entrada em osso denso ou alvéolo. Em Alvim em osso tipo I e II, use o macho de rosca do kit para implantes cônicos (110.277).'],
  ['Captar e inserir','Conexão CM de contra-ângulo (105.075) até 35 N.cm. Complete com catraca curta ou longa (105.073 e 105.074), máximo 60 N.cm. Anote o torque final.'],
  ['Profundidade','Posicione o implante 1 a 2 mm abaixo da crista óssea, conforme a bula do modelo.'],
- ['Fechar o caso','Cicatrizador ou tampa de fechamento, aperto manual leve. Sutura sem tensão.'],
+ ['Uma ou duas etapas','Uma etapa (não submersa): instale o cicatrizador já na cirurgia e suture ao redor dele, sem reabertura. Duas etapas (submersa): instale o parafuso de cobertura (tampa), feche o retalho sobre o implante e faça a reabertura após a osseointegração, para trocar a tampa pelo cicatrizador. Aperto manual leve. Sutura sem tensão.'],
  ['Controle e orientação','Radiografia periapical. Oriente o paciente. Aguarde a osseointegração conforme seu protocolo.']],
  ficha:CIR_CHECK(),
- notes:['Os códigos 105.073 a 105.075 são as conexões do implante CM; o torque máximo é 60 N.cm na catraca e 35 N.cm no contra-ângulo.','Cada modelo CM (Titamax, Alvim, Drive) tem sua sequência de brocas. Confirme na bula do implante. O app não substitui a bula.']};
+ notes:['Os códigos 105.073 a 105.075 são as conexões do implante CM; o torque máximo é 60 N.cm na catraca e 35 N.cm no contra-ângulo.','Cada modelo CM (Titamax, Alvim, Drive) tem sua sequência de brocas. Confirme na bula do implante. O app não substitui a bula.', ETAPAS]};
 
 D['cir|prot|gm'] = {theme:'gm', title:'Protocolo com implantes GM (arcada completa, NeoArch)',
  comps:['Implantes GM do NeoArch: Helix GM, Helix GM Long, Zygoma GM ou Zygoma-S GM','Kit cirúrgico GM do modelo escolhido','Guia multifuncional / guia cirúrgico','Mini pilares cônicos GM (retos e angulados)','Copings de moldagem esplintados','Cilindros e barra distal (provisório)'],
@@ -408,7 +409,7 @@ function build(l, tipo){
    ['Conferir o preparo','Sonda de profundidade (716.043) e indicador de direção (716.041 curto, 716.042 longo) para checar profundidade e paralelismo.'],
    ['Captar o implante','Chave: ' + c.chaves + '. Antes de aplicar torque, confirme o encaixe correto da chave no implante.'],
    ['Instalar o implante','Torque máximo indicado: 55 N.cm. As marcações esféricas no corpo da chave indicam a face do indexador; as três marcas indicam 1, 2 e 3 mm infraósseo. Anote o torque final.'],
-   ['Fechar o caso','Parafuso de cobertura (' + c.tapa + ') ou cicatrizador, e sutura sem tensão.'],
+   ['Uma ou duas etapas','Uma etapa (não submersa): instale o cicatrizador já na cirurgia e suture ao redor dele, sem reabertura. Duas etapas (submersa): instale o parafuso de cobertura (' + c.tapa + '), feche o retalho sobre o implante e faça a reabertura após a osseointegração, para trocar a tampa pelo cicatrizador. O implante não acompanha tampa: separe antes. Sutura sem tensão.'],
    ['Controle e orientação','Radiografia periapical, orientação ao paciente e aguardar a osseointegração conforme seu protocolo.']
   ] : [
    ['Planejar a arcada','Tomografia, relação intermaxilar, posição e número de implantes. O catálogo indica os Extract longos para a técnica All-On-Four' + (l === 'go' ? ' (Ø 3,75 e 4,0, de 20, 22 e 25 mm)' : l === 'mx' ? ' (Ø 3,75, de 17 e 18 mm)' : '') + '.' + (l === 'he' ? ' Para HE, o catálogo não cita essa indicação: confirme o modelo.' : '')],
@@ -423,6 +424,7 @@ function build(l, tipo){
    ['Provisório e controle','Cilindros do Mini Abutment (708.016, 702.292), prótese provisória conforme seu protocolo, radiografia final e orientação.']
   ];
   var notes = ['Sequência de brocas por modelo, segundo a tabela do catálogo (círculo é uso, asterisco é uso opcional): ' + c.seq.join(' ')];
+  if (uni) notes.push(ETAPAS);
   notes.push('Torque máximo de instalação do implante: 55 N.cm. Critérios de carga imediata não constam no catálogo: use a bula e o seu protocolo.');
   notes.push('O catálogo é de 2025 na capa, com direitos de 2026. Confirme códigos com o representante antes de pedir.');
   return {theme:c.theme, title:(uni ? 'Cirurgia unitária' : 'Protocolo (arcada completa)') + ' com ' + c.nome, comps:['Implante ' + c.nome.split(' (')[0], 'Broca lança Ø 2,0 (703.167)', 'Brocas helicoidais, pilotos e cônicas', 'Chaves de instalação', 'Torquímetro cirúrgico (700.001)', 'Tapa implante ou cicatrizador'], steps:steps, ficha:chk(l), notes:notes};
