@@ -35,14 +35,19 @@
   --ok:#55CBA0; --warn-bg:#2B2410; color-scheme:dark;
 }
 *{box-sizing:border-box}
-html{-webkit-text-size-adjust:100%}
+html{-webkit-text-size-adjust:100%; background:var(--bg); min-height:100%}
 body{
   margin:0; background:var(--bg); color:var(--fg); font:16px/1.5 var(--f-body);
-  padding-block:20px 104px;
+  padding-top:calc(20px + env(safe-area-inset-top, 0px));
+  padding-bottom:calc(104px + env(safe-area-inset-bottom, 0px));
   padding-left:max(16px, env(safe-area-inset-left, 0px));
   padding-right:max(16px, env(safe-area-inset-right, 0px));
 }
 .wrap{max-width:560px; margin:0 auto}
+/* faixa sob a barra de status do iPhone (app na tela inicial) */
+body::before{content:''; position:fixed; left:0; right:0; top:0; height:env(safe-area-inset-top, 0px); background:#0F5A44; z-index:6}
+/* preenche qualquer folga abaixo da barra de abas */
+nav::after{content:''; position:absolute; left:0; right:0; top:100%; height:200px; background:var(--surface)}
 h1,h2,h3{font-family:var(--f-display); margin:0; text-wrap:balance; letter-spacing:-0.01em}
 h1{font-size:28px; line-height:1.1; font-weight:700}
 h2{font-size:20px; line-height:1.2; font-weight:700}
