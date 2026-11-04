@@ -303,21 +303,21 @@ var CIR_CHECK = function(extra){ return [
  ['Campo e sutura','Soro, irrigação, aspiração, fio de sutura, e bisturi ou punch.']
 ].concat(extra || []); };
 
-D['cir|uni|gm'] = {theme:'gm', title:'Cirurgia unitária com implante GM (Helix GM)',
- comps:['Implante Helix GM','Broca lança Ø 2,0','Brocas cônicas Helix GM (ou Control Stop)','Brocas de contorno (osso tipo I e II)','Driver de contra-ângulo e driver dinamométrico','Cicatrizador ou parafuso de fechamento'],
+D['cir|uni|gm'] = {theme:'gm', title:'Cirurgia unitária com implante GM (Helix GM, Drive GM ou Titamax GM)',
+ comps:['Implante GM: Helix GM, Drive GM ou Titamax GM','Broca lança Ø 2,0','Brocas do modelo: cônicas Helix GM e Drive GM, ou helicoidais Titamax GM','Brocas piloto GM e de contorno (osso denso)','Driver de contra-ângulo e driver dinamométrico','Cicatrizador ou parafuso de fechamento'],
  steps:[
- ['Planejar o caso','Avalie o volume e o tipo de osso na tomografia. Defina posição, diâmetro e comprimento do implante. Veja no Catálogo, em Cirúrgico, os diâmetros e comprimentos do Helix GM.'],
- ['Preparar o campo','Anestesia, assepsia e campo. Separe o kit na ordem das brocas. Confira o implante e a validade da embalagem.'],
+ ['Planejar o caso','Avalie o volume e o tipo de osso na tomografia e escolha o modelo GM. Helix GM: cônico, todas as densidades ósseas e pós-extração. Drive GM: cônico, osso tipo III e IV e pós-extração. Titamax GM: cilíndrico, osso tipo I e II ou áreas enxertadas. Defina posição, diâmetro e comprimento; veja os tamanhos no Catálogo, em Cirúrgico. Helix GM Long e Zygoma GM são para arcada e maxila atrófica: veja o roteiro de Protocolo.'],
+ ['Preparar o campo','Anestesia, assepsia e campo. Separe o kit e as brocas do modelo escolhido, na ordem de uso. Confira o implante e a validade da embalagem.'],
  ['Acesso','Incisão e retalho, ou punch quando a técnica sem retalho for indicada. Exponha a crista para ver a posição do implante.'],
  ['Marcar o sítio','Broca lança Ø 2,0 (103.170) rompe a cortical e define o ponto. Irrigação abundante em todas as brocas.'],
- ['Fresar em sequência','Brocas cônicas Helix GM, da menor para a maior, até o diâmetro do implante. Com Control Stop, encaixe o stop da altura certa em cada broca. Conferir o paralelismo e a profundidade a cada broca.'],
- ['Osso denso','Em osso tipo I e II, use a broca de contorno do diâmetro correspondente (3,5+ a 5,0+) antes de inserir.'],
+ ['Fresar em sequência','Helix GM e Drive GM: brocas cônicas Helix GM e Drive GM, da menor até o diâmetro do implante; com Control Stop, encaixe o stop da altura certa. Titamax GM: brocas helicoidais Titamax GM (Ø 2,0 a 4,3) até o diâmetro indicado na bula. Confira paralelismo e profundidade a cada broca.'],
+ ['Osso denso e entrada do alvéolo','Brocas piloto GM alargam a entrada. Brocas de contorno cônicas (3,5+ a 5,0+) são para osso tipo I e II com Helix GM. Para Drive GM e Titamax GM, siga a bula.'],
  ['Captar o implante','O driver de contra-ângulo (105.131) capta o implante direto da embalagem. A alternativa é o driver da chave dinamométrica, curto (105.129) ou longo (105.130).'],
  ['Inserir o implante','Contra-ângulo com torque máximo de 35 N.cm; complete na catraca, máximo 60 N.cm. Anote o torque final. Posicione o implante 1 a 2 mm abaixo da crista óssea, usando as marcas a laser do driver como referência.'],
  ['Fechar o caso','Cicatrizador, se a técnica for de uma etapa, ou parafuso de fechamento (tampa), aperto manual leve (cerca de 10 N.cm). Sutura sem tensão.'],
  ['Controle e orientação','Radiografia periapical do assentamento. Oriente o paciente. Aguarde a osseointegração conforme seu protocolo antes da fase protética.']],
  ficha:CIR_CHECK(),
- notes:['As brocas cônicas Helix GM seguem código de cor por diâmetro. O comprimento da broca (curto 31, regular 35, longo 43 mm) é separado do comprimento do implante.','Sequência exata de brocas, velocidades e carga imediata: siga a bula e o protocolo cirúrgico do kit. O app não substitui a bula.']};
+ notes:['Todos os implantes GM têm a mesma conexão protética (cone Morse 16°), então a parte protética não muda com o modelo. O que muda na cirurgia é a broca e o tipo de osso indicado.','As brocas cônicas Helix GM e Drive GM seguem código de cor por diâmetro. O comprimento da broca (curto 31, regular 35, longo 43 mm) é separado do comprimento do implante.','Sequência exata de brocas por modelo, velocidades e carga imediata: siga a bula e o protocolo cirúrgico do kit. O app não substitui a bula.']};
 
 D['cir|uni|cm'] = {theme:'cm', title:'Cirurgia unitária com implante CM (Titamax, Alvim ou Drive)',
  comps:['Implante CM (Titamax CM, Alvim CM ou Drive CM)','Broca lança Ø 2,0','Brocas helicoidais ou Alvim (conforme o implante)','Brocas piloto CM','Conexões CM de contra-ângulo e catraca','Cicatrizador ou tampa'],
@@ -336,13 +336,13 @@ D['cir|uni|cm'] = {theme:'cm', title:'Cirurgia unitária com implante CM (Titama
  notes:['Os códigos 105.073 a 105.075 são as conexões do implante CM; o torque máximo é 60 N.cm na catraca e 35 N.cm no contra-ângulo.','Cada modelo CM (Titamax, Alvim, Drive) tem sua sequência de brocas. Confirme na bula do implante. O app não substitui a bula.']};
 
 D['cir|prot|gm'] = {theme:'gm', title:'Protocolo com implantes GM (arcada completa, NeoArch)',
- comps:['Helix GM, Helix GM Long ou Zygoma GM','Kit cirúrgico Helix GM','Guia multifuncional / guia cirúrgico','Mini pilares cônicos GM (retos e angulados)','Copings de moldagem esplintados','Cilindros e barra distal (provisório)'],
+ comps:['Implantes GM do NeoArch: Helix GM, Helix GM Long, Zygoma GM ou Zygoma-S GM','Kit cirúrgico GM do modelo escolhido','Guia multifuncional / guia cirúrgico','Mini pilares cônicos GM (retos e angulados)','Copings de moldagem esplintados','Cilindros e barra distal (provisório)'],
  steps:[
- ['Planejar a arcada','Tomografia, relação intermaxilar e posição dos implantes. No inferior, o padrão do catálogo usa 4 implantes. No superior atrófico, considere Helix GM Long ou Zygoma GM.'],
+ ['Planejar a arcada','Tomografia, relação intermaxilar e posição dos implantes. No inferior, o padrão do catálogo usa 4 implantes. O catálogo indica para arcada imediata (NeoArch) o Helix GM, o Helix GM Long (20 a 25 mm) e, no superior atrófico, o Zygoma GM e o Zygoma-S GM. Drive GM e Titamax GM também têm a conexão GM; a escolha depende do osso.'],
  ['Decidir a técnica','Cirurgia guiada (kit de cirurgia guiada Neodent GM, com guia e acesso sem retalho) ou convencional, com guia multifuncional.'],
  ['Regularizar a crista','Alveoloplastia com retalho, para criar plataforma óssea e espaço protético. Na mandíbula, respeite o forame mentoniano.'],
  ['Distância do forame','Antes de fresar os distais, deixe distância segura do forame mentoniano. O catálogo cita instrumento de planejamento de espaço de 7 mm.'],
- ['Fresar e inserir os implantes','Mesmo fluxo da unitária: broca lança, brocas cônicas até o diâmetro, broca de contorno em osso denso. Insira no contra-ângulo (máx. 35 N.cm) e finalize na catraca (máx. 60 N.cm). Anote o torque de cada implante.'],
+ ['Fresar e inserir os implantes','Mesmo fluxo da unitária, com as brocas do modelo escolhido. Zygoma usa instrumental próprio: siga a bula. Insira no contra-ângulo (máx. 35 N.cm) e finalize na catraca (máx. 60 N.cm). Anote o torque de cada implante.'],
  ['Angulação e paralelismo','Implantes distais podem ser inclinados para ganhar comprimento. Compense com mini pilares angulados (17°, 30°; 45°, 52° e 60° para casos especiais, conforme a bula).'],
  ['Instalar os mini pilares','Escolha a altura gengival pela espessura da mucosa. Instale com o torque da bula e confira o assentamento na radiografia.'],
  ['Copings e esplintagem','Coloque os copings de moldagem e esplinte com resina acrílica, ou use a guia multifuncional para registrar as relações intermaxilares.'],
@@ -1039,7 +1039,7 @@ function guia(){
         + '<button class="choice cm" data-act="pick" data-v="mx"><b>Max CM</b><span>Cone Morse 11,5°. Advanced, Cônico, Extract e Cortical.</span></button>'
         + '<button class="choice cm" data-act="pick" data-v="he"><b>Titaoss HE</b><span>Hexágono externo, plataforma Ø 4,1 ou 3,4.</span></button>';
     } else {
-      h += '<button class="choice gm" data-act="pick" data-v="gm"><b>Implante GM</b><span>Grand Morse, Helix GM e Drive GM.</span></button>'
+      h += '<button class="choice gm" data-act="pick" data-v="gm"><b>Implante GM</b><span>Grand Morse: Helix GM, Drive GM, Titamax GM, Helix GM Long e Zygoma GM.</span></button>'
         + '<button class="choice cm" data-act="pick" data-v="cm"><b>Implante CM</b><span>Cone Morse: Titamax, Alvim e Drive CM.</span></button>';
     }
     h += '</div><div class="row"><button class="btn" data-act="back">Voltar</button></div>';
