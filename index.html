@@ -578,6 +578,39 @@ window.NIVEL_TXT = {
 };
 })();
 
+/* ===== Como escolher alturas ===== */
+var ALT_TXT = {
+ cic:['Cicatrizador','Meça a espessura da mucosa sobre o implante: sonda da plataforma até a margem gengival, ou a espessura do retalho na cirurgia. Escolha a altura que fique 1 a 2 mm acima da margem gengival, para a mucosa não cobrir o cicatrizador. Implante mais profundo pede cicatrizador mais alto. Diâmetro: o mais estreito para incisivos e dentes pequenos, o mais largo para pré-molares e molares, acompanhando o perfil de emergência do dente que vai ser reposto.'],
+ implante:['Componente no nível do implante','Quem define a altura do componente é o laboratório, a partir do modelo. Anote na ficha a espessura da mucosa de cada implante e se a região é estética. Uma foto da mucosa sem o cicatrizador ajuda a definir o perfil.'],
+ pilar:['Pilar','Meça a mucosa em cada implante, no ponto mais raso (em geral por vestibular). Em região estética, escolha a altura que deixe a margem cerca de 1 mm subgengival: altura do pilar ≈ espessura da mucosa menos 1 mm. Em posterior, a margem pode ficar no nível da gengiva, o que facilita a higiene. Entre duas alturas, a menor deixa a margem mais subgengival e a maior, mais exposta. Confira o espaço interoclusal mínimo do pilar.'],
+ cim:['Abutment cimentado','A margem não deve ficar mais que cerca de 1 mm subgengival, para dar para remover o excesso de cimento. A área cimentável de 6 mm dá mais retenção; a de 4 mm cabe em espaço interoclusal menor. Meça a mucosa em cada implante, no ponto mais raso.'],
+ mini:['Mini pilar','A margem fica no nível da gengiva ou até 1 mm acima, porque a prótese múltipla precisa de higiene e de assentamento passivo. Meça cada implante: implantes em profundidades diferentes podem levar alturas diferentes, para nivelar as plataformas. Use angulado quando os implantes divergem ou o acesso do parafuso sairia fora da prótese. Confira o espaço interoclusal mínimo.']
+};
+var ALT_H = {
+ cic:{gm:'Cicatrizador GM: Ø 3,3 ou 4,5 mm, altura 0,8 a 5,5 mm. Existem também Ø 5,0, 5,5 e 6,5 mm, de 1,5 a 4,5 mm.', cm:'Cicatrizador CM: Ø 3,3 ou 4,5 mm, altura 0,8 a 6,5 mm.', go:'Cicatrizador Grand Oss: perfil Ø 3,3 ou 4,5 mm, altura 1,5 a 5,5 mm.', mx:'Cicatrizador Max CM: perfil Ø 3,3 ou 4,5 mm, altura 1,5 a 4,5 mm.', he:'Cicatrizador HE: Ø 4,1 com 2, 3, 4 ou 6 mm; Ø 3,4 com 4 ou 6 mm.'},
+ pilar:{gm:'Pilar GM: 0,8 / 1,5 / 2,5 / 3,5 / 4,5 mm. Espaço interoclusal mínimo de 4,9 mm.', cm:'Pilar CM: altura gengival de 0,8 a 6,5 mm. Espaço interoclusal mínimo de 5,0 mm.', go:'Abutment CMN Grand Oss: 0,8 / 1,5 / 2,5 / 3,5 / 4,5 mm.', mx:'Abutment CMN Max CM: 0,8 / 1,5 / 2,5 / 3,5 / 4,5 mm.'},
+ cim:{go:'Abutment cimentado GO: 1,5 / 2,5 / 3,5 mm, cimentável 4 ou 6 mm.', mx:'Abutment cimentado Max CM: 1,5 / 2,5 / 3,5 mm, cimentável 4 ou 6 mm.', he:'Abutment cimentado HE: 1 / 2 / 3 / 4 mm.'},
+ mini:{gm:'Mini Pilar Cônico GM: reto 0,8 a 5,5 mm (mínimo de 4,5 mm interoclusal); angulado 17° e 30° em 1,5 / 2,5 / 3,5 mm.', cm:'Mini pilar CM: retos e angulados 17° e 30°, veja as alturas no Catálogo.', go:'Mini Abutment GO: reto 0,8 a 4,5 mm; angulado 17° e 30° em 1,5 / 2,5 / 3,5 mm.', mx:'Mini Abutment Max CM: reto 0,8 a 4,5 mm; angulado 17° e 30° em 1,5 / 2,5 / 3,5 mm.', he:'Mini Abutment HE: reto 1 a 4 mm; angulado 17° em 2 / 3 / 4 mm e 30° em 2 / 3 mm.'}
+};
+function altNotes(key){
+  var k = key.split('|'), cir = k.indexOf('cir') > -1, line, tipos = [];
+  if (cir){ line = k[k.length - 1]; if (k.indexOf('uni') > -1 || k.indexOf('prot') > -1) tipos = ['cic']; if (k.indexOf('prot') > -1) tipos.push('mini'); }
+  else {
+    line = k[0] === 'in' ? k[1] : k[0];
+    var nv = nivelOf(key);
+    if (nv === 'implante') tipos = ['implante', 'cic'];
+    else if (k[k.length - 1] === 'cim') tipos = ['cim'];
+    else tipos = [nv];
+  }
+  if (!tipos.length) return '';
+  var h = '<div class="label">Como escolher a altura</div><div class="group" style="margin-top:0">';
+  tipos.forEach(function(t){
+    var hh = ALT_H[t] && ALT_H[t][line];
+    h += '<div class="item"><b>' + ALT_TXT[t][0] + '</b><span>' + ALT_TXT[t][1] + (hh ? '<br><br>Alturas disponíveis: ' + hh : '') + '</span></div>';
+  });
+  return h + '</div><p class="foot" style="margin-top:6px">As regras de escolha são práticas clínicas gerais, não vêm do catálogo. As alturas disponíveis vêm do catálogo de cada marca.</p>';
+}
+
 var CATS = [['pilares','Pilares'],['mini','Mini pilares'],['transfer','Transfer'],['analogo','Análogo'],['implantes','Implantes'],['cicatrizadores','Cicatrizadores e tampas'],['parafusos','Parafusos'],['cilindros','Cilindros de proteção'],['kits','Kits cirúrgicos'],['brocas','Brocas e stops'],['drivers','Drivers de implante'],['scanbodies','Transfers de escaneamento'],['copings','Cilindros protéticos'],['instrumental','Instrumental']];
 
 var ITEMS = [
@@ -1094,6 +1127,7 @@ function guia(){
     h += '<div class="label">' + (fase === 'cir' ? 'Checklist antes da cirurgia' : 'O que colocar na ficha do laboratório') + '</div><div class="group" style="margin-top:0">';
     d.ficha.forEach(function(f){ h += '<div class="item"><b>' + f[0] + '</b><span>' + f[1] + '</span></div>'; });
     h += '</div>';
+    h += altNotes(key);
     d.notes.forEach(function(t){ h += '<div class="note">' + t + '</div>'; });
     h += '<div class="note">Torques e alturas: confirme sempre na bula do componente.</div>';
     h += '<div class="row"><button class="btn" data-act="back">Voltar</button><button class="btn" data-act="clear">Limpar marcações</button><button class="btn" data-act="reset">Recomeçar</button></div></div>';
